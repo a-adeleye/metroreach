@@ -12,6 +12,109 @@ import { FormsModule } from '@angular/forms';
 export class LandingComponent implements OnInit, OnDestroy {
   currentSlide = 0;
   activeServiceType: 'home' | 'business' = 'home';
+
+  homePlans = [
+    {
+      name: 'Essential',
+      speed: '50 Mbps',
+      tag: 'Best Value',
+      tagClass: 'best-value',
+      price: '20,000',
+      featured: false,
+      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Basic technical support']
+    },
+    {
+      name: 'Premium',
+      speed: '100 Mbps',
+      tag: 'Full Fibre',
+      tagClass: 'full-fibre',
+      price: '38,250',
+      featured: true,
+      badge: 'Most Popular',
+      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Standard technical support', 'Smart home ready']
+    },
+    {
+      name: 'Ultra',
+      speed: '300 Mbps',
+      tag: 'Fast',
+      tagClass: 'fast',
+      price: '85,000',
+      featured: false,
+      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Priority technical support', 'Smart home ready']
+    },
+    {
+      name: 'Gigabit',
+      speed: '500 Mbps',
+      tag: 'Fast',
+      tagClass: 'fast',
+      price: '139,500',
+      featured: false,
+      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Premium technical support', 'Gaming & 4K streaming']
+    },
+    {
+      name: 'Ultrafast',
+      speed: '1000 Mbps',
+      tag: 'Full Fibre',
+      tagClass: 'full-fibre',
+      price: '252,000',
+      featured: false,
+      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', '24/7 premium support', '4K streaming & smart home ready']
+    }
+  ];
+
+  businessPlans = [
+    {
+      name: 'Small Business',
+      speed: '50 Mbps CIR',
+      tag: 'Guaranteed Bandwidth',
+      tagClass: 'full-fibre',
+      price: '90,000',
+      featured: false,
+      features: ['Unlimited data', 'Business-grade router', 'Static IP included', '24/7 business support', '99.9% uptime SLA', 'CIR guaranteed bandwidth']
+    },
+    {
+      name: 'Growing Business',
+      speed: '100 Mbps CIR',
+      tag: 'Guaranteed Bandwidth',
+      tagClass: 'full-fibre',
+      price: '170,000',
+      featured: true,
+      badge: 'Most Popular',
+      features: ['Unlimited data', 'Enterprise router', '2 Static IPs included', '24/7 priority support', '99.95% uptime SLA', 'Dedicated account manager']
+    },
+    {
+      name: 'Established Business',
+      speed: '300 Mbps CIR',
+      tag: 'Guaranteed Bandwidth',
+      tagClass: 'full-fibre',
+      price: '380,000',
+      featured: false,
+      features: ['Unlimited data', 'Advanced enterprise router', '5 Static IPs included', '24/7 premium support', '99.99% uptime SLA', 'Network security suite']
+    },
+    {
+      name: 'Large Enterprise',
+      speed: '500 Mbps CIR',
+      tag: 'Guaranteed Bandwidth',
+      tagClass: 'full-fibre',
+      price: '625,000',
+      featured: false,
+      features: ['Unlimited data', 'Carrier-grade equipment', '10 Static IPs included', '24/7 dedicated support', '99.99% uptime SLA', 'Advanced security suite']
+    },
+    {
+      name: 'Corporate Solution',
+      speed: '1000 Mbps CIR',
+      tag: 'Guaranteed Bandwidth',
+      tagClass: 'full-fibre',
+      price: '1,130,000',
+      featured: false,
+      features: ['Unlimited data', 'Redundant carrier-grade equipment', 'Unlimited Static IPs', '24/7 engineer support', '99.999% uptime SLA', 'On-site technician included']
+    }
+  ];
+
+  get activePlans() {
+    return this.activeServiceType === 'home' ? this.homePlans : this.businessPlans;
+  }
+
   slides = [
     {
       subtitle: 'Fibre Deep, Reach Wide',
