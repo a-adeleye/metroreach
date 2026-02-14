@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetroReach - Fibre Deep, Reach Wide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; color: #222; background: #fff; line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { max-width: 100%; }
+
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --green-dark: #166534;
+      --green-mid: #1e4d30;
+      --green-primary: #1b6b3a;
+      --green-light: #2e7d47;
+      --gold: #d4a843;
+      --gold-light: #e8c55a;
+      --yellow: #f0c93b;
+      --white: #ffffff;
+      --light-bg: #f7f7f7;
+      --gray-100: #f5f5f5;
+      --gray-200: #eeeeee;
+      --gray-300: #ddd;
+      --gray-500: #888;
+      --gray-700: #555;
+      --text-dark: #1a1a1a;
+      --text-body: #444;
+      --section-padding: 60px 0;
+      --container-width: 1140px;
+    }
+
+    .container {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== HEADER / NAVBAR ===== */
+    .navbar {
+      background: var(--green-dark);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .navbar-logo svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .navbar-logo span {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .navbar-logo .logo-accent {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      font-size: 13.5px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-my-account {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 18px;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-my-account:hover {
+      border-color: var(--white);
+    }
+
+    .btn-get-started {
+      background: var(--gold);
+      color: var(--green-dark);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-get-started:hover {
+      background: var(--gold-light);
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      background: var(--green-dark);
+      padding: 60px 0 50px;
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    .hero .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .hero-content {
+      flex: 1;
+      max-width: 520px;
+    }
+
+    .hero-subtitle {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-title {
+      color: var(--white);
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .hero-tagline {
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .hero-desc {
+      color: rgba(255,255,255,0.6);
+      font-size: 12.5px;
+      font-weight: 300;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .btn-express {
+      background: var(--green-dark);
+      color: var(--white);
+      border: 2px solid var(--white);
+      padding: 10px 24px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-express:hover {
+      background: var(--white);
+      color: var(--green-dark);
+    }
+
+    .btn-view-packages {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      padding: 10px 24px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-view-packages:hover {
+      border-color: var(--white);
+    }
+
+    .hero-visual {
+      flex: 0 0 380px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .speed-card {
+      background: var(--green-primary);
+      border-radius: 16px;
+      padding: 50px 55px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .speed-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+
+    .speed-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .speed-card h2 {
+      color: var(--white);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .speed-card h2 span {
+      display: block;
+      font-size: 16px;
+      font-weight: 400;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .hero-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 30px;
+    }
+
+    .hero-dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .hero-dots .dot.active {
+      background: var(--white);
+    }
+
+    /* ===== INFO BANNER ===== */
+    .info-banner {
+      background: var(--gray-100);
+      padding: 14px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .info-banner p {
+      font-size: 12.5px;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .info-banner .info-icon {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--gray-500);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--gray-500);
+      font-weight: 600;
+    }
+
+    /* ===== REGISTER INTEREST SECTION ===== */
+    .register-section {
+      padding: 70px 0;
+      background: var(--white);
+    }
+
+    .register-section .container {
+      display: flex;
+      gap: 50px;
+      align-items: flex-start;
+    }
+
+    .register-left {
+      flex: 1;
+      max-width: 360px;
+      padding-top: 30px;
+    }
+
+    .register-left h3 {
+      color: var(--green-dark);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .register-features {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .register-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.5;
+    }
+
+    .register-features li .check {
+      color: var(--green-primary);
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 1px;
+    }
+
+    .register-right {
+      flex: 1;
+      max-width: 560px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 36px 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    .register-right h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .register-right .form-subtitle {
+      font-size: 12.5px;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      flex: 1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .required {
+      color: #d32f2f;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-dark);
+      background: var(--white);
+      transition: border-color 0.2s;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #bbb;
+      font-size: 12px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--green-primary);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .form-group-full {
+      margin-bottom: 16px;
+    }
+
+    .service-type {
+      margin-bottom: 20px;
+    }
+
+    .service-type label.type-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 24px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-body);
+      cursor: pointer;
+    }
+
+    .radio-group input[type="radio"] {
+      accent-color: var(--green-primary);
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      background: var(--green-dark);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-register:hover {
+      background: var(--green-mid);
+    }
+
+    .form-disclaimer {
+      font-size: 10.5px;
+      color: var(--gray-500);
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    .form-disclaimer a {
+      color: var(--green-primary);
+      text-decoration: underline;
+    }
+
+    /* ===== PLAN TOGGLE ===== */
+    .plan-toggle-section {
+      padding: 30px 0 10px;
+      background: var(--light-bg);
+    }
+
+    .plan-toggle-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .plan-toggle-label {
+      font-size: 13px;
+      color: var(--text-body);
+    }
+
+    .plan-toggle {
+      display: flex;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 2px solid var(--green-dark);
+    }
+
+    .plan-toggle-btn {
+      padding: 8px 24px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: var(--green-dark);
+    }
+
+    .plan-toggle-btn.active {
+      background: var(--green-dark);
+      color: var(--white);
+    }
+
+    /* ===== PLANS SECTION ===== */
+    .plans-section {
+      padding: 40px 0 60px;
+      background: var(--light-bg);
+    }
+
+    .plans-section .section-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .plans-section .section-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 40px;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+
+    .plan-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 28px 20px 24px;
+      border: 1.5px solid var(--gray-200);
+      position: relative;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-card:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+
+    .plan-card.featured {
+      border-color: var(--green-primary);
+      box-shadow: 0 4px 20px rgba(27,107,58,0.15);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--green-dark);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .plan-speed {
+      font-size: 12.5px;
+      color: var(--gray-500);
+      margin-bottom: 14px;
+    }
+
+    .plan-tag {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .plan-tag.best-value {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .plan-tag.full-fibre {
+      background: #d4edda;
+      color: var(--green-primary);
+    }
+
+    .plan-tag.fast {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .plan-price {
+      margin-bottom: 14px;
+    }
+
+    .plan-price .currency {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+      vertical-align: top;
+    }
+
+    .plan-price .amount {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .plan-price .period {
+      font-size: 11px;
+      color: var(--gray-500);
+      font-weight: 400;
+    }
+
+    .plan-speed-detail {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .plan-features {
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .plan-features li {
+      font-size: 11.5px;
+      color: var(--text-body);
+      padding: 3px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .plan-features li::before {
+      content: '•';
+      color: var(--green-primary);
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .btn-plan {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      border: 2px solid var(--green-dark);
+      background: var(--white);
+      color: var(--green-dark);
+      transition: all 0.2s;
+      margin-top: auto;
+    }
+
+    .btn-plan:hover {
+      background: var(--green-dark);
+      color: var(--white);
+    }
+
+    .plan-card.featured .btn-plan {
+      background: var(--green-dark);
+      color: var(--white);
+    }
+
+    .plan-card.featured .btn-plan:hover {
+      background: var(--green-mid);
+    }
+
+    /* ===== INCLUDED SERVICES ===== */
+    .services-section {
+      padding: 60px 0;
+      background: var(--white);
+    }
+
+    .services-section .section-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 30px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 24px 22px;
+    }
+
+    .service-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .service-card .service-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .service-card .service-price.free {
+      color: var(--green-primary);
+    }
+
+    .service-card .service-price.optional {
+      color: var(--gold);
+    }
+
+    .service-card p {
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+
+    /* ===== COVERAGE SECTION ===== */
+    .coverage-section {
+      padding: 60px 0;
+      background: var(--light-bg);
+    }
+
+    .coverage-section .section-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .coverage-section .section-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 30px;
+    }
+
+    .coverage-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .coverage-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 22px 20px;
+      border: 1.5px solid var(--gray-200);
+    }
+
+    .coverage-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .coverage-card-header .location-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--green-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coverage-card-header .location-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--white);
+    }
+
+    .coverage-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .coverage-status {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .coverage-status.live {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .coverage-status.coming {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .coverage-status.progress {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .coverage-card p {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-bottom: 14px;
+    }
+
+    .btn-coverage {
+      display: block;
+      width: 100%;
+      padding: 9px;
+      text-align: center;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-coverage.green {
+      background: var(--green-dark);
+      color: var(--white);
+    }
+
+    .btn-coverage.green:hover {
+      background: var(--green-mid);
+    }
+
+    .btn-coverage.gold {
+      background: var(--gold);
+      color: var(--green-dark);
+    }
+
+    .btn-coverage.gold:hover {
+      background: var(--gold-light);
+    }
+
+    .coverage-single {
+      display: flex;
+      justify-content: flex-start;
+      gap: 22px;
+      margin-bottom: 30px;
+    }
+
+    .coverage-single .coverage-card {
+      max-width: calc(33.333% - 15px);
+      flex: 0 0 calc(33.333% - 15px);
+    }
+
+    .coverage-cta {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .coverage-cta p {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 12px;
+    }
+
+    .btn-request-expansion {
+      display: inline-block;
+      padding: 10px 28px;
+      background: var(--green-dark);
+      color: var(--white);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .btn-request-expansion:hover {
+      background: var(--green-mid);
+    }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+      background: var(--green-dark);
+      padding: 55px 0;
+      text-align: center;
+    }
+
+    .cta-section .cta-logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .cta-section .cta-tagline {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 20px;
+    }
+
+    .cta-section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .cta-section p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 24px;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      padding: 12px 32px;
+      border: 2px solid var(--white);
+      color: var(--white);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.2s;
+    }
+
+    .btn-cta:hover {
+      background: var(--white);
+      color: var(--green-dark);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--green-dark);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 50px 0 0;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+    }
+
+    .footer-brand .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand .footer-logo svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    .footer-brand .footer-logo span {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .footer-brand .brand-tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 12px;
+    }
+
+    .footer-brand .rc-number {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .footer-brand .contact-info {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+    }
+
+    .footer-brand .contact-info span {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .footer-col h5 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-col ul li a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--white);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .plans-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 16px; }
+      .nav-links { display: none; }
+
+      .hero .container { flex-direction: column; text-align: center; }
+      .hero-content { max-width: 100%; }
+      .hero-buttons { justify-content: center; }
+      .hero-visual { flex: none; }
+
+      .register-section .container { flex-direction: column; }
+      .register-left { max-width: 100%; }
+      .register-right { max-width: 100%; }
+
+      .plans-grid { grid-template-columns: 1fr 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .coverage-grid { grid-template-columns: 1fr; }
+      .coverage-single .coverage-card { max-width: 100%; flex: 1; }
+
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .form-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <a href="#" class="navbar-logo">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 28C8 28 14 12 22 12C26 12 28 16 26 20C24 24 18 26 14 24" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M18 22C18 22 24 10 30 14C34 17 30 24 24 26" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span><span class="logo-accent">metro</span>Reach</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Full Fibre</a>
+    <a href="#">Business</a>
+    <a href="#">Coverage</a>
+    <a href="#">Support</a>
+  </div>
+
+  <div class="nav-right">
+    <a href="#" class="btn-my-account">My Account</a>
+    <a href="#" class="btn-get-started">Get Started</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="hero-subtitle">Fibre Deep, Reach Wide</p>
+      <h1 class="hero-title">Up to 1000Mbps<br>Symmetrical Speeds</h1>
+      <p class="hero-tagline">True End-to-End Fibre Connectivity</p>
+      <p class="hero-desc">Fibre runs directly from our core network to your premises — no copper, no slowdowns.</p>
+      <div class="hero-buttons">
+        <button class="btn-express">Express Interest Now</button>
+        <button class="btn-view-packages">View All Packages</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="speed-card">
+        <h2>1000 Mbps<span>Fibre</span></h2>
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</section>
+
+<!-- ===== INFO BANNER ===== -->
+<section class="info-banner">
+  <p><span class="info-icon">i</span> All Full Fibre plans include Free WiFi Gateway & Installation. Prices include VAT. 12 month minimum contract.</p>
+</section>
+
+<!-- ===== REGISTER INTEREST ===== -->
+<section class="register-section">
+  <div class="container">
+    <div class="register-left">
+      <h3>Fibre Deep, Reach Wide</h3>
+      <ul class="register-features">
+        <li><span class="check">✓</span> No obligation: Express interest, no commitment</li>
+        <li><span class="check">✓</span> Scheduled installation scheduling</li>
+        <li><span class="check">✓</span> Priority support for registered leads</li>
+      </ul>
+    </div>
+    <div class="register-right">
+      <h2>Register Your Interest</h2>
+      <p class="form-subtitle">Provide your details and we'll contact you to schedule your Full Fibre installation.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name <span class="required">*</span></label>
+          <input type="text" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label>Phone Number <span class="required">*</span></label>
+          <input type="tel" placeholder="E.g. 08012345678">
+        </div>
+      </div>
+
+      <div class="form-group form-group-full">
+        <label>Email Address <span class="required">*</span></label>
+        <input type="email" placeholder="your.email@example.com">
+      </div>
+
+      <div class="form-group form-group-full">
+        <label>Physical Address <span class="required">*</span></label>
+        <textarea placeholder="Full address including area, estate, street, house number"></textarea>
+      </div>
+
+      <div class="service-type">
+        <label class="type-label">Service Type <span class="required">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="service" checked> Home</label>
+          <label><input type="radio" name="service"> Business</label>
+        </div>
+      </div>
+
+      <button class="btn-register">Register Interest</button>
+
+      <p class="form-disclaimer">By submitting this form you agree to our <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a>. We will use your information to contact you about MetroReach services.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PLAN TOGGLE ===== -->
+<section class="plan-toggle-section">
+  <div class="plan-toggle-wrapper">
+    <span class="plan-toggle-label">Choose your full fibre service:</span>
+    <div class="plan-toggle">
+      <button class="plan-toggle-btn active">Home (Default)</button>
+      <button class="plan-toggle-btn">Business (CUG)</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PLANS ===== -->
+<section class="plans-section">
+  <div class="container">
+    <h2 class="section-title">MetroReach Full Fibre Internet Plans</h2>
+    <p class="section-subtitle">True end-to-end fibre to your home — unlimited data, symmetrical speeds, 12-month only</p>
+
+    <div class="plans-grid">
+      <!-- Essential -->
+      <div class="plan-card">
+        <h3 class="plan-name">Essential</h3>
+        <p class="plan-speed">Up to 50 Mbps</p>
+        <span class="plan-tag best-value">Best Value</span>
+        <div class="plan-price">
+          <span class="currency">₦</span><span class="amount">20,000</span> <span class="period">/month</span>
+        </div>
+        <p class="plan-speed-detail">50 Mbps symmetrical</p>
+        <ul class="plan-features">
+          <li>Unlimited data</li>
+          <li>Free WiFi Gateway</li>
+          <li>Free installation</li>
+          <li>Basic technical support</li>
+        </ul>
+        <button class="btn-plan">Get This Plan</button>
+      </div>
+
+      <!-- Premium (Featured) -->
+      <div class="plan-card featured">
+        <span class="plan-badge">Most Popular</span>
+        <h3 class="plan-name">Premium</h3>
+        <p class="plan-speed">Up to 100 Mbps</p>
+        <span class="plan-tag full-fibre">Full Fibre</span>
+        <div class="plan-price">
+          <span class="currency">₦</span><span class="amount">38,250</span> <span class="period">/month</span>
+        </div>
+        <p class="plan-speed-detail">100 Mbps symmetrical</p>
+        <ul class="plan-features">
+          <li>Unlimited data</li>
+          <li>Free WiFi Gateway</li>
+          <li>Free installation</li>
+          <li>Standard technical support</li>
+          <li>Smart home ready</li>
+        </ul>
+        <button class="btn-plan">Get This Plan</button>
+      </div>
+
+      <!-- Ultra -->
+      <div class="plan-card">
+        <h3 class="plan-name">Ultra</h3>
+        <p class="plan-speed">Up to 300 Mbps</p>
+        <span class="plan-tag fast">Fast</span>
+        <div class="plan-price">
+          <span class="currency">₦</span><span class="amount">85,000</span> <span class="period">/month</span>
+        </div>
+        <p class="plan-speed-detail">300 Mbps symmetrical</p>
+        <ul class="plan-features">
+          <li>Unlimited data</li>
+          <li>Free WiFi Gateway</li>
+          <li>Free installation</li>
+          <li>Priority technical support</li>
+          <li>Smart home ready</li>
+        </ul>
+        <button class="btn-plan">Get This Plan</button>
+      </div>
+
+      <!-- Gigabit -->
+      <div class="plan-card">
+        <h3 class="plan-name">Gigabit</h3>
+        <p class="plan-speed">Up to 500 Mbps</p>
+        <span class="plan-tag fast">Fast</span>
+        <div class="plan-price">
+          <span class="currency">₦</span><span class="amount">139,500</span> <span class="period">/month</span>
+        </div>
+        <p class="plan-speed-detail">500 Mbps symmetrical</p>
+        <ul class="plan-features">
+          <li>Unlimited data</li>
+          <li>Free WiFi Gateway</li>
+          <li>Free installation</li>
+          <li>Premium technical support</li>
+          <li>Gaming & 4K streaming</li>
+        </ul>
+        <button class="btn-plan">Get This Plan</button>
+      </div>
+
+      <!-- Ultrafast -->
+      <div class="plan-card">
+        <h3 class="plan-name">Ultrafast</h3>
+        <p class="plan-speed">Up to 1000 Mbps</p>
+        <span class="plan-tag full-fibre">Full Fibre</span>
+        <div class="plan-price">
+          <span class="currency">₦</span><span class="amount">252,000</span> <span class="period">/month</span>
+        </div>
+        <p class="plan-speed-detail">1000 Mbps symmetrical</p>
+        <ul class="plan-features">
+          <li>Unlimited data</li>
+          <li>Free WiFi Gateway</li>
+          <li>Free installation</li>
+          <li>24/7 premium support</li>
+          <li>4K streaming & smart home integration</li>
+        </ul>
+        <button class="btn-plan">Get This Plan</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INCLUDED SERVICES ===== -->
+<section class="services-section">
+  <div class="container">
+    <h2 class="section-title">Included & Optional Services</h2>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <h4>Fibre Drop Connection</h4>
+        <p class="service-price">₦60,000</p>
+        <p>One-time charge for new fibre drop installation (if required).</p>
+      </div>
+      <div class="service-card">
+        <h4>Residential WiFi Gateway</h4>
+        <p class="service-price free">FREE</p>
+        <p>Included with all full fibre plans.</p>
+      </div>
+      <div class="service-card">
+        <h4>Mesh WiFi Extender</h4>
+        <p class="service-price optional">Optional</p>
+        <p>For extended coverage in large homes and offices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COVERAGE ===== -->
+<section class="coverage-section">
+  <div class="container">
+    <h2 class="section-title">MetroReach Full Fibre Coverage in Lagos</h2>
+    <p class="section-subtitle">Live service and expansion status across key Lagos neighborhoods</p>
+
+    <div class="coverage-grid">
+      <div class="coverage-card">
+        <div class="coverage-card-header">
+          <div class="location-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h4>Oniru Estate</h4>
+        </div>
+        <span class="coverage-status live">Live & Available</span>
+        <p>Covering all residences and businesses.</p>
+        <button class="btn-coverage green">Get Service Now</button>
+      </div>
+
+      <div class="coverage-card">
+        <div class="coverage-card-header">
+          <div class="location-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h4>Victoria Island</h4>
+        </div>
+        <span class="coverage-status coming">Coming Soon</span>
+        <p>Target completion: Q2 2026.</p>
+        <button class="btn-coverage gold">Notify Me When Live</button>
+      </div>
+
+      <div class="coverage-card">
+        <div class="coverage-card-header">
+          <div class="location-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h4>Ikoyi</h4>
+        </div>
+        <span class="coverage-status progress">Work In Progress</span>
+        <p>Infrastructure deployment underway.</p>
+        <button class="btn-coverage gold">Notify Me When Live</button>
+      </div>
+    </div>
+
+    <div class="coverage-single">
+      <div class="coverage-card">
+        <div class="coverage-card-header">
+          <div class="location-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h4>Lekki Phase 1</h4>
+        </div>
+        <span class="coverage-status progress">Work In Progress</span>
+        <p>Fibre network expansion in progress.</p>
+        <button class="btn-coverage gold">Notify Me When Live</button>
+      </div>
+    </div>
+
+    <div class="coverage-cta">
+      <p>Don't see your area? Let us know where you'd like MetroReach Full Fibre next!</p>
+      <button class="btn-request-expansion">Request Service Expansion</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="cta-section">
+  <div class="container">
+    <p class="cta-logo">MetroReach</p>
+    <p class="cta-tagline">Fibre Deep, Reach Wide</p>
+    <h2>Ready for Lagos's Fastest Full Fibre?</h2>
+    <p>Register your interest today — no obligation, just priority access.</p>
+    <button class="btn-cta">Register Interest Now</button>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 28C8 28 14 12 22 12C26 12 28 16 26 20C24 24 18 26 14 24" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M18 22C18 22 24 10 30 14C34 17 30 24 24 26" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span>MetroReach</span>
+        </div>
+        <p class="brand-tagline">Fibre Deep, Reach Wide</p>
+        <p class="rc-number">RC: 1771187</p>
+        <div class="contact-info">
+          <span>📍 Plot 1A3, Adeola Odeku Street,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Victoria Island, Lagos</span>
+          <span>📞 090 8799 0545</span>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;090 8799 0574</span>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;090 8799 1641</span>
+          <span>✉️ info@metro-reach.com</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Full Fibre Plans</h5>
+        <ul>
+          <li><a href="#">50 Mbps - ₦20,000</a></li>
+          <li><a href="#">100 Mbps - ₦38,250</a></li>
+          <li><a href="#">300 Mbps - ₦85,000</a></li>
+          <li><a href="#">500 Mbps - ₦139,500</a></li>
+          <li><a href="#">1000 Mbps - ₦252,000</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Business Solutions</h5>
+        <ul>
+          <li><a href="#">50 Mbps CUG</a></li>
+          <li><a href="#">100 Mbps CUG</a></li>
+          <li><a href="#">300 Mbps CUG</a></li>
+          <li><a href="#">500 Mbps CUG</a></li>
+          <li><a href="#">1000 Mbps CUG</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Support</h5>
+        <ul>
+          <li><a href="#">Installation Process</a></li>
+          <li><a href="#">Service Areas</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Contact Sales</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 MetroReach Internet. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Installation Process</a>
+        <a href="#">Service Areas</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Plan toggle interaction
+  document.querySelectorAll('.plan-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.plan-toggle-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
