@@ -1,17 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-landing',
-  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './landing.html',
-  styleUrl: './landing.scss'
+  styleUrl: './landing.scss',
 })
 export class LandingComponent implements OnInit, OnDestroy {
   currentSlide = 0;
   activeServiceType: 'home' | 'business' = 'home';
+  mobileMenuOpen = false;
+  touchStartX = 0;
+  touchEndX = 0;
+
+  constructor(private cdr: ChangeDetectorRef) { }
 
   homePlans = [
     {
@@ -156,9 +160,10 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   startAutoSlide() {
+    this.stopAutoSlide();
     this.autoSlideInterval = setInterval(() => {
-      this.nextSlide();
-    }, 5000);
+      this.autoNextSlide();
+    }, 3000);
   }
 
   stopAutoSlide() {
@@ -167,18 +172,47 @@ export class LandingComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSlide(index: number) {
-    this.currentSlide = index;
+  resetAutoSlide() {
     this.stopAutoSlide();
     this.startAutoSlide();
   }
 
+  setSlide(index: number) {
+    this.currentSlide = index;
+    this.resetAutoSlide();
+  }
+
+  autoNextSlide() {
+    this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+    this.cdr.detectChanges(); // Manually trigger view update
+  }
+
   nextSlide() {
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+    this.resetAutoSlide();
   }
 
   prevSlide() {
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+    this.resetAutoSlide();
+  }
+
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].screenX;
+  }
+
+  onTouchEnd(event: TouchEvent) {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.handleSwipe();
+  }
+
+  handleSwipe() {
+    if (this.touchEndX < this.touchStartX - 50) {
+      this.nextSlide();
+    }
+    if (this.touchEndX > this.touchStartX + 50) {
+      this.prevSlide();
+    }
   }
 
   scrollToSection(sectionId: string) {
@@ -190,5 +224,13 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   setServiceType(type: 'home' | 'business') {
     this.activeServiceType = type;
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
   }
 }
