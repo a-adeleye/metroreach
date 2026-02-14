@@ -956,8 +956,10 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
             .currency {
                 font-size: 14px;
-                font-weight: 400;
-                opacity: 0.4;
+                font-weight: 500;
+                color: #888;
+                opacity: 1;
+                /* Was 0.4, made fully visible but grey */
                 vertical-align: top;
                 margin-top: 4px;
                 display: inline-block;
@@ -972,7 +974,10 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
             .period {
                 font-size: 13px;
-                opacity: 0.4;
+                color: #888;
+                opacity: 1;
+                /* Was 0.4 */
+                font-weight: 500;
             }
         }
 
@@ -1533,7 +1538,8 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     .rc-number {
         font-size: 12px;
         font-weight: 400;
-        opacity: 0.6;
+        opacity: 0.9;
+        /* Increased visibility */
     }
 
     h5 {
@@ -1559,6 +1565,7 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
                 &:hover {
                     color: $white;
+                    text-decoration: underline;
                 }
             }
         }
@@ -1587,6 +1594,7 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
                 &:hover {
                     color: $white;
+                    text-decoration: underline;
                 }
             }
         }
@@ -1701,12 +1709,20 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         grid-template-columns: 1fr !important;
         gap: 40px;
     }
+
+    .section-header .section-title {
+        font-size: 40px !important
+    }
 }
 
 @media (max-width: 768px) {
     .navbar {
         .nav-links {
             display: none;
+        }
+
+        .navbar-logo .logo-img {
+            height: 32px;
         }
     }
 
@@ -1731,6 +1747,18 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
     .hero-title {
         font-size: 38px !important;
+    }
+
+    .section-header {
+        margin-bottom: 40px;
+
+        .section-title {
+            font-size: 32px !important
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+        }
     }
 
     .hero-buttons {

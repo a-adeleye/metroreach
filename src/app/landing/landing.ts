@@ -14,6 +14,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   mobileMenuOpen = false;
   touchStartX = 0;
   touchEndX = 0;
+  currentYear = new Date().getFullYear();
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -125,7 +126,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       title1: 'Free WiFi Gateway',
       title2: 'Included',
       tagline: 'Professional Installation at No Extra Cost',
-      description: 'All plans include expert installation and a modern dual-band WiFi Gateway — ready to use on day one.',
+      description: 'All plans include expert installation and a modern dual - and WiFi - ready to use on day one.',
       cardTitle: 'Free Installation',
       cardSubtitle: ''
     },
@@ -134,7 +135,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       title1: 'Up to 1000Mbps',
       title2: 'Symmetrical Speeds',
       tagline: 'True End-to-End Fibre Connectivity',
-      description: 'Fibre runs directly from our core network to your premises — no copper, no slowdowns.',
+      description: 'Fibre runs directly from our core network to your premises - no copper, no slowdowns.',
       cardTitle: '1000 Mbps',
       cardSubtitle: 'Fibre'
     },
