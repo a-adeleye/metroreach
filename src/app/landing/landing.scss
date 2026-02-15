@@ -694,6 +694,10 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                 display: flex;
                 gap: 12px;
 
+                @media (max-width: 576px) {
+                    flex-direction: column;
+                }
+
                 .radio-option {
                     position: relative;
                     cursor: pointer;
@@ -728,19 +732,17 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                     .radio-tile {
                         display: flex;
                         align-items: center;
-                        justify-content: center;
-                        padding: 14px 20px;
+                        padding: 12px 20px;
                         background: #fcfdfc;
                         border: 1px solid rgba(0, 0, 0, 0.08);
-                        border-radius: 12px;
+                        border-radius: 14px;
                         transition: $transition-smooth;
                         color: $text-body;
                         font-weight: 500;
                         font-size: 14px;
-                        text-align: center;
                         height: 100%;
-                        /* Ensure full height */
-                        gap: 10px;
+                        gap: 12px;
+                        position: relative;
 
                         &::before {
                             content: '';
@@ -752,6 +754,24 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                             flex-shrink: 0;
                         }
 
+                        .toggle-icon {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 24px;
+                            height: 24px;
+                            color: $primary-green;
+                            background: rgba($primary-green, 0.05);
+                            border-radius: 6px;
+                            transition: $transition-smooth;
+                            flex-shrink: 0;
+
+                            svg {
+                                width: 16px;
+                                height: 16px;
+                            }
+                        }
+
                         &:hover {
                             border-color: rgba(22, 101, 52, 0.3);
                             background: $white;
@@ -759,11 +779,34 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                             &::before {
                                 border-color: $primary-green;
                             }
+
+                            .toggle-icon {
+                                background: rgba($primary-green, 0.1);
+                                transform: scale(1.1);
+                            }
                         }
 
                         .radio-label {
                             pointer-events: none;
-                            /* Ensure clicks go to label/input */
+                            white-space: nowrap;
+                        }
+                    }
+
+                    input:checked+.radio-tile {
+                        background: $primary-green;
+                        color: $white;
+                        border-color: $primary-green;
+                        box-shadow: 0 8px 20px rgba(22, 101, 52, 0.2);
+
+                        &::before {
+                            border-color: $white;
+                            background: $white;
+                            box-shadow: inset 0 0 0 4px $primary-green;
+                        }
+
+                        .toggle-icon {
+                            color: $white;
+                            background: rgba(255, 255, 255, 0.2);
                         }
                     }
                 }

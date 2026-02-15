@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MetroReach - Fibre Deep, Reach Wide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     /* ===== RESET & BASE ===== */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Poppins', sans-serif; color: #222; background: #fff; line-height: 1.6; }
-    a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
-    img { max-width: 100%; }
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #222;
+      background: #fff;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+    }
 
     /* ===== CSS VARIABLES ===== */
     :root {
@@ -105,7 +132,7 @@
       font-size: 13px;
       font-weight: 500;
       padding: 7px 18px;
-      border: 1.5px solid rgba(255,255,255,0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
       border-radius: 5px;
       transition: all 0.2s;
     }
@@ -150,7 +177,7 @@
     }
 
     .hero-subtitle {
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 13px;
       font-weight: 400;
       margin-bottom: 12px;
@@ -173,7 +200,7 @@
     }
 
     .hero-desc {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       font-size: 12.5px;
       font-weight: 300;
       margin-bottom: 28px;
@@ -206,7 +233,7 @@
     .btn-view-packages {
       background: transparent;
       color: var(--white);
-      border: 1.5px solid rgba(255,255,255,0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
       padding: 10px 24px;
       border-radius: 5px;
       font-size: 13px;
@@ -234,7 +261,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
 
     .speed-card::before {
@@ -244,7 +271,7 @@
       right: -30px;
       width: 120px;
       height: 120px;
-      background: rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.06);
       border-radius: 50%;
     }
 
@@ -255,7 +282,7 @@
       left: -20px;
       width: 80px;
       height: 80px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.04);
       border-radius: 50%;
     }
 
@@ -285,7 +312,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.3);
     }
 
     .hero-dots .dot.active {
@@ -376,7 +403,7 @@
       border: 1px solid var(--gray-200);
       border-radius: 12px;
       padding: 36px 40px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
     }
 
     .register-right h2 {
@@ -591,13 +618,13 @@
     }
 
     .plan-card:hover {
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
       transform: translateY(-2px);
     }
 
     .plan-card.featured {
       border-color: var(--green-primary);
-      box-shadow: 0 4px 20px rgba(27,107,58,0.15);
+      box-shadow: 0 4px 20px rgba(27, 107, 58, 0.15);
     }
 
     .plan-badge {
@@ -971,7 +998,7 @@
 
     .cta-section .cta-tagline {
       font-size: 12px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
       margin-bottom: 20px;
     }
 
@@ -984,7 +1011,7 @@
 
     .cta-section p {
       font-size: 13px;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       margin-bottom: 24px;
     }
 
@@ -1010,7 +1037,7 @@
     /* ===== FOOTER ===== */
     .footer {
       background: var(--green-dark);
-      border-top: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: 50px 0 0;
     }
 
@@ -1041,20 +1068,20 @@
 
     .footer-brand .brand-tagline {
       font-size: 11px;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255, 255, 255, 0.4);
       margin-bottom: 12px;
     }
 
     .footer-brand .rc-number {
       font-size: 12px;
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
       font-weight: 600;
       margin-bottom: 10px;
     }
 
     .footer-brand .contact-info {
       font-size: 11.5px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
       line-height: 1.8;
     }
 
@@ -1077,7 +1104,7 @@
 
     .footer-col ul li a {
       font-size: 12px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
       transition: color 0.2s;
     }
 
@@ -1086,7 +1113,7 @@
     }
 
     .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: 16px 0;
       display: flex;
       justify-content: space-between;
@@ -1095,7 +1122,7 @@
 
     .footer-bottom p {
       font-size: 11px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255, 255, 255, 0.35);
     }
 
     .footer-bottom-links {
@@ -1105,7 +1132,7 @@
 
     .footer-bottom-links a {
       font-size: 11px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255, 255, 255, 0.35);
       transition: color 0.2s;
     }
 
@@ -1121,431 +1148,495 @@
     }
 
     @media (max-width: 768px) {
-      .navbar { padding: 0 16px; }
-      .nav-links { display: none; }
+      .navbar {
+        padding: 0 16px;
+      }
 
-      .hero .container { flex-direction: column; text-align: center; }
-      .hero-content { max-width: 100%; }
-      .hero-buttons { justify-content: center; }
-      .hero-visual { flex: none; }
+      .nav-links {
+        display: none;
+      }
 
-      .register-section .container { flex-direction: column; }
-      .register-left { max-width: 100%; }
-      .register-right { max-width: 100%; }
+      .hero .container {
+        flex-direction: column;
+        text-align: center;
+      }
 
-      .plans-grid { grid-template-columns: 1fr 1fr; }
-      .services-grid { grid-template-columns: 1fr; }
-      .coverage-grid { grid-template-columns: 1fr; }
-      .coverage-single .coverage-card { max-width: 100%; flex: 1; }
+      .hero-content {
+        max-width: 100%;
+      }
 
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .form-row { flex-direction: column; }
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        flex: none;
+      }
+
+      .register-section .container {
+        flex-direction: column;
+      }
+
+      .register-left {
+        max-width: 100%;
+      }
+
+      .register-right {
+        max-width: 100%;
+      }
+
+      .plans-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coverage-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coverage-single .coverage-card {
+        max-width: 100%;
+        flex: 1;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar">
-  <a href="#" class="navbar-logo">
-    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 28C8 28 14 12 22 12C26 12 28 16 26 20C24 24 18 26 14 24" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
-      <path d="M18 22C18 22 24 10 30 14C34 17 30 24 24 26" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
-    </svg>
-    <span><span class="logo-accent">metro</span>Reach</span>
-  </a>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <a href="#" class="navbar-logo">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 28C8 28 14 12 22 12C26 12 28 16 26 20C24 24 18 26 14 24" stroke="#d4a843" stroke-width="3"
+          stroke-linecap="round" fill="none" />
+        <path d="M18 22C18 22 24 10 30 14C34 17 30 24 24 26" stroke="#d4a843" stroke-width="3" stroke-linecap="round"
+          fill="none" />
+      </svg>
+      <span><span class="logo-accent">metro</span>Reach</span>
+    </a>
 
-  <div class="nav-links">
-    <a href="#">Home</a>
-    <a href="#">Full Fibre</a>
-    <a href="#">Business</a>
-    <a href="#">Coverage</a>
-    <a href="#">Support</a>
-  </div>
-
-  <div class="nav-right">
-    <a href="#" class="btn-my-account">My Account</a>
-    <a href="#" class="btn-get-started">Get Started</a>
-  </div>
-</nav>
-
-<!-- ===== HERO ===== -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-content">
-      <p class="hero-subtitle">Fibre Deep, Reach Wide</p>
-      <h1 class="hero-title">Up to 1000Mbps<br>Symmetrical Speeds</h1>
-      <p class="hero-tagline">True End-to-End Fibre Connectivity</p>
-      <p class="hero-desc">Fibre runs directly from our core network to your premises — no copper, no slowdowns.</p>
-      <div class="hero-buttons">
-        <button class="btn-express">Express Interest Now</button>
-        <button class="btn-view-packages">View All Packages</button>
-      </div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Full Fibre</a>
+      <a href="#">Business</a>
+      <a href="#">Coverage</a>
+      <a href="#">Support</a>
     </div>
-    <div class="hero-visual">
-      <div class="speed-card">
-        <h2>1000 Mbps<span>Fibre</span></h2>
-      </div>
+
+    <div class="nav-right">
+      <a href="#" class="btn-my-account">My Account</a>
+      <a href="#" class="btn-get-started">Get Started</a>
     </div>
-  </div>
-  <div class="hero-dots">
-    <span class="dot active"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-  </div>
-</section>
+  </nav>
 
-<!-- ===== INFO BANNER ===== -->
-<section class="info-banner">
-  <p><span class="info-icon">i</span> All Full Fibre plans include Free WiFi Gateway & Installation. Prices include VAT. 12 month minimum contract.</p>
-</section>
-
-<!-- ===== REGISTER INTEREST ===== -->
-<section class="register-section">
-  <div class="container">
-    <div class="register-left">
-      <h3>Fibre Deep, Reach Wide</h3>
-      <ul class="register-features">
-        <li><span class="check">✓</span> No obligation: Express interest, no commitment</li>
-        <li><span class="check">✓</span> Scheduled installation scheduling</li>
-        <li><span class="check">✓</span> Priority support for registered leads</li>
-      </ul>
-    </div>
-    <div class="register-right">
-      <h2>Register Your Interest</h2>
-      <p class="form-subtitle">Provide your details and we'll contact you to schedule your Full Fibre installation.</p>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Full Name <span class="required">*</span></label>
-          <input type="text" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-          <label>Phone Number <span class="required">*</span></label>
-          <input type="tel" placeholder="E.g. 08012345678">
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-subtitle">Fibre Deep, Reach Wide</p>
+        <h1 class="hero-title">Up to 1000Mbps<br>Symmetrical Speeds</h1>
+        <p class="hero-tagline">True End-to-End Fibre Connectivity</p>
+        <p class="hero-desc">Fibre runs directly from our core network to your premises — no copper, no slowdowns.</p>
+        <div class="hero-buttons">
+          <button class="btn-express">Express Interest Now</button>
+          <button class="btn-view-packages">View All Packages</button>
         </div>
       </div>
-
-      <div class="form-group form-group-full">
-        <label>Email Address <span class="required">*</span></label>
-        <input type="email" placeholder="your.email@example.com">
-      </div>
-
-      <div class="form-group form-group-full">
-        <label>Physical Address <span class="required">*</span></label>
-        <textarea placeholder="Full address including area, estate, street, house number"></textarea>
-      </div>
-
-      <div class="service-type">
-        <label class="type-label">Service Type <span class="required">*</span></label>
-        <div class="radio-group">
-          <label><input type="radio" name="service" checked> Home</label>
-          <label><input type="radio" name="service"> Business</label>
+      <div class="hero-visual">
+        <div class="speed-card">
+          <h2>1000 Mbps<span>Fibre</span></h2>
         </div>
       </div>
-
-      <button class="btn-register">Register Interest</button>
-
-      <p class="form-disclaimer">By submitting this form you agree to our <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a>. We will use your information to contact you about MetroReach services.</p>
     </div>
-  </div>
-</section>
-
-<!-- ===== PLAN TOGGLE ===== -->
-<section class="plan-toggle-section">
-  <div class="plan-toggle-wrapper">
-    <span class="plan-toggle-label">Choose your full fibre service:</span>
-    <div class="plan-toggle">
-      <button class="plan-toggle-btn active">Home (Default)</button>
-      <button class="plan-toggle-btn">Business (CUG)</button>
+    <div class="hero-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== PLANS ===== -->
-<section class="plans-section">
-  <div class="container">
-    <h2 class="section-title">MetroReach Full Fibre Internet Plans</h2>
-    <p class="section-subtitle">True end-to-end fibre to your home — unlimited data, symmetrical speeds, 12-month only</p>
+  <!-- ===== INFO BANNER ===== -->
+  <section class="info-banner">
+    <p><span class="info-icon">i</span> All Full Fibre plans include Free WiFi Gateway & Installation. Prices include
+      VAT. 12 month minimum contract.</p>
+  </section>
 
-    <div class="plans-grid">
-      <!-- Essential -->
-      <div class="plan-card">
-        <h3 class="plan-name">Essential</h3>
-        <p class="plan-speed">Up to 50 Mbps</p>
-        <span class="plan-tag best-value">Best Value</span>
-        <div class="plan-price">
-          <span class="currency">₦</span><span class="amount">20,000</span> <span class="period">/month</span>
-        </div>
-        <p class="plan-speed-detail">50 Mbps symmetrical</p>
-        <ul class="plan-features">
-          <li>Unlimited data</li>
-          <li>Free WiFi Gateway</li>
-          <li>Free installation</li>
-          <li>Basic technical support</li>
+  <!-- ===== REGISTER INTEREST ===== -->
+  <section class="register-section">
+    <div class="container">
+      <div class="register-left">
+        <h3>Fibre Deep, Reach Wide</h3>
+        <ul class="register-features">
+          <li><span class="check">✓</span> No obligation: Express interest, no commitment</li>
+          <li><span class="check">✓</span> Scheduled installation scheduling</li>
+          <li><span class="check">✓</span> Priority support for registered leads</li>
         </ul>
-        <button class="btn-plan">Get This Plan</button>
       </div>
+      <div class="register-right">
+        <h2>Register Your Interest</h2>
+        <p class="form-subtitle">Provide your details and we'll contact you to schedule your Full Fibre installation.
+        </p>
 
-      <!-- Premium (Featured) -->
-      <div class="plan-card featured">
-        <span class="plan-badge">Most Popular</span>
-        <h3 class="plan-name">Premium</h3>
-        <p class="plan-speed">Up to 100 Mbps</p>
-        <span class="plan-tag full-fibre">Full Fibre</span>
-        <div class="plan-price">
-          <span class="currency">₦</span><span class="amount">38,250</span> <span class="period">/month</span>
-        </div>
-        <p class="plan-speed-detail">100 Mbps symmetrical</p>
-        <ul class="plan-features">
-          <li>Unlimited data</li>
-          <li>Free WiFi Gateway</li>
-          <li>Free installation</li>
-          <li>Standard technical support</li>
-          <li>Smart home ready</li>
-        </ul>
-        <button class="btn-plan">Get This Plan</button>
-      </div>
-
-      <!-- Ultra -->
-      <div class="plan-card">
-        <h3 class="plan-name">Ultra</h3>
-        <p class="plan-speed">Up to 300 Mbps</p>
-        <span class="plan-tag fast">Fast</span>
-        <div class="plan-price">
-          <span class="currency">₦</span><span class="amount">85,000</span> <span class="period">/month</span>
-        </div>
-        <p class="plan-speed-detail">300 Mbps symmetrical</p>
-        <ul class="plan-features">
-          <li>Unlimited data</li>
-          <li>Free WiFi Gateway</li>
-          <li>Free installation</li>
-          <li>Priority technical support</li>
-          <li>Smart home ready</li>
-        </ul>
-        <button class="btn-plan">Get This Plan</button>
-      </div>
-
-      <!-- Gigabit -->
-      <div class="plan-card">
-        <h3 class="plan-name">Gigabit</h3>
-        <p class="plan-speed">Up to 500 Mbps</p>
-        <span class="plan-tag fast">Fast</span>
-        <div class="plan-price">
-          <span class="currency">₦</span><span class="amount">139,500</span> <span class="period">/month</span>
-        </div>
-        <p class="plan-speed-detail">500 Mbps symmetrical</p>
-        <ul class="plan-features">
-          <li>Unlimited data</li>
-          <li>Free WiFi Gateway</li>
-          <li>Free installation</li>
-          <li>Premium technical support</li>
-          <li>Gaming & 4K streaming</li>
-        </ul>
-        <button class="btn-plan">Get This Plan</button>
-      </div>
-
-      <!-- Ultrafast -->
-      <div class="plan-card">
-        <h3 class="plan-name">Ultrafast</h3>
-        <p class="plan-speed">Up to 1000 Mbps</p>
-        <span class="plan-tag full-fibre">Full Fibre</span>
-        <div class="plan-price">
-          <span class="currency">₦</span><span class="amount">252,000</span> <span class="period">/month</span>
-        </div>
-        <p class="plan-speed-detail">1000 Mbps symmetrical</p>
-        <ul class="plan-features">
-          <li>Unlimited data</li>
-          <li>Free WiFi Gateway</li>
-          <li>Free installation</li>
-          <li>24/7 premium support</li>
-          <li>4K streaming & smart home integration</li>
-        </ul>
-        <button class="btn-plan">Get This Plan</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== INCLUDED SERVICES ===== -->
-<section class="services-section">
-  <div class="container">
-    <h2 class="section-title">Included & Optional Services</h2>
-
-    <div class="services-grid">
-      <div class="service-card">
-        <h4>Fibre Drop Connection</h4>
-        <p class="service-price">₦60,000</p>
-        <p>One-time charge for new fibre drop installation (if required).</p>
-      </div>
-      <div class="service-card">
-        <h4>Residential WiFi Gateway</h4>
-        <p class="service-price free">FREE</p>
-        <p>Included with all full fibre plans.</p>
-      </div>
-      <div class="service-card">
-        <h4>Mesh WiFi Extender</h4>
-        <p class="service-price optional">Optional</p>
-        <p>For extended coverage in large homes and offices.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== COVERAGE ===== -->
-<section class="coverage-section">
-  <div class="container">
-    <h2 class="section-title">MetroReach Full Fibre Coverage in Lagos</h2>
-    <p class="section-subtitle">Live service and expansion status across key Lagos neighborhoods</p>
-
-    <div class="coverage-grid">
-      <div class="coverage-card">
-        <div class="coverage-card-header">
-          <div class="location-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name <span class="required">*</span></label>
+            <input type="text" placeholder="Enter your full name">
           </div>
-          <h4>Oniru Estate</h4>
-        </div>
-        <span class="coverage-status live">Live & Available</span>
-        <p>Covering all residences and businesses.</p>
-        <button class="btn-coverage green">Get Service Now</button>
-      </div>
-
-      <div class="coverage-card">
-        <div class="coverage-card-header">
-          <div class="location-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <div class="form-group">
+            <label>Phone Number <span class="required">*</span></label>
+            <input type="tel" placeholder="E.g. 08012345678">
           </div>
-          <h4>Victoria Island</h4>
         </div>
-        <span class="coverage-status coming">Coming Soon</span>
-        <p>Target completion: Q2 2026.</p>
-        <button class="btn-coverage gold">Notify Me When Live</button>
-      </div>
 
-      <div class="coverage-card">
-        <div class="coverage-card-header">
-          <div class="location-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <div class="form-group form-group-full">
+          <label>Email Address <span class="required">*</span></label>
+          <input type="email" placeholder="your.email@example.com">
+        </div>
+
+        <div class="form-group form-group-full">
+          <label>Physical Address <span class="required">*</span></label>
+          <textarea placeholder="Full address including area, estate, street, house number"></textarea>
+        </div>
+
+        <div class="service-type">
+          <label class="type-label">Service Type <span class="required">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="service" checked> Home</label>
+            <label><input type="radio" name="service"> Business</label>
           </div>
-          <h4>Ikoyi</h4>
         </div>
-        <span class="coverage-status progress">Work In Progress</span>
-        <p>Infrastructure deployment underway.</p>
-        <button class="btn-coverage gold">Notify Me When Live</button>
+
+        <button class="btn-register">Register Interest</button>
+
+        <p class="form-disclaimer">By submitting this form you agree to our <a href="#">Privacy Policy</a> and <a
+            href="#">Terms of Service</a>. We will use your information to contact you about MetroReach services.</p>
       </div>
     </div>
+  </section>
 
-    <div class="coverage-single">
-      <div class="coverage-card">
-        <div class="coverage-card-header">
-          <div class="location-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+  <!-- ===== PLAN TOGGLE ===== -->
+  <section class="plan-toggle-section">
+    <div class="plan-toggle-wrapper">
+      <span class="plan-toggle-label">Choose your full fibre service:</span>
+      <div class="plan-toggle">
+        <button class="plan-toggle-btn active">Home (Default)</button>
+        <button class="plan-toggle-btn">Business (CUG)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PLANS ===== -->
+  <section class="plans-section">
+    <div class="container">
+      <h2 class="section-title">MetroReach Full Fibre Internet Plans</h2>
+      <p class="section-subtitle">True end-to-end fibre to your home — unlimited data, symmetrical speeds, 12-month only
+      </p>
+
+      <div class="plans-grid">
+        <!-- Essential -->
+        <div class="plan-card">
+          <h3 class="plan-name">Essential</h3>
+          <p class="plan-speed">Up to 50 Mbps</p>
+          <span class="plan-tag best-value">Best Value</span>
+          <div class="plan-price">
+            <span class="currency">₦</span><span class="amount">20,000</span> <span class="period">/month</span>
           </div>
-          <h4>Lekki Phase 1</h4>
+          <p class="plan-speed-detail">50 Mbps symmetrical</p>
+          <ul class="plan-features">
+            <li>Unlimited data</li>
+            <li>Free WiFi Gateway</li>
+            <li>Free installation</li>
+            <li>Basic technical support</li>
+          </ul>
+          <button class="btn-plan">Get This Plan</button>
         </div>
-        <span class="coverage-status progress">Work In Progress</span>
-        <p>Fibre network expansion in progress.</p>
-        <button class="btn-coverage gold">Notify Me When Live</button>
-      </div>
-    </div>
 
-    <div class="coverage-cta">
-      <p>Don't see your area? Let us know where you'd like MetroReach Full Fibre next!</p>
-      <button class="btn-request-expansion">Request Service Expansion</button>
-    </div>
-  </div>
-</section>
-
-<!-- ===== CTA SECTION ===== -->
-<section class="cta-section">
-  <div class="container">
-    <p class="cta-logo">MetroReach</p>
-    <p class="cta-tagline">Fibre Deep, Reach Wide</p>
-    <h2>Ready for Lagos's Fastest Full Fibre?</h2>
-    <p>Register your interest today — no obligation, just priority access.</p>
-    <button class="btn-cta">Register Interest Now</button>
-  </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 28C8 28 14 12 22 12C26 12 28 16 26 20C24 24 18 26 14 24" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
-            <path d="M18 22C18 22 24 10 30 14C34 17 30 24 24 26" stroke="#d4a843" stroke-width="3" stroke-linecap="round" fill="none"/>
-          </svg>
-          <span>MetroReach</span>
+        <!-- Premium (Featured) -->
+        <div class="plan-card featured">
+          <span class="plan-badge">Most Popular</span>
+          <h3 class="plan-name">Premium</h3>
+          <p class="plan-speed">Up to 100 Mbps</p>
+          <span class="plan-tag full-fibre">Full Fibre</span>
+          <div class="plan-price">
+            <span class="currency">₦</span><span class="amount">38,250</span> <span class="period">/month</span>
+          </div>
+          <p class="plan-speed-detail">100 Mbps symmetrical</p>
+          <ul class="plan-features">
+            <li>Unlimited data</li>
+            <li>Free WiFi Gateway</li>
+            <li>Free installation</li>
+            <li>Standard technical support</li>
+            <li>Smart home ready</li>
+          </ul>
+          <button class="btn-plan">Get This Plan</button>
         </div>
-        <p class="brand-tagline">Fibre Deep, Reach Wide</p>
-        <p class="rc-number">RC: 1771187</p>
-        <div class="contact-info">
-          <span>📍 Plot 1A3, Adeola Odeku Street,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Victoria Island, Lagos</span>
-          <span>📞 090 8799 0545</span>
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;090 8799 0574</span>
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;090 8799 1641</span>
-          <span>✉️ info@metro-reach.com</span>
+
+        <!-- Ultra -->
+        <div class="plan-card">
+          <h3 class="plan-name">Ultra</h3>
+          <p class="plan-speed">Up to 300 Mbps</p>
+          <span class="plan-tag fast">Fast</span>
+          <div class="plan-price">
+            <span class="currency">₦</span><span class="amount">85,000</span> <span class="period">/month</span>
+          </div>
+          <p class="plan-speed-detail">300 Mbps symmetrical</p>
+          <ul class="plan-features">
+            <li>Unlimited data</li>
+            <li>Free WiFi Gateway</li>
+            <li>Free installation</li>
+            <li>Priority technical support</li>
+            <li>Smart home ready</li>
+          </ul>
+          <button class="btn-plan">Get This Plan</button>
+        </div>
+
+        <!-- Gigabit -->
+        <div class="plan-card">
+          <h3 class="plan-name">Gigabit</h3>
+          <p class="plan-speed">Up to 500 Mbps</p>
+          <span class="plan-tag fast">Fast</span>
+          <div class="plan-price">
+            <span class="currency">₦</span><span class="amount">139,500</span> <span class="period">/month</span>
+          </div>
+          <p class="plan-speed-detail">500 Mbps symmetrical</p>
+          <ul class="plan-features">
+            <li>Unlimited data</li>
+            <li>Free WiFi Gateway</li>
+            <li>Free installation</li>
+            <li>Premium technical support</li>
+            <li>Gaming & 4K streaming</li>
+          </ul>
+          <button class="btn-plan">Get This Plan</button>
+        </div>
+
+        <!-- Ultrafast -->
+        <div class="plan-card">
+          <h3 class="plan-name">Ultrafast</h3>
+          <p class="plan-speed">Up to 1000 Mbps</p>
+          <span class="plan-tag full-fibre">Full Fibre</span>
+          <div class="plan-price">
+            <span class="currency">₦</span><span class="amount">252,000</span> <span class="period">/month</span>
+          </div>
+          <p class="plan-speed-detail">1000 Mbps symmetrical</p>
+          <ul class="plan-features">
+            <li>Unlimited data</li>
+            <li>Free WiFi Gateway</li>
+            <li>Free installation</li>
+            <li>24/7 premium support</li>
+            <li>4K streaming & smart home integration</li>
+          </ul>
+          <button class="btn-plan">Get This Plan</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INCLUDED SERVICES ===== -->
+  <section class="services-section">
+    <div class="container">
+      <h2 class="section-title">Included & Optional Services</h2>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <h4>Fibre Drop Connection</h4>
+          <p class="service-price">₦60,000</p>
+          <p>One-time charge for new fibre drop installation (if required).</p>
+        </div>
+        <div class="service-card">
+          <h4>Residential WiFi Gateway</h4>
+          <p class="service-price free">FREE</p>
+          <p>Included with all full fibre plans.</p>
+        </div>
+        <div class="service-card">
+          <h4>Mesh WiFi Extender</h4>
+          <p class="service-price optional">Optional</p>
+          <p>For extended coverage in large homes and offices.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COVERAGE ===== -->
+  <section class="coverage-section">
+    <div class="container">
+      <h2 class="section-title">MetroReach Full Fibre Coverage in Lagos</h2>
+      <p class="section-subtitle">Live service and expansion status across key Lagos neighborhoods</p>
+
+      <div class="coverage-grid">
+        <div class="coverage-card">
+          <div class="coverage-card-header">
+            <div class="location-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+            </div>
+            <h4>Oniru Estate</h4>
+          </div>
+          <span class="coverage-status live">Live & Available</span>
+          <p>Covering all residences and businesses.</p>
+          <button class="btn-coverage green">Get Service Now</button>
+        </div>
+
+        <div class="coverage-card">
+          <div class="coverage-card-header">
+            <div class="location-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+            </div>
+            <h4>Victoria Island</h4>
+          </div>
+          <span class="coverage-status coming">Coming Soon</span>
+          <p>Target completion: Q2 2026.</p>
+          <button class="btn-coverage gold">Notify Me When Live</button>
+        </div>
+
+        <div class="coverage-card">
+          <div class="coverage-card-header">
+            <div class="location-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+            </div>
+            <h4>Ikoyi</h4>
+          </div>
+          <span class="coverage-status progress">Work In Progress</span>
+          <p>Infrastructure deployment underway.</p>
+          <button class="btn-coverage gold">Notify Me When Live</button>
         </div>
       </div>
 
-      <div class="footer-col">
-        <h5>Full Fibre Plans</h5>
-        <ul>
-          <li><a href="#">50 Mbps - ₦20,000</a></li>
-          <li><a href="#">100 Mbps - ₦38,250</a></li>
-          <li><a href="#">300 Mbps - ₦85,000</a></li>
-          <li><a href="#">500 Mbps - ₦139,500</a></li>
-          <li><a href="#">1000 Mbps - ₦252,000</a></li>
-        </ul>
+      <div class="coverage-single">
+        <div class="coverage-card">
+          <div class="coverage-card-header">
+            <div class="location-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+            </div>
+            <h4>Lekki Phase 1</h4>
+          </div>
+          <span class="coverage-status progress">Work In Progress</span>
+          <p>Fibre network expansion in progress.</p>
+          <button class="btn-coverage gold">Notify Me When Live</button>
+        </div>
       </div>
 
-      <div class="footer-col">
-        <h5>Business Solutions</h5>
-        <ul>
-          <li><a href="#">50 Mbps CUG</a></li>
-          <li><a href="#">100 Mbps CUG</a></li>
-          <li><a href="#">300 Mbps CUG</a></li>
-          <li><a href="#">500 Mbps CUG</a></li>
-          <li><a href="#">1000 Mbps CUG</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h5>Support</h5>
-        <ul>
-          <li><a href="#">Installation Process</a></li>
-          <li><a href="#">Service Areas</a></li>
-          <li><a href="#">Terms & Conditions</a></li>
-          <li><a href="#">Contact Sales</a></li>
-        </ul>
+      <div class="coverage-cta">
+        <p>Don't see your area? Let us know where you'd like MetroReach Full Fibre next!</p>
+        <button class="btn-request-expansion">Request Service Expansion</button>
       </div>
     </div>
+  </section>
 
-    <div class="footer-bottom">
-      <p>© 2025 MetroReach Internet. All rights reserved.</p>
-      <div class="footer-bottom-links">
-        <a href="#">Installation Process</a>
-        <a href="#">Service Areas</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact Sales</a>
+  <!-- ===== CTA SECTION ===== -->
+  <section class="cta-section">
+    <div class="container">
+      <p class="cta-logo">MetroReach</p>
+      <p class="cta-tagline">Fibre Deep, Reach Wide</p>
+      <h2>Ready for Lagos's Fastest Full Fibre?</h2>
+      <p>Register your interest today — no obligation, just priority access.</p>
+      <button class="btn-cta">Register Interest Now</button>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 28C8 28 14 12 22 12C26 12 28 16 26 20C24 24 18 26 14 24" stroke="#d4a843" stroke-width="3"
+                stroke-linecap="round" fill="none" />
+              <path d="M18 22C18 22 24 10 30 14C34 17 30 24 24 26" stroke="#d4a843" stroke-width="3"
+                stroke-linecap="round" fill="none" />
+            </svg>
+            <span>MetroReach</span>
+          </div>
+          <p class="brand-tagline">Fibre Deep, Reach Wide</p>
+          <p class="rc-number">RC: 1771187</p>
+          <div class="contact-info">
+            <span>📍 Plot 1A3, Adeola Odeku Street,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Victoria Island, Lagos</span>
+            <span>📞 090 8799 0545</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;090 8799 0574</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;090 8799 1641</span>
+            <span>✉️ info@metro-reach.com</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Full Fibre Plans</h5>
+          <ul>
+            <li><a href="#">50 Mbps - ₦20,000</a></li>
+            <li><a href="#">100 Mbps - ₦38,250</a></li>
+            <li><a href="#">300 Mbps - ₦85,000</a></li>
+            <li><a href="#">500 Mbps - ₦139,500</a></li>
+            <li><a href="#">1000 Mbps - ₦252,000</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Business Solutions</h5>
+          <ul>
+            <li><a href="#">50 Mbps CUG</a></li>
+            <li><a href="#">100 Mbps CUG</a></li>
+            <li><a href="#">300 Mbps CUG</a></li>
+            <li><a href="#">500 Mbps CUG</a></li>
+            <li><a href="#">1000 Mbps CUG</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Support</h5>
+          <ul>
+            <li><a href="#">Installation Process</a></li>
+            <li><a href="#">Service Areas</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Contact Sales</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 MetroReach Internet. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Installation Process</a>
+          <a href="#">Service Areas</a>
+          <a href="#">Terms & Conditions</a>
+          <a href="#">Contact Sales</a>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-  // Plan toggle interaction
-  document.querySelectorAll('.plan-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.plan-toggle-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
+  <script>
+    // Plan toggle interaction
+    document.querySelectorAll('.plan-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.plan-toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
     });
-  });
-</script>
+  </script>
 
 </body>
+
 </html>
