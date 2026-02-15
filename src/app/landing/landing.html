@@ -217,7 +217,8 @@
                         <map-advanced-marker
                             [position]="markerPosition"
                             [options]="markerOptions"
-                            title="Installation Location">
+                            title="Installation Location"
+                            (mapDragend)="onMarkerDragEnd($event)">
                         </map-advanced-marker>
                     </google-map>
                     @if (mapLoading) {

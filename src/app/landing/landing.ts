@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
@@ -41,20 +41,25 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   // Google Maps config
-  mapCenter: google.maps.LatLngLiteral = { lat: 6.432, lng: 3.448 };
+  mapCenter = { lat: 6.432, lng: 3.448 };
   mapZoom = 14;
-  mapOptions: google.maps.MapOptions = {
+  mapOptions: any = {
     mapId: 'DEMO_MAP_ID',
-    disableDefaultUI: true
+    disableDefaultUI: false,
+    mapTypeControl: true,
+    zoomControl: true,
+    streetViewControl: false,
+    fullscreenControl: false
   };
-  markerPosition: google.maps.LatLngLiteral = { lat: 6.432, lng: 3.448 };
-  markerOptions: google.maps.marker.AdvancedMarkerElementOptions = {
+  markerPosition = { lat: 6.432, lng: 3.448 };
+  markerOptions = {
     gmpDraggable: true
   };
+  private geocoder: any;
 
   private autocomplete: any;
 
-  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   homePlans = [
     {
@@ -298,40 +303,82 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!placeId) return;
 
       // Show loading state immediately
-      this.ngZone.run(() => {
-        this.mapLoading = true;
-        dropdown.style.display = 'none';
-        input.value = suggestion.placePrediction?.text?.text || 'Loading...';
-      });
+      this.mapLoading = true;
+      dropdown.style.display = 'none';
+      input.value = suggestion.placePrediction?.text?.text || 'Loading...';
+      this.cdr.detectChanges();
 
+      const startTime = Date.now();
       const place = new Place({ id: placeId });
       await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
 
+      // Ensure minimum 500ms loading time for smooth UX
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 500) {
+        await new Promise(resolve => setTimeout(resolve, 500 - elapsed));
+      }
+
       const addr = place.formattedAddress || place.displayName?.text || '';
 
-      this.ngZone.run(() => {
+      this.searchAddress = addr;
+      this.addressSelected = true;
+      this.errors.address = '';
+      this.mapLoading = false;
+      input.value = addr;
+
+      if (place.location) {
+        const pos = typeof place.location.lat === 'function'
+          ? { lat: place.location.lat(), lng: place.location.lng() }
+          : place.location;
+
+        this.mapCenter = pos;
+        this.markerPosition = pos;
+        this.mapZoom = 17;
+      }
+      this.cdr.detectChanges();
+    } catch (e) {
+      console.error('Error selecting place:', e);
+      this.mapLoading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async onMarkerDragEnd(event: google.maps.MapMouseEvent) {
+    if (!event.latLng) return;
+
+    const pos = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng()
+    };
+
+    this.markerPosition = pos;
+    this.mapLoading = true;
+    this.cdr.detectChanges();
+
+    try {
+      // Initialize geocoder if needed
+      if (!this.geocoder) {
+        const { Geocoder } = await (window as any).google.maps.importLibrary("geocoding");
+        this.geocoder = new Geocoder();
+      }
+
+      const response = await this.geocoder.geocode({ location: pos });
+
+      if (response.results && response.results[0]) {
+        const addr = response.results[0].formatted_address;
+        const input = document.getElementById('address-input') as HTMLInputElement;
+
         this.searchAddress = addr;
         this.addressSelected = true;
         this.errors.address = '';
-        this.mapLoading = false;
-        input.value = addr;
-
-        if (place.location) {
-          const pos = typeof place.location.lat === 'function'
-            ? { lat: place.location.lat(), lng: place.location.lng() }
-            : place.location;
-
-          this.mapCenter = pos;
-          this.markerPosition = pos;
-          this.mapZoom = 17;
-        }
-      });
+        if (input) input.value = addr;
+      }
     } catch (e) {
-      console.error('Error selecting place:', e);
-      this.ngZone.run(() => {
-        this.mapLoading = false;
-      });
+      console.error('Reverse geocoding error:', e);
     }
+
+    this.mapLoading = false;
+    this.cdr.detectChanges();
   }
 
   startAutoSlide() {
