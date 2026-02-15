@@ -1,14 +1,18 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, NgZone, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GoogleMapsModule],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(GoogleMap) googleMap!: GoogleMap;
+  @ViewChild(MapAdvancedMarker) mapMarker!: MapAdvancedMarker;
+
   currentSlide = 0;
   activeServiceType: 'home' | 'business' = 'home';
   mobileMenuOpen = false;
@@ -17,6 +21,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   currentYear = new Date().getFullYear();
   searchAddress = '';
   addressSelected = false;
+  mapLoading = false;
   showOverlay = false;
   overlayStep: 'loading' | 'success' | 'interest' = 'loading';
 
@@ -35,9 +40,18 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     email: ''
   };
 
-  // Google Maps Objects
-  private map: any;
-  private marker: any;
+  // Google Maps config
+  mapCenter: google.maps.LatLngLiteral = { lat: 6.432, lng: 3.448 };
+  mapZoom = 14;
+  mapOptions: google.maps.MapOptions = {
+    mapId: 'DEMO_MAP_ID',
+    disableDefaultUI: true
+  };
+  markerPosition: google.maps.LatLngLiteral = { lat: 6.432, lng: 3.448 };
+  markerOptions: google.maps.marker.AdvancedMarkerElementOptions = {
+    gmpDraggable: true
+  };
+
   private autocomplete: any;
 
   constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
@@ -187,9 +201,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.initAutocomplete();
     this.initTouchListeners();
-    // Default location for MetroReach area (VI/Oniru/Ikoyi)
-    const defaultLoc = { lat: 6.432, lng: 3.448 };
-    this.initMap(defaultLoc);
   }
 
   private initTouchListeners() {
@@ -209,129 +220,117 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     try {
-      const { PlaceAutocompleteElement } = await (window as any).google.maps.importLibrary("places");
+      const places = await (window as any).google.maps.importLibrary("places");
+      const { Place, AutocompleteSuggestion } = places;
 
-      const wrapper = document.querySelector('.address-group .autocomplete-wrapper');
-      const oldInput = document.getElementById('address-input') as HTMLInputElement;
+      const input = document.getElementById('address-input') as HTMLInputElement;
+      if (!input || this.autocomplete) return;
 
-      if (!wrapper || !oldInput) {
-        if (retryCount < 5) setTimeout(() => this.initAutocomplete(retryCount + 1), 500);
-        return;
-      }
+      this.autocomplete = { Place, AutocompleteSuggestion };
 
-      // Check if already initialized
-      if (this.autocomplete) return;
+      // Create suggestions dropdown
+      const wrapper = input.parentElement!;
+      const dropdown = document.createElement('div');
+      dropdown.className = 'autocomplete-dropdown';
+      dropdown.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:8px;max-height:250px;overflow-y:auto;z-index:1000;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+      wrapper.style.position = 'relative';
+      wrapper.appendChild(dropdown);
 
-      const placeAutocomplete = new PlaceAutocompleteElement({
-        componentRestrictions: { country: 'ng' },
-        types: ['address']
-      });
+      let debounceTimer: any;
 
-      this.autocomplete = placeAutocomplete;
-      oldInput.style.display = 'none';
-      wrapper.appendChild(placeAutocomplete);
-      placeAutocomplete.setAttribute('placeholder', 'Start typing your street address...');
+      input.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const query = input.value;
 
-      console.log('PlaceAutocompleteElement created and appended');
-
-      console.log(PlaceAutocompleteElement);
-
-
-      placeAutocomplete.addEventListener('gmp-placeselect', async (event: any) => {
-        console.log('gmp-placeselect event:', event);
-        console.log('event.place:', event.place);
-        console.log('event.detail:', event.detail);
-
-        const place = event.place || event.detail?.place || event.detail;
-
-        if (!place) {
-          console.warn('No place in event');
+        if (query.length < 3) {
+          dropdown.style.display = 'none';
           return;
         }
 
-        try {
-          await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+        debounceTimer = setTimeout(async () => {
+          try {
+            const request = {
+              input: query,
+              includedRegionCodes: ['ng'],
+              includedPrimaryTypes: ['street_address', 'subpremise', 'premise', 'route']
+            };
 
-          const addr = place.formattedAddress ||
-            (place.displayName?.text) ||
-            (typeof place.displayName === 'string' ? place.displayName : '');
+            const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
 
-          console.log('Fetched address:', addr);
-
-          if (!addr || addr.length < 3) return;
-
-          this.ngZone.run(() => {
-            this.searchAddress = addr;
-            this.addressSelected = true;
-            this.errors.address = '';
-
-            if (place.location) {
-              this.updateMapLocation(place.location);
+            dropdown.innerHTML = '';
+            if (suggestions && suggestions.length > 0) {
+              suggestions.forEach((suggestion: any) => {
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:12px 16px;cursor:pointer;border-bottom:1px solid #eee;font-size:14px;';
+                item.textContent = suggestion.placePrediction?.text?.text || 'Unknown';
+                item.addEventListener('mouseenter', () => item.style.background = '#f5f5f5');
+                item.addEventListener('mouseleave', () => item.style.background = '#fff');
+                item.addEventListener('click', async () => {
+                  await this.selectSuggestion(suggestion, input, dropdown, Place);
+                });
+                dropdown.appendChild(item);
+              });
+              dropdown.style.display = 'block';
+            } else {
+              dropdown.style.display = 'none';
             }
-          });
-        } catch (e) {
-          console.error('Error fetching place fields:', e);
+          } catch (e) {
+            console.error('Autocomplete error:', e);
+          }
+        }, 300);
+      });
+
+      // Hide dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!wrapper.contains(e.target as Node)) {
+          dropdown.style.display = 'none';
         }
       });
 
     } catch (error) {
-      console.error('Error initializing PlaceAutocompleteElement:', error);
+      console.error('Error initializing autocomplete:', error);
     }
   }
 
-  private updateMapLocation(location: any) {
-    if (!location) return;
-
-    // Convert LatLng to plain object if needed
-    const pos = typeof location.lat === 'function'
-      ? { lat: location.lat(), lng: location.lng() }
-      : location;
-
-    console.log('Updating map to position:', pos);
-
-    if (this.map) {
-      this.map.setCenter(pos);
-      this.map.setZoom(17);
-      if (this.marker) {
-        this.marker.position = pos;
-      }
-    } else {
-      this.initMap(pos);
-    }
-  }
-
-  private async initMap(location: any) {
-    if (!location) return;
-
+  private async selectSuggestion(suggestion: any, input: HTMLInputElement, dropdown: HTMLElement, Place: any) {
     try {
-      const { Map } = await (window as any).google.maps.importLibrary("maps");
-      const { AdvancedMarkerElement } = await (window as any).google.maps.importLibrary("marker");
+      const placeId = suggestion.placePrediction?.placeId;
+      if (!placeId) return;
 
-      const mapElement = document.getElementById('sidebar-map');
-      if (!mapElement) return;
-
-      // If map already exists, just update it
-      if (this.map) {
-        this.updateMapLocation(location);
-        return;
-      }
-
-      this.map = new Map(mapElement, {
-        center: location,
-        zoom: 14, // Zoomed out a bit for default view
-        mapId: 'DEMO_MAP_ID',
-        disableDefaultUI: true
+      // Show loading state immediately
+      this.ngZone.run(() => {
+        this.mapLoading = true;
+        dropdown.style.display = 'none';
+        input.value = suggestion.placePrediction?.text?.text || 'Loading...';
       });
 
-      this.marker = new AdvancedMarkerElement({
-        map: this.map,
-        position: location,
-        gmpDraggable: true,
-        title: 'MetroReach Area'
-      });
+      const place = new Place({ id: placeId });
+      await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
 
-    } catch (error) {
-      console.error('Error in initMap:', error);
+      const addr = place.formattedAddress || place.displayName?.text || '';
+
+      this.ngZone.run(() => {
+        this.searchAddress = addr;
+        this.addressSelected = true;
+        this.errors.address = '';
+        this.mapLoading = false;
+        input.value = addr;
+
+        if (place.location) {
+          const pos = typeof place.location.lat === 'function'
+            ? { lat: place.location.lat(), lng: place.location.lng() }
+            : place.location;
+
+          this.mapCenter = pos;
+          this.markerPosition = pos;
+          this.mapZoom = 17;
+        }
+      });
+    } catch (e) {
+      console.error('Error selecting place:', e);
+      this.ngZone.run(() => {
+        this.mapLoading = false;
+      });
     }
   }
 
@@ -360,7 +359,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   autoNextSlide() {
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-    this.cdr.detectChanges(); // Manually trigger view update
+    this.cdr.detectChanges();
   }
 
   nextSlide() {
@@ -398,11 +397,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // Coverage & Overlay Logic
-  onAddressFocus() {
-    console.log('Address input focused');
-  }
-
   validateAddress(): boolean {
     this.errors.address = '';
     if (!this.searchAddress || this.searchAddress.length < 5) {
@@ -425,19 +419,16 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.overlayStep = 'loading';
     this.cdr.detectChanges();
 
-    // Simulated Infrastructure Check
     setTimeout(() => {
       const addr = this.searchAddress.toLowerCase();
-      console.log('Timeout fired. Processing address:', addr);
+      console.log('Processing address:', addr);
 
-      // Oniru is our live demo zone
       if (addr.includes('oniru') || addr.includes('ikoyi') || addr.includes('vi')) {
         this.overlayStep = 'success';
       } else {
         this.overlayStep = 'interest';
       }
 
-      console.log('New overlay step:', this.overlayStep);
       this.cdr.detectChanges();
     }, 1500);
   }
@@ -472,7 +463,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.validateInterestForm()) return;
 
     console.log('Submitting interest:', this.interestData);
-    // Simulate API call
     alert('Thank you for your interest! We will contact you soon.');
     this.closeOverlay();
   }
