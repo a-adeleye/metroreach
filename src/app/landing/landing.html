@@ -44,7 +44,7 @@
 
 <!-- ===== HERO (CAROUSEL) ===== -->
 <section id="home" class="hero">
-    <div class="carousel-container" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+    <div class="carousel-container" id="hero-carousel">
         <div class="carousel-track" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
             <div *ngFor="let slide of slides; let i = index" class="slide">
                 <div class="container slide-content-wrapper">
@@ -109,46 +109,62 @@
             <p>Join the future of connectivity. Our pure fibre network delivers unmatched reliability and speed for your
                 home or business.</p>
             <ul class="register-features">
-                <li><span class="check">✓</span> No obligation: Express interest, no commitment</li>
-                <li><span class="check">✓</span> Scheduled installation scheduling</li>
-                <li><span class="check">✓</span> Priority support for registered leads</li>
-                <li><span class="check">✓</span> Next-gen WiFi technology included</li>
+                <li>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span>No obligation: Express interest, no commitment</span>
+                </li>
+                <li>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <span>Scheduled installation at your convenience</span>
+                </li>
+                <li>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <span>Priority support for registered leads</span>
+                </li>
+                <li>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                        </svg>
+                    </div>
+                    <span>Next-gen WiFi technology included</span>
+                </li>
             </ul>
         </div>
         <div class="register-right">
             <div class="glass-form">
-                <h2>Register Your Interest</h2>
-                <p class="form-subtitle">Provide your details and we'll contact you to schedule your Full Fibre
-                    installation.</p>
+                <h2>Check Availability</h2>
+                <p class="form-subtitle">Enter your address to see which Full Fibre plans are available in your area.
+                </p>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="full-name">Full Name <span class="required">*</span></label>
-                        <input id="full-name" type="text" placeholder="Enter your full name">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number <span class="required">*</span></label>
-                        <input id="phone" type="tel" placeholder="E.g. 08012345678">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address <span class="required">*</span></label>
-                    <input id="email" type="email" placeholder="your.email@example.com">
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Physical Address <span class="required">*</span></label>
-                    <textarea id="address"
-                        placeholder="Full address including area, estate, street, house number"></textarea>
-                </div>
-
-                <div class="service-type">
-                    <label class="type-label">Service Type <span class="required">*</span></label>
+                <div class="service-type mb-wide">
+                    <label class="type-label">I am looking for: <span class="required">*</span></label>
                     <div class="radio-group">
                         <label class="radio-option">
-                            <input type="radio" name="service" checked>
-                            <span class="radio-tile">
+                            <input type="radio" name="service" [(ngModel)]="activeServiceType" value="home">
+                            <div class="radio-tile">
                                 <div class="toggle-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
@@ -156,12 +172,12 @@
                                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                     </svg>
                                 </div>
-                                <span class="radio-label">Home Internet</span>
-                            </span>
+                                <span class="radio-label">Home</span>
+                            </div>
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="service">
-                            <span class="radio-tile">
+                            <input type="radio" name="service" [(ngModel)]="activeServiceType" value="business">
+                            <div class="radio-tile">
                                 <div class="toggle-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
@@ -169,21 +185,132 @@
                                         <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
                                     </svg>
                                 </div>
-                                <span class="radio-label">Business Internet</span>
-                            </span>
+                                <span class="radio-label">Business</span>
+                            </div>
                         </label>
                     </div>
                 </div>
 
-                <button class="btn-register-submit">Register Interest Now</button>
+                <div class="form-group address-group">
+                    <label for="address-input">Installation Address <span class="required">*</span></label>
+                    <div class="autocomplete-wrapper">
+                        <input id="address-input" type="text" placeholder="Start typing your street address...">
+                        <div class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="error-msg" *ngIf="errors.address">{{ errors.address }}</div>
+                </div>
 
-                <p class="form-disclaimer">By submitting this form you agree to our <a href="#">Privacy Policy</a> and
-                    <a href="#">Terms of Service</a>.
-                </p>
+                <!-- Mini Map Preview -->
+                <div class="mini-map-preview">
+                    <div id="sidebar-map"></div>
+                    <div class="map-overlay-tag">
+                        <span class="pulse-dot"></span>
+                        Adjust pin to your exact building
+                    </div>
+                </div>
+
+                <button class="btn-check-availability" (click)="checkAvailability()">
+                    <span>Check Availability</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+
+                <p class="form-disclaimer">Reliable connectivity for Oniru, Ikoyi, and VI.</p>
             </div>
         </div>
     </div>
 </section>
+
+<!-- ===== FULL SCREEN COVERAGE OVERLAY ===== -->
+<div class="coverage-overlay" [class.active]="showOverlay">
+    <div class="overlay-backdrop" (click)="closeOverlay()"></div>
+
+    <div class="overlay-container">
+        <button class="btn-close-overlay" (click)="closeOverlay()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <div class="overlay-content">
+            <!-- Loading State -->
+            <div *ngIf="overlayStep === 'loading'" class="overlay-step loading-step">
+                <div class="scanner-wrap">
+                    <div class="scanner-circle"></div>
+                    <div class="scanner-line"></div>
+                </div>
+                <h3>Checking Infrastructure...</h3>
+                <p>Verifying fibre availability for {{ searchAddress }}</p>
+            </div>
+
+            <!-- Success: Coverage Found -->
+            <div *ngIf="overlayStep === 'success'" class="overlay-step success-step">
+                <div class="step-header">
+                    <div class="status-badge live">Live Coverage Found</div>
+                    <h2>Great news! MetroReach is live.</h2>
+                    <p>Fibre infrastructure is ready at <strong>{{ searchAddress }}</strong>. Select a plan to continue.
+                    </p>
+                </div>
+
+                <div class="plans-slider-wrap">
+                    <div class="plans-grid-mini">
+                        <div *ngFor="let plan of activePlans" class="plan-card-mini" [class.featured]="plan.featured">
+                            <div class="plan-info">
+                                <h3>{{ plan.name }}</h3>
+                                <p class="speed">{{ plan.speed }}</p>
+                                <div class="price">₦{{ plan.price }}<span>/mo</span></div>
+                            </div>
+                            <button class="btn-select-plan">Select Plan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interest: No Coverage -->
+            <div *ngIf="overlayStep === 'interest'" class="overlay-step interest-step">
+                <div class="step-header">
+                    <div class="status-badge coming">Coming Soon</div>
+                    <h2>Coming Soon to Your Area!</h2>
+                    <p>We are currently expanding our network. Register your interest below to get priority installation
+                        at <strong>{{ searchAddress }}</strong>.</p>
+                </div>
+
+                <div class="interest-form-wrap">
+                    <!-- Form fields for interest registration -->
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="John Doe" [(ngModel)]="interestData.fullName">
+                            <div class="error-msg" *ngIf="errors.fullName">{{ errors.fullName }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" placeholder="08012345678" [(ngModel)]="interestData.phoneNumber">
+                            <div class="error-msg" *ngIf="errors.phoneNumber">{{ errors.phoneNumber }}</div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="john@example.com" [(ngModel)]="interestData.email">
+                            <div class="error-msg" *ngIf="errors.email">{{ errors.email }}</div>
+                        </div>
+                    </div>
+                    <button class="btn-submit-interest" (click)="submitInterest()">Register for Priority Access</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- ===== PLANS ===== -->
 <section id="plans" class="plans-section">
