@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeadService } from '../../services/lead.service';
-import { Observable, map } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -10,13 +10,29 @@ import { Observable, map } from 'rxjs';
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
     private leadService = inject(LeadService);
-    leadsCount$: Observable<number> = new Observable<number>();
+    private subscription: Subscription | null = null;
+
+    leadsCount = signal<number>(0);
 
     ngOnInit() {
-        this.leadsCount$ = this.leadService.getLeads().pipe(
+        this.subscription = this.leadService.getLeads().pipe(
             map(leads => leads ? leads.length : 0)
-        );
+        ).subscribe({
+            next: (count) => {
+                console.log('AdminDashboard: Updated count:', count);
+                this.leadsCount.set(count);
+            },
+            error: (err) => {
+                console.error('AdminDashboard: Error fetching lead count:', err);
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 }
