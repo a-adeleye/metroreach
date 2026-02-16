@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
+import { CommonService } from '../services/common.service';
+import { LeadService } from '../services/lead.service';
 
 @Component({
   selector: 'app-landing',
@@ -10,6 +12,8 @@ import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-
   styleUrl: './landing.scss',
 })
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
+  private commonService = inject(CommonService);
+  private leadService = inject(LeadService);
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
   @ViewChild(MapAdvancedMarker) mapMarker!: MapAdvancedMarker;
 
@@ -30,6 +34,13 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     fullName: '',
     phoneNumber: '',
     email: ''
+  };
+
+  addressMetadata = {
+    locality: '',
+    localGovernment: '',
+    lat: 0,
+    lng: 0
   };
 
   // Error Messages
@@ -246,6 +257,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       input.addEventListener('input', () => {
         clearTimeout(debounceTimer);
         const query = input.value;
+        this.searchAddress = query; // Sync the value immediately
 
         if (query.length < 3) {
           dropdown.style.display = 'none';
@@ -310,7 +322,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
       const startTime = Date.now();
       const place = new Place({ id: placeId });
-      await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+      await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location', 'addressComponents'] });
 
       // Ensure minimum 500ms loading time for smooth UX
       const elapsed = Date.now() - startTime;
@@ -327,14 +339,28 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       input.value = addr;
 
       if (place.location) {
-        const pos = typeof place.location.lat === 'function'
-          ? { lat: place.location.lat(), lng: place.location.lng() }
-          : place.location;
+        const lat = typeof place.location.lat === 'function' ? place.location.lat() : place.location.lat;
+        const lng = typeof place.location.lng === 'function' ? place.location.lng() : place.location.lng;
+        const pos = { lat, lng };
 
         this.mapCenter = pos;
         this.markerPosition = pos;
         this.mapZoom = 17;
+
+        this.addressMetadata.lat = lat;
+        this.addressMetadata.lng = lng;
       }
+
+      // Extract components
+      if (place.addressComponents) {
+        const components = place.addressComponents;
+        const locality = components.find((c: any) => c.types.includes('locality'))?.longText || '';
+        const lga = components.find((c: any) => c.types.includes('administrative_area_level_2'))?.longText || '';
+
+        this.addressMetadata.locality = locality;
+        this.addressMetadata.localGovernment = lga;
+      }
+
       this.cdr.detectChanges();
     } catch (e) {
       console.error('Error selecting place:', e);
@@ -365,13 +391,25 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       const response = await this.geocoder.geocode({ location: pos });
 
       if (response.results && response.results[0]) {
-        const addr = response.results[0].formatted_address;
+        const result = response.results[0];
+        const addr = result.formatted_address;
         const input = document.getElementById('address-input') as HTMLInputElement;
 
         this.searchAddress = addr;
         this.addressSelected = true;
         this.errors.address = '';
         if (input) input.value = addr;
+
+        // Update metadata
+        this.addressMetadata.lat = pos.lat;
+        this.addressMetadata.lng = pos.lng;
+
+        const components = result.address_components;
+        const locality = components.find((c: any) => c.types.includes('locality'))?.long_name || '';
+        const lga = components.find((c: any) => c.types.includes('administrative_area_level_2'))?.long_name || '';
+
+        this.addressMetadata.locality = locality;
+        this.addressMetadata.localGovernment = lga;
       }
     } catch (e) {
       console.error('Reverse geocoding error:', e);
@@ -506,12 +544,40 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     return isValid;
   }
 
-  submitInterest() {
+  async submitInterest() {
+    // Final check for address from the DOM
+    const addrInput = document.getElementById('address-input') as HTMLInputElement;
+    if (addrInput) this.searchAddress = addrInput.value;
+
     if (!this.validateInterestForm()) return;
 
-    console.log('Submitting interest:', this.interestData);
-    alert('Thank you for your interest! We will contact you soon.');
-    this.closeOverlay();
+    this.commonService.setLoading(true);
+
+    try {
+      const data = {
+        fullName: this.interestData.fullName,
+        phoneNumber: this.interestData.phoneNumber,
+        email: this.interestData.email,
+        address: this.searchAddress,
+        serviceType: this.activeServiceType
+      };
+
+      console.log('Sending lead to service:', data);
+
+      await this.leadService.createLead(data, this.addressMetadata);
+
+      // Small delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      this.commonService.setLoading(false);
+      this.commonService.showToast('Great! Your interest has been registered.', 'success');
+      this.closeOverlay();
+      this.resetForm();
+    } catch (error) {
+      console.error('Error submitting interest:', error);
+      this.commonService.setLoading(false);
+      this.commonService.showToast('Something went wrong. Please try again.', 'error');
+    }
   }
 
   closeOverlay() {
@@ -528,5 +594,34 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   closeMobileMenu() {
     this.mobileMenuOpen = false;
+  }
+
+  resetForm() {
+    // Reset Data
+    this.interestData = {
+      fullName: '',
+      phoneNumber: '',
+      email: ''
+    };
+    this.addressMetadata = {
+      locality: '',
+      localGovernment: '',
+      lat: 0,
+      lng: 0
+    };
+    this.searchAddress = '';
+    this.addressSelected = false;
+
+    // Reset Input DOM
+    const addrInput = document.getElementById('address-input') as HTMLInputElement;
+    if (addrInput) addrInput.value = '';
+
+    // Reset Map
+    const initialPos = { lat: 6.432, lng: 3.448 };
+    this.mapCenter = initialPos;
+    this.markerPosition = initialPos;
+    this.mapZoom = 14;
+
+    this.cdr.detectChanges();
   }
 }

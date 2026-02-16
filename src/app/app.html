@@ -1,1 +1,16 @@
 <router-outlet />
+
+<!-- Global Toast Notification -->
+<div class="toast-container" *ngIf="commonService.toast() as t" [class]="t.type">
+    <div class="toast-content">
+        <svg *ngIf="t.type === 'success'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>{{ t.message }}</span>
+    </div>
+</div>
+
+<!-- Global Loading Overlay -->
+<div class="global-loading" *ngIf="commonService.loading()">
+    <div class="spinner"></div>
+</div>
