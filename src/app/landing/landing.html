@@ -14,7 +14,7 @@
         </div>
 
         <div class="nav-right">
-            <a href="#" class="btn-my-account">My Account</a>
+            <a routerLink="/dashboard" class="btn-my-account">My Account</a>
             <a (click)="scrollToSection('register')" class="btn-get-started">Get Started</a>
         </div>
 
@@ -36,7 +36,7 @@
         <a (click)="closeMobileMenu(); scrollToSection('services')">Services</a>
         <a (click)="closeMobileMenu(); scrollToSection('support')">Support</a>
         <div class="mobile-menu-actions">
-            <a href="#" class="btn-mobile-account">My Account</a>
+            <a routerLink="/dashboard" class="btn-mobile-account">My Account</a>
             <a (click)="closeMobileMenu(); scrollToSection('register')" class="btn-mobile-cta">Get Started</a>
         </div>
     </div>
@@ -208,29 +208,21 @@
 
                 <!-- Mini Map Preview -->
                 <div class="mini-map-preview">
-                    <google-map
-                        width="100%"
-                        height="100%"
-                        [center]="mapCenter"
-                        [zoom]="mapZoom"
-                        [options]="mapOptions">
-                        <map-advanced-marker
-                            [position]="markerPosition"
-                            [options]="markerOptions"
-                            title="Installation Location"
-                            (mapDragend)="onMarkerDragEnd($event)">
+                    <google-map width="100%" height="100%" [center]="mapCenter" [zoom]="mapZoom" [options]="mapOptions">
+                        <map-advanced-marker [position]="markerPosition" [options]="markerOptions"
+                            title="Installation Location" (mapDragend)="onMarkerDragEnd($event)">
                         </map-advanced-marker>
                     </google-map>
                     @if (mapLoading) {
-                        <div class="map-loading-overlay">
-                            <div class="map-spinner"></div>
-                            <span>Locating address...</span>
-                        </div>
+                    <div class="map-loading-overlay">
+                        <div class="map-spinner"></div>
+                        <span>Locating address...</span>
+                    </div>
                     } @else {
-                        <div class="map-overlay-tag">
-                            <span class="pulse-dot"></span>
-                            Adjust pin to your exact building
-                        </div>
+                    <div class="map-overlay-tag">
+                        <span class="pulse-dot"></span>
+                        Adjust pin to your exact building
+                    </div>
                     }
                 </div>
 

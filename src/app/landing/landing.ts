@@ -5,9 +5,12 @@ import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-
 import { CommonService } from '../services/common.service';
 import { LeadService } from '../services/lead.service';
 
+import { RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, FormsModule, GoogleMapsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, GoogleMapsModule, RouterModule],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })

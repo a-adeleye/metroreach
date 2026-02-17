@@ -8,7 +8,7 @@
     z-index: 9999;
     padding: 14px 28px;
     border-radius: 40px;
-    background: white;
+    background: var(--white);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
@@ -17,18 +17,18 @@
     border: 1px solid rgba(0, 0, 0, 0.03);
 
     &.success {
-        border-left: 4px solid #16a34a;
+        border-left: 4px solid var(--success-green);
 
         .toast-content svg {
-            color: #16a34a;
+            color: var(--success-green);
         }
     }
 
     &.error {
-        border-left: 4px solid #dc2626;
+        border-left: 4px solid var(--error-red);
 
         .toast-content svg {
-            color: #dc2626;
+            color: var(--error-red);
         }
     }
 
@@ -56,20 +56,183 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(4px);
+    background: var(--white);
     z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    .spinner {
-        width: 48px;
-        height: 48px;
-        border: 4px solid rgba(22, 163, 74, 0.1);
-        border-top-color: #16a34a;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+    .loading-content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 70px;
+        background: var(--white);
+        border: 1px solid var(--gray-light);
+        border-radius: 12px;
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+
+        .loading-logo {
+            height: 48px;
+            z-index: 5;
+            position: relative;
+            filter: drop-shadow(0 0 10px rgba(22, 101, 52, 0.1));
+            animation: logoFloat 2s infinite ease-in-out;
+        }
+
+        /* Moving Laser Scanner Line */
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    var(--primary-green),
+                    var(--success-green),
+                    var(--primary-green),
+                    transparent);
+            box-shadow: 0 0 15px var(--primary-green);
+            animation: scannerMove 2.5s infinite ease-in-out;
+            z-index: 4;
+        }
+
+        /* Scanning Grid Overlay */
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(22, 101, 52, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(22, 101, 52, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        /* Border Accents (Seeking Corners) */
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--primary-green);
+            z-index: 6;
+            transition: var(--transition-smooth);
+
+            &.tl {
+                top: 15px;
+                left: 15px;
+                border-right: none;
+                border-bottom: none;
+                animation: bracketTL 2s infinite;
+            }
+
+            &.tr {
+                top: 15px;
+                right: 15px;
+                border-left: none;
+                border-bottom: none;
+                animation: bracketTR 2s infinite;
+            }
+
+            &.bl {
+                bottom: 15px;
+                left: 15px;
+                border-right: none;
+                border-top: none;
+                animation: bracketBL 2s infinite;
+            }
+
+            &.br {
+                bottom: 15px;
+                right: 15px;
+                border-left: none;
+                border-top: none;
+                animation: bracketBR 2s infinite;
+            }
+        }
+    }
+}
+
+@keyframes scannerMove {
+
+    0%,
+    100% {
+        top: 10%;
+        opacity: 0;
+    }
+
+    20%,
+    80% {
+        opacity: 1;
+    }
+
+    50% {
+        top: 90%;
+    }
+}
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+/* Corner Bracket Animations */
+@keyframes bracketTL {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-5px, -5px);
+    }
+}
+
+@keyframes bracketTR {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(5px, -5px);
+    }
+}
+
+@keyframes bracketBL {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-5px, 5px);
+    }
+}
+
+@keyframes bracketBR {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(5px, 5px);
     }
 }
 
@@ -86,11 +249,5 @@
     100% {
         opacity: 1;
         transform: translate(-50%, 0) scale(1);
-    }
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
     }
 }

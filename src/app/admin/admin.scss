@@ -2,12 +2,12 @@ $primary-green: #166534;
 $secondary-green: #0d3b1e;
 $midnight-blue: #111827;
 $accent-gold: #d4a843;
-$light-bg: #f3f4f6;
+$light-bg: #f8faf9;
 $white: #ffffff;
 $text-dark: #111827;
-$text-body: #6b7280;
-$gray-light: #f9fafb;
-$transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+$text-body: #64748b;
+$border-color: rgba(0, 0, 0, 0.06);
+$transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
 .admin-layout {
     display: flex;
@@ -19,13 +19,14 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 /* Sidebar */
 .sidebar {
     width: 280px;
-    background-color: $midnight-blue;
-    color: $white;
+    background-color: $white;
+    color: $midnight-blue;
     display: flex;
     flex-direction: column;
     position: fixed;
     height: 100vh;
     z-index: 100;
+    border-right: 1px solid $border-color;
 }
 
 .sidebar-header {
@@ -33,11 +34,11 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid rgba($white, 0.05);
+    background: $white;
 
     .admin-logo {
         height: 32px;
-        filter: brightness(0) invert(1);
+        // No filter as requested
     }
 
     .admin-badge {
@@ -46,9 +47,9 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         font-weight: 700;
         letter-spacing: 0.1em;
         padding: 2px 8px;
-        background: rgba($accent-gold, 0.2);
-        color: $accent-gold;
-        border-radius: 4px;
+        background: rgba($primary-green, 0.1);
+        color: $primary-green;
+        border-radius: 4 round;
     }
 }
 
@@ -62,7 +63,7 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 6px;
     }
 }
 
@@ -70,12 +71,12 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
-    color: rgba($white, 0.7);
+    padding: 14px 16px;
+    color: $text-body;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    border-radius: 10px;
+    border-radius: 12px;
     transition: $transition-smooth;
 
     .nav-icon {
@@ -83,28 +84,33 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         align-items: center;
         justify-content: center;
         width: 20px;
-        color: rgba($white, 0.5);
+        color: #94a3b8;
+        transition: $transition-smooth;
     }
 
     &:hover {
-        background: rgba($white, 0.05);
-        color: $white;
+        background: $light-bg;
+        color: $midnight-blue;
+
+        .nav-icon {
+            color: $primary-green;
+        }
     }
 
     &.active {
-        background: $primary-green;
-        color: $white;
-        box-shadow: 0 4px 12px rgba($primary-green, 0.3);
+        background: rgba($primary-green, 0.08);
+        color: $primary-green;
+        font-weight: 600;
 
         .nav-icon {
-            color: $white;
+            color: $primary-green;
         }
     }
 }
 
 .sidebar-footer {
-    padding: 24px;
-    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-top: 1px solid $border-color;
 }
 
 .user-profile {
@@ -113,27 +119,41 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     gap: 12px;
 
     .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
         background: $primary-green;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
+        font-weight: 700;
         color: $white;
-    }
-
-    .user-name {
         font-size: 14px;
-        font-weight: 600;
-        margin: 0;
     }
 
-    .user-role {
-        font-size: 12px;
-        color: rgba($white, 0.5);
-        margin: 0;
+    .user-info {
+        flex: 1;
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+            color: $midnight-blue;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 12px;
+            color: $text-body;
+            cursor: pointer;
+
+            &:hover {
+                color: #f43f5e;
+                text-decoration: underline;
+            }
+        }
     }
 }
 
@@ -141,8 +161,85 @@ $transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 .content-area {
     flex: 1;
     margin-left: 280px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.top-nav {
+    height: 80px;
+    background: rgba($white, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    border-bottom: 1px solid $border-color;
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: $light-bg;
+        padding: 10px 16px;
+        border-radius: 12px;
+        width: 300px;
+        border: 1px solid transparent;
+        transition: $transition-smooth;
+
+        svg {
+            width: 18px;
+            color: #94a3b8;
+        }
+
+        input {
+            background: none;
+            border: none;
+            font-size: 14px;
+            width: 100%;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        &:focus-within {
+            border-color: $primary-green;
+            background: $white;
+            box-shadow: 0 0 0 4px rgba($primary-green, 0.05);
+        }
+    }
+
+    .notif-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid $border-color;
+        background: $white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: $text-body;
+        transition: $transition-smooth;
+
+        &:hover {
+            color: $primary-green;
+            background: $light-bg;
+        }
+
+        svg {
+            width: 22px;
+        }
+    }
+}
+
+.scrolling-content {
     padding: 40px;
-    min-width: 0; // Prevent flex item from overflowing
+    flex: 1;
 }
 
 @media (max-width: 1024px) {

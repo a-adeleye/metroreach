@@ -1,16 +1,29 @@
 <router-outlet />
 
 <!-- Global Toast Notification -->
-<div class="toast-container" *ngIf="commonService.toast() as t" [class]="t.type">
+@if (commonService.toast(); as t) {
+<div class="toast-container" [class]="t.type">
     <div class="toast-content">
-        <svg *ngIf="t.type === 'success'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        @if (t.type === 'success') {
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
+        }
         <span>{{ t.message }}</span>
     </div>
 </div>
+}
 
-<!-- Global Loading Overlay -->
-<div class="global-loading" *ngIf="commonService.loading()">
-    <div class="spinner"></div>
+<!-- Global Loading Overlay (Laser Scanner) -->
+@if (commonService.loading() || authService.isResolvingAuth()) {
+<div class="global-loading">
+    <div class="loading-content">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <img src="metroreach-logo.png" alt="MetroReach" class="loading-logo">
+    </div>
 </div>
+}

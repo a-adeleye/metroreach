@@ -1,0 +1,140 @@
+<div class="overview-container">
+    <!-- Main Dashboard Row -->
+    <div class="dashboard-grid">
+        <!-- Plan Summary -->
+        <div class="card plan-card">
+            <div class="card-header">
+                <h3>Current Plan</h3>
+                <span class="badge active">Active</span>
+            </div>
+            <div class="plan-details">
+                <div class="plan-name">{{ userPlan().name }}</div>
+                <div class="plan-speed">{{ userPlan().speed }}</div>
+                <div class="plan-billing">Next billing: {{ userPlan().nextBilling }}</div>
+            </div>
+            <button class="btn-secondary btn-manage">Manage Plan</button>
+        </div>
+
+        <!-- Dynamic Usage Analyzer (Line Chart) -->
+        <div class="card usage-analyzer">
+            <div class="card-header">
+                <div class="header-info">
+                    <h3>Usage Pattern</h3>
+                    <p>Fibre Data Consumption (Upload vs Download)</p>
+                </div>
+                <div class="view-toggles">
+                    <button [class.active]="viewMode() === 'day'" (click)="changeView('day')">Day</button>
+                    <button [class.active]="viewMode() === 'week'" (click)="changeView('week')">Week</button>
+                    <button [class.active]="viewMode() === 'month'" (click)="changeView('month')">Month</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <svg viewBox="0 0 1000 200" preserveAspectRatio="none" class="usage-svg">
+                    <!-- Grid Lines -->
+                    <line x1="0" y1="0" x2="1000" y2="0" class="grid-line" />
+                    <line x1="0" y1="50" x2="1000" y2="50" class="grid-line" />
+                    <line x1="0" y1="100" x2="1000" y2="100" class="grid-line" />
+                    <line x1="0" y1="150" x2="1000" y2="150" class="grid-line" />
+                    <line x1="0" y1="200" x2="1000" y2="200" class="grid-line" />
+
+                    <!-- Area Shadows -->
+                    <path [attr.d]="downloadPath() + ' L 1000 200 L 0 200 Z'" class="area-fill download-area" />
+                    <path [attr.d]="uploadPath() + ' L 1000 200 L 0 200 Z'" class="area-fill upload-area" />
+
+                    <!-- Lines -->
+                    <path [attr.d]="downloadPath()" class="chart-line download-line" />
+                    <path [attr.d]="uploadPath()" class="chart-line upload-line" />
+
+                    <!-- Interaction Points -->
+                    @for (point of chartPoints(); track $index) {
+                    <g class="point-group">
+                        <circle [attr.cx]="point.x" [attr.cy]="point.y1" r="4" class="point download-point" />
+                        <circle [attr.cx]="point.x" [attr.cy]="point.y2" r="4" class="point upload-point" />
+
+                        <!-- Tooltip Hit Area -->
+                        <rect [attr.x]="point.x - 20" y="0" width="40" height="200" class="hit-area">
+                            <title>{{point.label}}: {{point.val1}}GB ↓ / {{point.val2}}GB ↑</title>
+                        </rect>
+                    </g>
+                    }
+                </svg>
+
+                <!-- Labels -->
+                <div class="chart-labels">
+                    @for (item of usageData(); track $index) {
+                    <span class="label" [style.left.%]="($index / (usageData().length - 1)) * 100">{{ item.label
+                        }}</span>
+                    }
+                </div>
+
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="dot download"></span>
+                        <span>Download (GB)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot upload"></span>
+                        <span>Upload (GB)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="stats-container">
+        @for (stat of stats(); track stat.label) {
+        <div class="stat-card">
+            <div class="stat-icon">
+                @switch (stat.icon) {
+                @case ('zap') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg> }
+                @case ('activity') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg> }
+                @case ('wifi') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                    <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                </svg> }
+                }
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">{{ stat.label }}</span>
+                <span class="stat-value">{{ stat.value }}</span>
+                <span class="stat-sub">{{ stat.sub }}</span>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="section-container mt-32">
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Network Activity</h3>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="dot green"></div>
+                    <div class="activity-info">
+                        <strong>Payment Successful</strong>
+                        <span>Monthly subscription processed for February</span>
+                    </div>
+                    <span class="activity-time">2 days ago</span>
+                </div>
+                <div class="activity-item">
+                    <div class="dot blue"></div>
+                    <div class="activity-info">
+                        <strong>Speed Boost Active</strong>
+                        <span>Network optimization completed for your area</span>
+                    </div>
+                    <span class="activity-time">5 days ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

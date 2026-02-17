@@ -1,0 +1,73 @@
+<div class="billing-container">
+    <div class="page-header">
+        <h1>Billing & Payments</h1>
+        <p>Keep track of your subscriptions and invoices</p>
+    </div>
+
+    <div class="billing-grid">
+        <!-- Balance Card -->
+        <div class="card balance-card">
+            <div class="balance-main">
+                <span class="label">Current Balance</span>
+                <div class="amount-row">
+                    <span class="currency">₦</span>
+                    <span class="value">{{ balance() }}</span>
+                </div>
+                <p>No outstanding payments at the moment.</p>
+            </div>
+            <div class="balance-details">
+                <div class="next-due">
+                    <span class="label">Next Payment Due</span>
+                    <strong>{{ nextPayment.date }}</strong>
+                </div>
+                <div class="due-amount">
+                    <span class="label">Amount</span>
+                    <strong>₦{{ nextPayment.amount }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History -->
+    <div class="history-section mt-40">
+        <div class="card">
+            <div class="card-header">
+                <h3>Transaction History</h3>
+                <button class="btn-link">Download All</button>
+            </div>
+
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Invoice ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Method</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of history; track item.id) {
+                    <tr>
+                        <td class="id-cell">{{ item.id }}</td>
+                        <td>{{ item.date }}</td>
+                        <td class="amount-cell">₦{{ item.amount }}</td>
+                        <td><span class="status-badge paid">{{ item.status }}</span></td>
+                        <td class="method-cell">{{ item.method }}</td>
+                        <td class="action-cell">
+                            <button class="btn-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

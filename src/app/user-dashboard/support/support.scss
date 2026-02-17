@@ -1,0 +1,231 @@
+.support-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.page-header {
+    margin-bottom: 32px;
+
+    h1 {
+        font-size: 32px;
+        color: var(--midnight-blue);
+        margin-bottom: 4px;
+    }
+
+    p {
+        color: var(--text-body);
+    }
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.support-card {
+    transition: var(--transition-smooth);
+    border: 1px solid var(--gray-light);
+
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-medium);
+        border-color: var(--primary-green);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(22, 101, 52, 0.08);
+        color: var(--primary-green);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    h3 {
+        font-size: 18px;
+        color: var(--midnight-blue);
+        margin-bottom: 12px;
+    }
+
+    p {
+        font-size: 14px;
+        color: var(--text-body);
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .btn-link {
+        background: none;
+        border: none;
+        color: var(--primary-green);
+        font-weight: 600;
+        font-size: 14px;
+        padding: 0;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.support-content-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 32px;
+}
+
+.contact-card {
+    h3 {
+        margin-bottom: 8px;
+    }
+
+    p {
+        color: var(--text-body);
+        font-size: 14px;
+        margin-bottom: 32px;
+    }
+
+    .contact-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .method {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--midnight-blue);
+
+            svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+
+            strong {
+                font-size: 14px;
+                color: var(--midnight-blue);
+            }
+
+            span {
+                font-size: 12px;
+                color: var(--text-body);
+            }
+        }
+    }
+}
+
+.faq-card {
+    h3 {
+        margin-bottom: 24px;
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .faq-item {
+        background: var(--gray-light);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: var(--transition-smooth);
+
+        summary {
+            padding: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--midnight-blue);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &::after {
+                content: '+';
+                font-size: 20px;
+                color: var(--primary-green);
+            }
+        }
+
+        &[open] {
+            background: rgba(22, 101, 52, 0.04);
+
+            summary::after {
+                content: '−';
+            }
+        }
+
+        .answer {
+            padding: 0 20px 20px;
+            font-size: 14px;
+            color: var(--text-body);
+            line-height: 1.6;
+            animation: slideDown 0.3s ease-out;
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 1100px) {
+    .support-content-row {
+        grid-template-columns: 1fr;
+    }
+}

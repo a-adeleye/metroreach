@@ -1,0 +1,199 @@
+$primary-green: #166534;
+$accent-gold: #d4a843;
+$midnight-blue: #111827;
+$text-body: #6b7280;
+$white: #ffffff;
+$transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+.infra-view {
+    animation: fadeIn 0.4s ease;
+}
+
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+
+    h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0;
+        color: $midnight-blue;
+    }
+
+    p {
+        color: $text-body;
+        margin: 4px 0 0 0;
+    }
+}
+
+.btn-add {
+    background: $midnight-blue;
+    color: $white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: $transition;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: $primary-green;
+        transform: translateY(-2px);
+    }
+}
+
+.node-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.node-card {
+    background: $white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: $transition;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .node-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    }
+
+    &.online {
+        .status-indicator {
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(#22c55e, 0.5);
+        }
+
+        .status-text {
+            color: #166534;
+        }
+    }
+
+    &.maintenance {
+        .status-indicator {
+            background: #f59e0b;
+        }
+
+        .status-text {
+            color: #92400e;
+        }
+    }
+
+    &.planned {
+        .status-indicator {
+            background: #94a3b8;
+        }
+
+        .status-text {
+            color: #475569;
+        }
+    }
+
+    h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0 0 16px 0;
+        color: $midnight-blue;
+    }
+
+    .meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .meta-item {
+            .label {
+                display: block;
+                font-size: 11px;
+                color: $text-body;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+
+            .value {
+                font-size: 14px;
+                font-weight: 600;
+                color: $midnight-blue;
+            }
+        }
+    }
+
+    .node-footer {
+        padding-top: 16px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .clients {
+            font-size: 13px;
+            color: $text-body;
+
+            strong {
+                color: $midnight-blue;
+            }
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+
+            &:hover {
+                color: $primary-green;
+            }
+
+            svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

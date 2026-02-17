@@ -1,78 +1,186 @@
+$primary-green: #166534;
+$midnight-blue: #111827;
+$text-body: #64748b;
+$white: #ffffff;
+$light-bg: #f8faf9;
+$transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
 .dashboard-view {
     animation: fadeIn 0.4s ease;
 }
 
 .view-header {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 
     h1 {
         font-size: 28px;
         font-weight: 700;
+        color: $midnight-blue;
         margin: 0;
     }
 
     p {
-        color: #6b7280;
-        margin: 4px 0 0 0;
+        color: $text-body;
+        margin: 6px 0 0 0;
     }
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 24px;
+    margin-bottom: 60px;
 }
 
 .stat-card {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
+    background: $white;
+    padding: 32px;
+    border-radius: 24px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    gap: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    text-decoration: none;
+    color: inherit;
+    transition: $transition;
+    position: relative;
+    overflow: hidden;
+
+    &.no-link {
+        cursor: default;
+    }
+
+    &:hover:not(.no-link) {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        border-color: rgba($primary-green, 0.1);
+
+        .card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 
     .stat-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
 
         svg {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
         }
 
         &.leads {
-            background: rgba(22, 101, 52, 0.1);
-            color: #166534;
+            background: rgba($primary-green, 0.1);
+            color: $primary-green;
         }
 
         &.coverage {
-            background: rgba(212, 168, 67, 0.1);
+            background: rgba(#d4a843, 0.1);
             color: #d4a843;
         }
 
         &.status {
-            background: rgba(17, 24, 39, 0.1);
-            color: #111827;
+            background: rgba($midnight-blue, 0.08);
+            color: $midnight-blue;
         }
     }
 
     .stat-info {
         h3 {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 700;
             margin: 0;
+            color: $midnight-blue;
+            line-height: 1;
         }
 
         p {
-            color: #6b7280;
+            color: $text-body;
             font-size: 14px;
-            margin: 2px 0 0 0;
+            margin: 8px 0 0 0;
+            font-weight: 500;
+        }
+    }
+
+    .card-arrow {
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%) translateX(-10px);
+        opacity: 0;
+        transition: $transition;
+        color: $primary-green;
+
+        svg {
+            width: 20px;
+        }
+    }
+}
+
+.quick-actions {
+    h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: $midnight-blue;
+        margin-bottom: 24px;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+}
+
+.action-btn {
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: $transition;
+
+    .action-icon {
+        width: 48px;
+        height: 48px;
+        background: $light-bg;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $text-body;
+        transition: $transition;
+
+        svg {
+            width: 20px;
+        }
+    }
+
+    span {
+        font-size: 14px;
+        font-weight: 600;
+        color: $midnight-blue;
+    }
+
+    &:hover {
+        background: $white;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        transform: translateY(-3px);
+
+        .action-icon {
+            background: $primary-green;
+            color: $white;
         }
     }
 }
