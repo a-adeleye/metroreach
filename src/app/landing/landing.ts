@@ -1,4 +1,6 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
@@ -217,9 +219,25 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stopAutoSlide();
   }
 
+  private coverageMap!: L.Map;
+
   ngAfterViewInit() {
     this.initAutocomplete();
     this.initTouchListeners();
+    this.initCoverageMap();
+  }
+
+  private initCoverageMap() {
+    // Check if we are in the browser
+    if (typeof window !== 'undefined') {
+      // 6.4426, 3.4116 is Victoria Island center
+      this.coverageMap = L.map('coverage-map').setView([6.4426, 3.4116], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(this.coverageMap);
+    }
   }
 
   private initTouchListeners() {
