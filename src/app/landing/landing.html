@@ -191,49 +191,70 @@
                     </div>
                 </div>
 
-                <div class="form-group address-group">
-                    <label for="address-input">Installation Address <span class="required">*</span></label>
-                    <div class="autocomplete-wrapper">
-                        <input id="address-input" type="text" placeholder="Start typing your street address...">
-                        <div class="input-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
+                <div class="coverage-hierarchy mb-wide">
+                    <!-- State Dropdown -->
+                    <div class="form-group">
+                        <label for="state-select">Select State <span class="required">*</span></label>
+                        <select id="state-select" [(ngModel)]="selectedStateId" (change)="onStateChange()"
+                            class="form-select">
+                            <option value="" disabled selected>Select a State</option>
+                            <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
+                        </select>
+                    </div>
+
+                    <!-- City Dropdown -->
+                    <div class="form-group" *ngIf="cities.length > 0 && currentStatus === 'Live'">
+                        <label for="city-select">Select City <span class="required">*</span></label>
+                        <select id="city-select" [(ngModel)]="selectedCityId" (change)="onCityChange()"
+                            class="form-select">
+                            <option value="" disabled selected>Select a City</option>
+                            <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Zone Dropdown -->
+                    <div class="form-group" *ngIf="zones.length > 0 && currentStatus === 'Live'">
+                        <label for="zone-select">Select Zone <span class="required">*</span></label>
+                        <select id="zone-select" [(ngModel)]="selectedZoneId" (change)="onZoneChange()"
+                            class="form-select">
+                            <option value="" disabled selected>Select a Zone</option>
+                            <option *ngFor="let zone of zones" [value]="zone.id">{{ zone.name }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Area Dropdown -->
+                    <div class="form-group" *ngIf="areas.length > 0 && currentStatus === 'Live'">
+                        <label for="area-select">Select Area <span class="required">*</span></label>
+                        <select id="area-select" [(ngModel)]="selectedAreaId" (change)="onAreaChange()"
+                            class="form-select">
+                            <option value="" disabled selected>Select an Area</option>
+                            <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Hierarchy Searching Loader -->
+                    <div class="hierarchy-search-loader" *ngIf="loadingHierarchy">
+                        <div class="loader-track">
+                            <div class="loader-fill"></div>
                         </div>
+                        <span class="loader-text">Searching for locations...</span>
                     </div>
-                    <div class="error-msg" *ngIf="errors.address">{{ errors.address }}</div>
                 </div>
 
-                <!-- Mini Map Preview -->
-                <div class="mini-map-preview">
-                    <google-map width="100%" height="100%" [center]="mapCenter" [zoom]="mapZoom" [options]="mapOptions">
-                        <map-advanced-marker [position]="markerPosition" [options]="markerOptions"
-                            title="Installation Location" (mapDragend)="onMarkerDragEnd($event)">
-                        </map-advanced-marker>
-                    </google-map>
-                    @if (mapLoading) {
-                    <div class="map-loading-overlay">
-                        <div class="map-spinner"></div>
-                        <span>Locating address...</span>
-                    </div>
-                    } @else {
-                    <div class="map-overlay-tag">
-                        <span class="pulse-dot"></span>
-                        Adjust pin to your exact building
-                    </div>
-                    }
+                <div class="registration-prompt-section">
+                    <p class="prompt-text">Can't find your zone or area? Register interest below.</p>
+                    <button class="btn-register-interest-trigger" (click)="openInterestDialog()">
+                        <span>Register Interest</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                    </button>
                 </div>
 
-                <button class="btn-check-availability" (click)="checkAvailability()">
-                    <span>Check Availability</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </button>
+                <p class="form-disclaimer" *ngIf="!selectedStateId || currentStatus === 'Live'">Reliable pure fibre
+                    connectivity for your premises.</p>
 
                 <p class="form-disclaimer">Reliable connectivity for Oniru, Ikoyi, and VI.</p>
             </div>
@@ -291,14 +312,22 @@
             <!-- Interest: No Coverage -->
             <div *ngIf="overlayStep === 'interest'" class="overlay-step interest-step">
                 <div class="step-header">
-                    <div class="status-badge coming">Coming Soon</div>
-                    <h2>Coming Soon to Your Area!</h2>
-                    <p>We are currently expanding our network. Register your interest below to get priority installation
-                        at <strong>{{ searchAddress }}</strong>.</p>
+                    <div class="status-badge"
+                        [ngClass]="currentStatus === 'Live' ? 'coming' : currentStatus.split(' ')[0]">
+                        {{ currentStatus === 'Live' ? 'Coming Soon' : (currentStatus | titlecase) }}
+                    </div>
+                    <h2 *ngIf="currentStatus === 'ongoing'">Deployment in Progress</h2>
+                    <h2 *ngIf="currentStatus === 'coming soon' || currentStatus === 'Live'">Coming Soon to Your Area!
+                    </h2>
+                    <h2 *ngIf="currentStatus === 'not available'">Request Coverage Expansion</h2>
+
+                    <p *ngIf="currentStatus === 'Live'">We are currently expanding our network. Register your interest
+                        below to get priority installation at <strong>{{ searchAddress }}</strong>.</p>
+                    <p *ngIf="currentStatus !== 'Live'">We're not quite there yet, but you can help us prioritize your
+                        area! Register below for updates and early access.</p>
                 </div>
 
                 <div class="interest-form-wrap">
-                    <!-- Form fields for interest registration -->
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Full Name</label>
@@ -315,8 +344,48 @@
                             <input type="email" placeholder="john@example.com" [(ngModel)]="interestData.email">
                             <div class="error-msg" *ngIf="errors.email">{{ errors.email }}</div>
                         </div>
+                        <div class="form-group full-width address-group">
+                            <label for="address-input">Exact Installation Address <span
+                                    class="required">*</span></label>
+                            <div class="autocomplete-wrapper">
+                                <input id="address-input" type="text" placeholder="Start typing your street address...">
+                                <div class="input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button class="btn-submit-interest" (click)="submitInterest()">Register for Priority Access</button>
+
+                    <!-- Mini Map Preview in Dialog -->
+                    <div class="mini-map-preview">
+                        <google-map width="100%" height="100%" [center]="mapCenter" [zoom]="mapZoom"
+                            [options]="mapOptions">
+                            <map-advanced-marker [position]="markerPosition" [options]="markerOptions"
+                                title="Installation Location" (mapDragend)="onMarkerDragEnd($event)">
+                            </map-advanced-marker>
+                        </google-map>
+                        @if (mapLoading) {
+                        <div class="map-loading-overlay">
+                            <div class="map-spinner"></div>
+                            <span>Locating...</span>
+                        </div>
+                        }
+                    </div>
+
+                    <button class="btn-submit-interest" (click)="submitInterest()">
+                        <div class="btn-icon-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                        </div>
+                        <span class="btn-label">Register for Priority Access</span>
+                    </button>
                 </div>
             </div>
         </div>

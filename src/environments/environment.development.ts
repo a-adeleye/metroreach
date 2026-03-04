@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    apiUrl: 'http://localhost:4000/api',
     firebase: {
         apiKey: "AIzaSyB0Vr-1DIjxOydUS7M1L_wgdyCpQiabArE",
         authDomain: "metroreach-dev.firebaseapp.com",

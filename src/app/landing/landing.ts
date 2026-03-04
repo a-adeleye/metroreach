@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { CommonService } from '../services/common.service';
 import { LeadService } from '../services/lead.service';
+import { CoverageService, State, City, Zone, Area, CoverageStatus } from '../services/coverage.service';
 
 import { RouterModule } from '@angular/router';
 
@@ -19,6 +20,7 @@ import { RouterModule } from '@angular/router';
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private commonService = inject(CommonService);
   private leadService = inject(LeadService);
+  private coverageService = inject(CoverageService);
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
   @ViewChild(MapAdvancedMarker) mapMarker!: MapAdvancedMarker;
 
@@ -34,12 +36,29 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   showOverlay = false;
   overlayStep: 'loading' | 'success' | 'interest' = 'loading';
 
+  // Coverage Hierarchy
+  states: State[] = [];
+  cities: City[] = [];
+  zones: Zone[] = [];
+  areas: Area[] = [];
+
+  selectedStateId = '';
+  selectedCityId = '';
+  selectedZoneId = '';
+  selectedAreaId = '';
+
+  currentStatus: CoverageStatus = 'Live';
+  lastLevelSelected: 'state' | 'city' | 'zone' | 'area' | null = null;
+  lastSelectedId = '';
+
   // Interest Form Data
   interestData = {
     fullName: '',
     phoneNumber: '',
     email: ''
   };
+
+  loadingHierarchy = false;
 
   addressMetadata = {
     locality: '',
@@ -213,6 +232,150 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.startAutoSlide();
+    this.loadStates();
+  }
+
+  loadStates() {
+    this.coverageService.getStates().subscribe({
+      next: (states) => {
+        this.states = states;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading states:', err)
+    });
+  }
+
+  onStateChange() {
+    this.selectedCityId = '';
+    this.selectedZoneId = '';
+    this.selectedAreaId = '';
+    this.cities = [];
+    this.zones = [];
+    this.areas = [];
+
+    const state = this.states.find(s => s.id === this.selectedStateId);
+    if (!state) return;
+
+    this.currentStatus = state.status?.toLowerCase() === 'live' ? 'Live' : state.status;
+    this.lastLevelSelected = 'state';
+    this.lastSelectedId = state.id;
+
+    if (state.status?.toLowerCase() === 'live') {
+      this.loadingHierarchy = true;
+      this.coverageService.getCities(state.id).subscribe({
+        next: (cities) => {
+          this.cities = cities;
+          this.loadingHierarchy = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading cities:', err);
+          this.loadingHierarchy = false;
+        }
+      });
+    } else {
+      this.openInterestDialog();
+    }
+  }
+
+  onCityChange() {
+    this.selectedZoneId = '';
+    this.selectedAreaId = '';
+    this.zones = [];
+    this.areas = [];
+
+    const city = this.cities.find(c => c.id === this.selectedCityId);
+    if (!city) return;
+
+    this.currentStatus = city.status?.toLowerCase() === 'live' ? 'Live' : city.status;
+    this.lastLevelSelected = 'city';
+    this.lastSelectedId = city.id;
+
+    if (city.status?.toLowerCase() === 'live') {
+      this.loadingHierarchy = true;
+      this.coverageService.getZones(city.id).subscribe({
+        next: (zones) => {
+          this.zones = zones;
+          this.loadingHierarchy = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading zones:', err);
+          this.loadingHierarchy = false;
+        }
+      });
+    } else {
+      this.openInterestDialog();
+    }
+  }
+
+  onZoneChange() {
+    this.selectedAreaId = '';
+    this.areas = [];
+
+    const zone = this.zones.find(z => z.id === this.selectedZoneId);
+    if (!zone) return;
+
+    this.currentStatus = zone.status?.toLowerCase() === 'live' ? 'Live' : zone.status;
+    this.lastLevelSelected = 'zone';
+    this.lastSelectedId = zone.id;
+
+    if (zone.status?.toLowerCase() === 'live') {
+      this.loadingHierarchy = true;
+      this.coverageService.getAreas(zone.id).subscribe({
+        next: (areas) => {
+          this.areas = areas;
+          this.loadingHierarchy = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading areas:', err);
+          this.loadingHierarchy = false;
+        }
+      });
+    } else {
+      this.openInterestDialog();
+    }
+  }
+
+  onAreaChange() {
+    const area = this.areas.find(a => a.id === this.selectedAreaId);
+    if (!area) return;
+
+    this.currentStatus = area.status?.toLowerCase() === 'live' ? 'Live' : area.status;
+    this.lastLevelSelected = 'area';
+    this.lastSelectedId = area.id;
+
+    if (area.status?.toLowerCase() === 'live') {
+      this.openSuccessDialog();
+    } else {
+      this.openInterestDialog();
+    }
+  }
+
+  private getFullAddressFromSelection(): string {
+    const s = this.states.find(x => x.id === this.selectedStateId)?.name || '';
+    const c = this.cities.find(x => x.id === this.selectedCityId)?.name || '';
+    const z = this.zones.find(x => x.id === this.selectedZoneId)?.name || '';
+    const a = this.areas.find(x => x.id === this.selectedAreaId)?.name || '';
+    return [a, z, c, s].filter(Boolean).join(', ');
+  }
+
+  openSuccessDialog() {
+    this.searchAddress = this.getFullAddressFromSelection();
+    this.showOverlay = true;
+    this.overlayStep = 'success';
+    this.cdr.detectChanges();
+  }
+
+  openInterestDialog() {
+    this.showOverlay = true;
+    this.overlayStep = 'interest';
+    this.cdr.detectChanges();
+    // Delay slightly to ensure elements are rendered
+    setTimeout(() => {
+      this.initAutocomplete();
+    }, 100);
   }
 
   ngOnDestroy() {
@@ -257,21 +420,25 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     try {
-      const places = await (window as any).google.maps.importLibrary("places");
-      const { Place, AutocompleteSuggestion } = places;
+      if (!this.autocomplete) {
+        this.autocomplete = await (window as any).google.maps.importLibrary("places");
+      }
+      const { Place, AutocompleteSuggestion } = this.autocomplete;
 
       const input = document.getElementById('address-input') as HTMLInputElement;
-      if (!input || this.autocomplete) return;
-
-      this.autocomplete = { Place, AutocompleteSuggestion };
+      if (!input) return;
 
       // Create suggestions dropdown
       const wrapper = input.parentElement!;
-      const dropdown = document.createElement('div');
-      dropdown.className = 'autocomplete-dropdown';
-      dropdown.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:8px;max-height:250px;overflow-y:auto;z-index:1000;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
-      wrapper.style.position = 'relative';
-      wrapper.appendChild(dropdown);
+      let dropdown = wrapper.querySelector('.autocomplete-dropdown') as HTMLElement;
+
+      if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.className = 'autocomplete-dropdown';
+        dropdown.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:8px;max-height:250px;overflow-y:auto;z-index:1000;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+        wrapper.style.position = 'relative';
+        wrapper.appendChild(dropdown);
+      }
 
       let debounceTimer: any;
 
@@ -503,41 +670,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  validateAddress(): boolean {
-    this.errors.address = '';
-    if (!this.searchAddress || this.searchAddress.length < 5) {
-      this.errors.address = 'Please enter your full installation address.';
-      return false;
-    }
-    if (!this.addressSelected) {
-      this.errors.address = 'Please select a valid address from the suggestions.';
-      return false;
-    }
-    return true;
-  }
-
-  checkAvailability() {
-    if (!this.validateAddress()) return;
-
-    console.log('Checking availability for:', this.searchAddress);
-
-    this.showOverlay = true;
-    this.overlayStep = 'loading';
-    this.cdr.detectChanges();
-
-    setTimeout(() => {
-      const addr = this.searchAddress.toLowerCase();
-      console.log('Processing address:', addr);
-
-      if (addr.includes('oniru') || addr.includes('ikoyi') || addr.includes('vi')) {
-        this.overlayStep = 'success';
-      } else {
-        this.overlayStep = 'interest';
-      }
-
-      this.cdr.detectChanges();
-    }, 1500);
-  }
 
   validateInterestForm(): boolean {
     let isValid = true;
@@ -580,12 +712,18 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         phoneNumber: this.interestData.phoneNumber,
         email: this.interestData.email,
         address: this.searchAddress,
-        serviceType: this.activeServiceType
+        type: this.activeServiceType,
+        stateId: this.selectedStateId || null,
+        cityId: this.selectedCityId || null,
+        zoneId: this.selectedZoneId || null,
+        areaId: this.selectedAreaId || null,
+        lat: this.addressMetadata.lat,
+        lng: this.addressMetadata.lng
       };
 
       console.log('Sending lead to service:', data);
 
-      await this.leadService.createLead(data, this.addressMetadata);
+      await this.leadService.publicLead(data as any).toPromise();
 
       // Small delay for better UX
       await new Promise(resolve => setTimeout(resolve, 600));
@@ -603,6 +741,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   closeOverlay() {
     this.showOverlay = false;
+    this.overlayStep = 'loading';
+    this.cdr.detectChanges();
   }
 
   setServiceType(type: 'home' | 'business') {

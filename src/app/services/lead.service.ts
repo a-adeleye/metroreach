@@ -1,16 +1,7 @@
-import {inject, Injectable} from '@angular/core';
-import {
-  addDoc,
-  collection,
-  collectionData,
-  Firestore,
-  orderBy,
-  query,
-  serverTimestamp,
-  where
-} from '@angular/fire/firestore';
-
-import {map, Observable, shareReplay} from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface LeadMetadata {
   locality: string;
@@ -24,66 +15,33 @@ export interface LeadData {
   phoneNumber: string;
   email: string;
   address: string;
-  serviceType: 'home' | 'business';
-
-  [key: string]: any;
+  type: 'home' | 'business';
+  stateId?: string;
+  cityId?: string;
+  zoneId?: string;
+  areaId?: string;
+  lat?: number;
+  lng?: number;
+  source?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeadService {
-  private firestore: Firestore = inject(Firestore);
-  protected readonly collectionName = 'leads';
+  private http = inject(HttpClient);
+  private apiUrl = environment.apiUrl;
 
-  protected colRef() {
-    return collection(this.firestore, this.collectionName);
+  createLead(data: LeadData, _metadata?: any) {
+    // Keeping backward compatibility for now if needed, but preferring publicLead
+    return this.publicLead(data).toPromise();
   }
 
-  private getLeadsCollection() {
-    return collection(this.firestore, 'leads');
-  }
-
-  async createLead(data: LeadData, metadata: LeadMetadata) {
-    const submissionData = {
+  publicLead(data: LeadData): Observable<any> {
+    const payload = {
       ...data,
-      ...metadata,
-      source: 'web app',
-      createdBy: data.email,
-      createdAt: serverTimestamp()
+      source: 'web_app'
     };
-
-    return addDoc(this.getLeadsCollection(), submissionData);
-  }
-
-  getAll(filters: Record<string, string> = {}, includeDeleted = false) {
-    return this.queryLive$((q: any) => {
-      q = includeDeleted ? q : query(q, where('deleted', '!=', true));
-      for (const [k, v] of Object.entries(filters)) q = query(q, where(k, '==', v));
-      return q;
-    });
-  }
-
-  protected queryLive$(build: any): Observable<any[]> {
-    const q = build(query(this.colRef()));
-    return collectionData(q, {idField: 'id'}).pipe(
-      map(arr => arr),
-      shareReplay({bufferSize: 1, refCount: true})
-    );
-  }
-
-
-  getLeads(): Observable<any[]> {
-    console.log('LeadService: [getLeads] Called');
-    try {
-      const col = this.getLeadsCollection();
-      console.log('LeadService: [getLeads] Collection reference obtained');
-      const q = query(col, orderBy('createdAt', 'desc'));
-      console.log('LeadService: [getLeads] Query created');
-      return collectionData(q, {idField: 'id'}) as Observable<any[]>;
-    } catch (error) {
-      console.error('LeadService: [getLeads] Exception caught:', error);
-      throw error;
-    }
+    return this.http.post(`${this.apiUrl}/public/leads`, payload);
   }
 }

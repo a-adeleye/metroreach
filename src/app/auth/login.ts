@@ -1,13 +1,13 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, TitleCasePipe],
+    imports: [CommonModule, FormsModule],
     templateUrl: './login.html',
     styleUrl: './login.scss'
 })
