@@ -1,0 +1,224 @@
+<div class="coverage-overlay" [class.active]="showOverlay">
+  <div class="overlay-backdrop" (click)="closeOverlay.emit()"></div>
+
+  <div class="overlay-container">
+    <button class="btn-close-overlay" (click)="closeOverlay.emit()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <div class="overlay-content">
+      @if (overlayStep === 'loading') {
+      <div class="overlay-step loading-step">
+        <div class="scanner-wrap">
+          <div class="scanner-circle"></div>
+          <div class="scanner-line"></div>
+        </div>
+        <h3>Checking Infrastructure...</h3>
+        <p>Verifying fibre availability for {{ searchAddress }}</p>
+      </div>
+      }
+
+      @if (overlayStep === 'selection') {
+      <div class="overlay-step selection-step">
+        <div class="step-header">
+          <div class="tag">Coverage Check</div>
+          <h2>Complete your location</h2>
+          <p>Tell us exactly where you are so we can check our infrastructure.</p>
+        </div>
+
+        <div class="modal-selection-grid">
+
+          @if (zones.length > 0) {
+          <div class="form-group full-width">
+            <label>Zone <span class="required">*</span></label>
+            <select [ngModel]="selectedZoneId" (ngModelChange)="selectedZoneIdChange.emit($event)"
+              (change)="zoneChange.emit()" class="form-select">
+              <option value="" disabled selected>Select your Zone</option>
+              <option *ngFor="let zone of zones" [value]="zone.id">{{ zone.name }}</option>
+            </select>
+          </div>
+          }
+
+          @if (areas.length > 0) {
+          <div class="form-group full-width">
+            <label>Area <span class="required">*</span></label>
+            <select [ngModel]="selectedAreaId" (ngModelChange)="selectedAreaIdChange.emit($event)"
+              (change)="areaChange.emit()" class="form-select">
+              <option value="" disabled selected>Select your Area</option>
+              <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+            </select>
+          </div>
+          }
+
+          @if (loadingHierarchy) {
+          <div class="selection-loader-mini">
+            <div class="spinner-mini"></div>
+            <span>Loading locations...</span>
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      @if (overlayStep === 'success') {
+      <div class="overlay-step success-step">
+        <div class="step-header">
+          <div style="display: flex; flex-direction: column;">
+            <div class="back-link premium-back" (click)="setOverlayStep('selection')">
+              <div class="back-link-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </div>
+              <span>Change Location</span>
+            </div>
+          </div>
+          <h2>Great news! MetroReach is live.</h2>
+          <p>Fibre infrastructure is ready at <strong>{{ searchAddress }}</strong>. Select a plan to continue.</p>
+        </div>
+
+        <div class="plans-slider-wrap">
+          <div class="plans-grid-mini">
+            <div *ngFor="let plan of activePlans" class="plan-card-mini" [class.featured]="plan.featured">
+              <div class="plan-info">
+                <h3>{{ plan.name }}</h3>
+                <p class="speed">{{ plan.speed }}</p>
+                <div class="price">₦{{ plan.price }}<span>/mo</span></div>
+              </div>
+              <button class="btn-select-plan" (click)="selectPlan.emit(plan)">Select Plan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      @if (overlayStep === 'interest') {
+      <div class="overlay-step interest-step">
+        <div class="step-header">
+          <div style="display: flex; "></div>
+          <div class="back-link premium-back" (click)="setOverlayStep('selection')">
+            <div class="back-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </div>
+            <span>Change Location</span>
+          </div>
+          @if (currentStatus === 'ongoing') {
+          <h2>Deployment in Progress</h2>
+          }
+          @if (currentStatus === 'coming soon' || currentStatus === 'Live') {
+          <h2>Coming Soon to Your Area!</h2>
+          }
+          @if (currentStatus === 'not available') {
+          <h2>Request Coverage Expansion</h2>
+          }
+
+          @if (currentStatus === 'Live' || currentStatus === 'coming soon') {
+          <p>We are currently expanding our network. Register your interest below to get priority installation at
+            <strong>{{ searchAddress }}</strong>.
+          </p>
+          }
+          @if (currentStatus !== 'Live' && currentStatus !== 'coming soon') {
+          <p>We're not quite there yet, but you can help us prioritize your area! Register below for updates and early
+            access.</p>
+          }
+        </div>
+
+        <div class="interest-form-wrap">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" placeholder="John Doe" [(ngModel)]="interestData.fullName">
+              @if (errors.fullName) {
+              <div class="error-msg">{{ errors.fullName }}</div>
+              }
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" placeholder="08012345678" [(ngModel)]="interestData.phoneNumber">
+              @if (errors.phoneNumber) {
+              <div class="error-msg">{{ errors.phoneNumber }}</div>
+              }
+            </div>
+            <div class="form-group full-width">
+              <label>Email Address</label>
+              <input type="email" placeholder="john@example.com" [(ngModel)]="interestData.email">
+              @if (errors.email) {
+              <div class="error-msg">{{ errors.email }}</div>
+              }
+            </div>
+            <div class="form-group full-width address-group">
+              <label for="address-input">Exact Installation Address <span class="required">*</span></label>
+              <div class="autocomplete-wrapper">
+                <input id="address-input" type="text" placeholder="Start typing your street address...">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-map-preview">
+            <google-map width="100%" height="100%" [center]="mapCenter" [zoom]="mapZoom" [options]="mapOptions">
+              <map-advanced-marker [position]="markerPosition" [options]="markerOptions" title="Installation Location"
+                (mapDragend)="markerDragEnd.emit($event)">
+              </map-advanced-marker>
+            </google-map>
+            @if (mapLoading) {
+            <div class="map-loading-overlay">
+              <div class="map-spinner"></div>
+              <span>Locating...</span>
+            </div>
+            }
+          </div>
+
+          <button class="btn-submit-interest" (click)="submitInterest.emit()">
+            <div class="btn-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+            <span class="btn-label">Register for Priority Access</span>
+          </button>
+        </div>
+      </div>
+      }
+
+      @if (overlayStep === 'interest-success') {
+      <div class="overlay-step interest-success-step">
+        <div class="success-animation">
+          <div class="checkmark-circle">
+            <div class="checkmark draw"></div>
+          </div>
+        </div>
+        <h2>Registration Successful!</h2>
+        <div class="success-message">
+          <p>Thank you for choosing MetroReach. Your interest has been registered for <strong>{{ searchAddress
+              }}</strong>.</p>
+          <p class="next-steps-hint">Our team will review your application and contact you within 24 hours to discuss
+            installation and next steps.</p>
+        </div>
+        <div class="success-actions">
+          <button class="btn-finish" (click)="closeOverlay.emit()">Finish & Close</button>
+          <p class="reference-not">A confirmation email has been sent to your inbox.</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

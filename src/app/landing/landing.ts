@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, inject, NgZone } from '@angular/core';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { CommonService } from '../services/common.service';
 import { LeadService } from '../services/lead.service';
 import { CoverageService, State, City, Zone, Area, CoverageStatus } from '../services/coverage.service';
 import { RouterModule } from '@angular/router';
+import { CoverageModalComponent } from './coverage-modal/coverage-modal.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule, GoogleMapsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, CoverageModalComponent],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
@@ -21,9 +20,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private leadService = inject(LeadService);
   private coverageService = inject(CoverageService);
   private cdr = inject(ChangeDetectorRef);
-
-  @ViewChild(GoogleMap) googleMap!: GoogleMap;
-  @ViewChild(MapAdvancedMarker) mapMarker!: MapAdvancedMarker;
+  private ngZone = inject(NgZone);
 
   currentSlide = 0;
   activeServiceType: 'home' | 'business' = 'home';
@@ -35,7 +32,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   addressSelected = false;
   mapLoading = false;
   showOverlay = false;
-  overlayStep: 'loading' | 'success' | 'interest' = 'loading';
+  overlayStep: 'loading' | 'success' | 'interest' | 'interest-success' | 'selection' = 'loading';
 
   // Coverage Hierarchy
   states: State[] = [];
@@ -228,18 +225,47 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ];
 
+  getStatusLabel(status: string): string {
+    if (!status) return '';
+    if (status.toLowerCase() === 'live') return 'Coming Soon';
+    return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+
   autoSlideInterval: any;
 
   ngOnInit() {
     this.startAutoSlide();
-    this.loadStates();
+    this.loadZones();
+  }
+
+  loadZones() {
+    this.loadingHierarchy = true;
+    this.coverageService.getZonesPublic().subscribe({
+      next: (zones: Zone[]) => {
+        this.ngZone.run(() => {
+          this.zones = zones;
+          this.loadingHierarchy = false;
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err: any) => {
+        console.error('Error loading zones:', err);
+        this.loadingHierarchy = false;
+      }
+    });
   }
 
   loadStates() {
     this.coverageService.getStates().subscribe({
       next: (states: State[]) => {
-        this.states = states;
-        this.cdr.detectChanges();
+        this.ngZone.run(() => {
+          this.states = states;
+          if (this.states.length > 0) {
+            this.selectedStateId = this.states[0].id;
+            this.onStateChange();
+          }
+          this.cdr.detectChanges();
+        });
       },
       error: (err: any) => console.error('Error loading states:', err)
     });
@@ -260,21 +286,21 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.lastLevelSelected = 'state';
     this.lastSelectedId = state.id;
 
-    if (state.status?.toLowerCase() === 'live') {
+    if (state) {
       this.loadingHierarchy = true;
       this.coverageService.getCities(state.id).subscribe({
         next: (cities: City[]) => {
-          this.cities = cities;
-          this.loadingHierarchy = false;
-          this.cdr.detectChanges();
+          this.ngZone.run(() => {
+            this.cities = cities;
+            this.loadingHierarchy = false;
+            this.cdr.detectChanges();
+          });
         },
         error: (err: any) => {
           console.error('Error loading cities:', err);
           this.loadingHierarchy = false;
         }
       });
-    } else {
-      this.openInterestDialog();
     }
   }
 
@@ -291,13 +317,21 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.lastLevelSelected = 'city';
     this.lastSelectedId = city.id;
 
+    // Launch modal if not already open
+    if (!this.showOverlay) {
+      this.showOverlay = true;
+      this.overlayStep = 'selection';
+    }
+
     if (city.status?.toLowerCase() === 'live') {
       this.loadingHierarchy = true;
       this.coverageService.getZones(city.id).subscribe({
         next: (zones: Zone[]) => {
-          this.zones = zones;
-          this.loadingHierarchy = false;
-          this.cdr.detectChanges();
+          this.ngZone.run(() => {
+            this.zones = zones;
+            this.loadingHierarchy = false;
+            this.cdr.detectChanges();
+          });
         },
         error: (err: any) => {
           console.error('Error loading zones:', err);
@@ -320,22 +354,29 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.lastLevelSelected = 'zone';
     this.lastSelectedId = zone.id;
 
-    if (zone.status?.toLowerCase() === 'live') {
-      this.loadingHierarchy = true;
-      this.coverageService.getAreas(zone.id).subscribe({
-        next: (areas: Area[]) => {
+    this.loadingHierarchy = true;
+    this.coverageService.getAreas(zone.id).subscribe({
+      next: (areas: Area[]) => {
+        this.ngZone.run(() => {
           this.areas = areas;
           this.loadingHierarchy = false;
+
+          if (this.areas.length === 0) {
+            this.openInterestDialog();
+          }
+
           this.cdr.detectChanges();
-        },
-        error: (err: any) => {
-          console.error('Error loading areas:', err);
+        });
+      },
+      error: (err: any) => {
+        console.error('Error loading areas:', err);
+        this.ngZone.run(() => {
           this.loadingHierarchy = false;
-        }
-      });
-    } else {
-      this.openInterestDialog();
-    }
+          this.openInterestDialog();
+          this.cdr.detectChanges();
+        });
+      }
+    });
   }
 
   onAreaChange() {
@@ -351,6 +392,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.openInterestDialog();
     }
+  }
+
+  onSelectPlan(plan: any) {
+    this.overlayStep = 'interest-success';
+    this.cdr.detectChanges();
   }
 
   private getFullAddressFromSelection(): string {
@@ -369,6 +415,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openInterestDialog() {
+    this.searchAddress = this.getFullAddressFromSelection();
     this.showOverlay = true;
     this.overlayStep = 'interest';
     this.cdr.detectChanges();
@@ -712,8 +759,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       await new Promise(resolve => setTimeout(resolve, 600));
 
       this.commonService.setLoading(false);
-      this.commonService.showToast('Great! Your interest has been registered.', 'success');
-      this.closeOverlay();
+      this.overlayStep = 'interest-success';
       this.resetForm();
     } catch (error) {
       console.error('Error submitting interest:', error);
@@ -725,6 +771,19 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   closeOverlay() {
     this.showOverlay = false;
     this.overlayStep = 'loading';
+
+    this.selectedStateId = '';
+    this.selectedCityId = '';
+    this.selectedZoneId = '';
+    this.selectedAreaId = '';
+
+    this.cities = [];
+    this.areas = [];
+    // Keep zones to avoid re-requesting if closing modal
+    // OR call loadZones again to refresh
+    // For now, let's just clear selection and status.
+    this.currentStatus = 'Live';
+
     this.cdr.detectChanges();
   }
 
@@ -764,5 +823,21 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mapZoom = 14;
 
     this.cdr.detectChanges();
+  }
+
+  trackByState(index: number, state: State) {
+    return state.id;
+  }
+
+  trackByCity(index: number, city: City) {
+    return city.id;
+  }
+
+  trackByZone(index: number, zone: Zone) {
+    return zone.id;
+  }
+
+  trackByArea(index: number, area: Area) {
+    return area.id;
   }
 }

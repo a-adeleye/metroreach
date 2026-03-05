@@ -35,6 +35,10 @@ export class CoverageService {
         return this.http.get<Zone[]>(`${this.apiUrl}/coverage/public/cities/${cityId}/zones`);
     }
 
+    getZonesPublic(): Observable<Zone[]> {
+        return this.http.get<Zone[]>(`${this.apiUrl}/coverage/public/zones`);
+    }
+
     getAreas(zoneId: string): Observable<Area[]> {
         return this.http.get<Area[]>(`${this.apiUrl}/coverage/public/zones/${zoneId}/areas`);
     }
