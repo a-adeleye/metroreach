@@ -634,10 +634,15 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
     }
 
-    .active-check-wrap {
-      .check-circle-glow {
+    .active-check-wrap,
+    .fallback-action-arrow {
+      flex-shrink: 0;
+
+      .check-circle-glow,
+      .arrow-circle {
         width: 44px;
         height: 44px;
+        // background: #f1f5f9;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -651,9 +656,45 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
           height: 18px;
         }
       }
+
+      .arrow-circle {
+        color: #94a3b8;
+        transform: scale(1);
+      }
     }
 
-    &:hover {
+    &.fallback-card {
+      // border: 2px dashed #e2e8f0;
+      background: #111827 !important;
+      box-shadow: none;
+
+      .location-pin-wrap.fallback {
+        background: #f1f5f9 !important;
+        color: #111827 !important;
+      }
+
+      .area-name-bold {
+        color: #ffffff !important;
+      }
+
+      .area-description {
+        color: #b9c5d5 !important;
+      }
+
+      &:hover {
+        border-color: #cbd5e1;
+        background: #f1f5f9;
+        transform: translateY(-2px);
+
+        .arrow-circle {
+          background: #166534;
+          color: #ffffff;
+          box-shadow: 0 8px 16px rgba(22, 101, 52, 0.2);
+        }
+      }
+    }
+
+    &:hover:not(.active):not(.fallback-card) {
       border-color: #e2e8f0;
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);

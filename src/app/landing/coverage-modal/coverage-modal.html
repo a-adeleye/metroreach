@@ -35,13 +35,14 @@
         <div class="modal-onboarding-grid">
           @if (areas.length > 0) {
           <div class="onboarding-list">
-            <label *ngFor="let area of areas" class="onboarding-card-full" [class.active]="selectedAreaId === area.id">
+            <label *ngFor="let area of areas" class="onboarding-card-full" [class.active]="selectedAreaId === area.id"
+              (click)="onAreaSelectCard(area)">
               <input type="radio" name="modal-area-radio" [value]="area.id" [ngModel]="selectedAreaId"
-                (ngModelChange)="selectedAreaIdChange.emit($event)" (change)="areaChange.emit()">
+                (ngModelChange)="selectedAreaIdChange.emit($event)" (click)="$event.stopPropagation()">
 
               <div class="card-left">
                 <div class="location-pin-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                     stroke-linejoin="round">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
@@ -66,13 +67,43 @@
                 </div>
               </div>
             </label>
+
+            <!-- Fallback Card -->
+            <div class="onboarding-card-full fallback-card" (click)="triggerInterestDialog()">
+              <div class="card-left">
+                <div class="location-pin-wrap fallback">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                </div>
+                <div class="card-text-main">
+                  <div class="name-badge-row">
+                    <span class="area-name-bold">Can't find your location?</span>
+                    <!-- <span class="status-micro-badge">HELP</span> -->
+                  </div>
+                  <span class="area-description">Register interest now for your specific address.</span>
+                </div>
+              </div>
+              <div class="fallback-action-arrow">
+                <div class="arrow-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
           }
 
           @if (selectedAreaId && areas.length > 0) {
           <div class="onboarding-actions">
             <button class="btn-primary-onboarding" (click)="areaChange.emit()">
-              Continue to Plans
+              {{ getSelectedAreaStatus() === 'Live' ? 'Continue to Plans' : 'Register Interest' }}
             </button>
           </div>
           }

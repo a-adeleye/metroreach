@@ -69,6 +69,22 @@ export class CoverageModalComponent {
   @Output() markerDragEnd = new EventEmitter<google.maps.MapMouseEvent>();
   @Output() submitInterest = new EventEmitter<void>();
 
+  getSelectedAreaStatus(): string {
+    const area = this.areas.find(a => a.id === this.selectedAreaId);
+    return area?.status || '';
+  }
+
+  triggerInterestDialog(): void {
+    this.overlayStepChange.emit('interest');
+  }
+
+  onAreaSelectCard(area: Area): void {
+    this.selectedAreaIdChange.emit(area.id);
+    setTimeout(() => {
+      this.areaChange.emit();
+    }, 50);
+  }
+
   setOverlayStep(step: CoverageOverlayStep): void {
     this.overlayStepChange.emit(step);
   }

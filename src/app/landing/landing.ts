@@ -411,18 +411,21 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAreaChange() {
-    const area = this.areas.find(a => a.id === this.selectedAreaId); // test matching area
-    if (!area) return;
+    this.ngZone.run(() => {
+      const area = this.areas.find(a => a.id === this.selectedAreaId);
+      if (!area) return;
 
-    this.currentStatus = area.status?.toLowerCase() === 'live' ? 'Live' : area.status;
-    this.lastLevelSelected = 'area';
-    this.lastSelectedId = area.id;
+      this.currentStatus = area.status?.toLowerCase() === 'live' ? 'Live' : area.status;
+      this.lastLevelSelected = 'area';
+      this.lastSelectedId = area.id;
 
-    if (area.status?.toLowerCase() === 'live') {
-      this.openSuccessDialog();
-    } else {
-      this.openInterestDialog();
-    }
+      if (area.status?.toLowerCase() === 'live') {
+        this.openSuccessDialog();
+      } else {
+        this.openInterestDialog();
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   onSelectPlan(plan: any) {
