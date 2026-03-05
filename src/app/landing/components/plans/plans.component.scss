@@ -1,0 +1,246 @@
+@import '../../styles/variables';
+
+.plans-section {
+    padding: 140px 0;
+    background: #fbfdfc;
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+
+    .section-header {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 80px;
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 600;
+            color: $text-dark;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .plan-toggle {
+            background: rgba(0, 0, 0, 0.04);
+            padding: 6px;
+            border-radius: 14px;
+            margin-top: 8px;
+            display: inline-flex;
+
+            button {
+                padding: 12px 32px;
+                border-radius: 10px;
+                font-weight: 500;
+                font-size: 14px;
+                transition: $transition-smooth;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                color: #666;
+                font-family: inherit;
+
+                &.active {
+                    background: $white;
+                    color: $primary-green;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+                }
+
+                &:hover:not(.active) {
+                    color: $text-dark;
+                }
+            }
+        }
+    }
+
+    .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
+
+    .plan-card {
+        background: $white;
+        padding: 36px 24px;
+        border-radius: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        transition: $transition-smooth;
+        position: relative;
+
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.06);
+        }
+
+        &.featured {
+            border-color: rgba($primary-green, 0.3);
+            box-shadow: 0 16px 32px rgba($primary-green, 0.06);
+
+            .plan-badge {
+                position: absolute;
+                top: -13px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: $primary-green;
+                color: $white;
+                padding: 5px 18px;
+                border-radius: 50px;
+                font-size: 11px;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .btn-plan {
+                background: $primary-green;
+                color: $white;
+                border-color: $primary-green;
+            }
+        }
+
+        .plan-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .plan-speed {
+            font-size: 24px;
+            font-weight: 600;
+            color: $primary-green;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .plan-tag {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            width: fit-content;
+
+            &.best-value {
+                background: rgba($accent-gold, 0.12);
+                color: #8a6d20;
+            }
+
+            &.full-fibre {
+                background: rgba($primary-green, 0.08);
+                color: $primary-green;
+            }
+
+            &.fast {
+                background: rgba(0, 64, 133, 0.08);
+                color: #004085;
+            }
+        }
+
+        .plan-price {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+            .currency {
+                font-size: 14px;
+                font-weight: 500;
+                color: #888;
+                vertical-align: top;
+                margin-top: 4px;
+                display: inline-block;
+            }
+
+            .amount {
+                font-size: 28px;
+                font-weight: 600;
+                color: $text-dark;
+                letter-spacing: -1px;
+            }
+
+            .period {
+                font-size: 13px;
+                color: #888;
+                font-weight: 500;
+            }
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 28px;
+            flex: 1;
+
+            li {
+                font-size: 13px;
+                color: #666;
+                padding: 7px 0;
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                text-align: left;
+                line-height: 1.4;
+
+                &::before {
+                    content: '✓';
+                    color: $primary-green;
+                    font-weight: 600;
+                    font-size: 12px;
+                    flex-shrink: 0;
+                    margin-top: 1px;
+                }
+            }
+        }
+
+        .btn-plan {
+            width: 100%;
+            padding: 13px;
+            background: transparent;
+            border: 1px solid rgba($primary-green, 0.15);
+            border-radius: 50px;
+            color: $primary-green;
+            font-weight: 500;
+            font-size: 13px;
+            font-family: inherit;
+            transition: $transition-smooth;
+            cursor: pointer;
+            margin-top: auto;
+
+            &:hover {
+                background: $primary-green;
+                color: $white;
+                border-color: $primary-green;
+            }
+        }
+    }
+}
+
+@media (max-width: 1400px) {
+    .plans-section .plans-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .plans-section .plans-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .plans-section .plans-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

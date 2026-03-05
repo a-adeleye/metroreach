@@ -1,0 +1,23 @@
+/* ===== DESIGN TOKENS ===== */
+$primary-green: #166534;
+$secondary-green: #0d3b1e;
+$midnight-blue: #111827;
+$accent-gold: #d4a843;
+$light-bg: #f8faf9;
+$white: #ffffff;
+$text-dark: #111827;
+$text-body: #555555;
+$gray-light: #f5f5f5;
+$transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+/* Required indicator */
+.required {
+    color: #e53935;
+}

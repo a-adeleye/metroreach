@@ -1,0 +1,284 @@
+@import '../../styles/variables';
+
+.coverage-section {
+    padding: 140px 0;
+    background: $light-bg;
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 600;
+            color: $text-dark;
+            letter-spacing: -1.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #555;
+            margin-top: 16px;
+        }
+    }
+
+    .coverage-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+    }
+
+    .map-container {
+        position: relative;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+        background: #f0f0f0;
+        height: 550px;
+
+        .coverage-zones {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .zone {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .pulse {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                opacity: 0.15;
+            }
+
+            &::before {
+                content: '';
+                width: 10px;
+                height: 10px;
+                background: $white;
+                border: 2px solid rgba(0, 0, 0, 0.08);
+                border-radius: 50%;
+                z-index: 2;
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .label {
+                position: absolute;
+                top: -30px;
+                background: rgba($white, 0.95);
+                backdrop-filter: blur(10px);
+                color: $text-dark;
+                font-size: 11px;
+                font-weight: 500;
+                padding: 6px 16px;
+                border-radius: 50px;
+                white-space: nowrap;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+                border: 1px solid rgba(0, 0, 0, 0.04);
+            }
+
+            &.live {
+                .pulse {
+                    background: $primary-green;
+                }
+
+                &::before {
+                    background: $primary-green;
+                }
+            }
+
+            &.progress {
+                .pulse {
+                    background: #004085;
+                }
+
+                &::before {
+                    background: #004085;
+                }
+            }
+
+            &.coming {
+                .pulse {
+                    background: $accent-gold;
+                }
+
+                &::before {
+                    background: $accent-gold;
+                }
+            }
+        }
+
+        .map-overlay {
+            position: absolute;
+            bottom: 32px;
+            left: 32px;
+            background: rgba($white, 0.92);
+            backdrop-filter: blur(15px);
+            padding: 20px 28px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+
+            .coverage-indicator {
+                font-size: 13px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                &.live {
+                    color: #155724;
+                }
+
+                &.progress {
+                    color: #004085;
+                }
+
+                &.coming {
+                    color: #856404;
+                }
+            }
+        }
+    }
+
+    .coverage-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .coverage-card {
+        background: $white;
+        padding: 36px;
+        border-radius: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: $transition-smooth;
+
+        &:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        }
+
+        .coverage-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+
+            .location-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                background: rgba($primary-green, 0.06);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $primary-green;
+                flex-shrink: 0;
+            }
+
+            h4 {
+                font-size: 18px;
+                font-weight: 500;
+                color: $text-dark;
+            }
+        }
+
+        .coverage-status {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+
+            &.live {
+                background: rgba($primary-green, 0.08);
+                color: $primary-green;
+            }
+
+            &.coming {
+                background: rgba($accent-gold, 0.12);
+                color: #8a6d20;
+            }
+
+            &.progress {
+                background: rgba(0, 64, 133, 0.08);
+                color: #004085;
+            }
+        }
+
+        p {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .btn-coverage {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: $transition-smooth;
+
+            &.green {
+                background: $primary-green;
+                color: $white;
+
+                &:hover {
+                    background: $secondary-green;
+                    transform: translateY(-2px);
+                }
+            }
+
+            &.gold {
+                background: rgba($accent-gold, 0.12);
+                color: #8a6d20;
+
+                &:hover {
+                    background: rgba($accent-gold, 0.2);
+                    transform: translateY(-2px);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .coverage-section .coverage-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .coverage-section .coverage-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

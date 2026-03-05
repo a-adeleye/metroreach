@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, inject, NgZone } from '@angular/core';
-import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonService } from '../services/common.service';
@@ -7,6 +6,10 @@ import { LeadService } from '../services/lead.service';
 import { CoverageService, State, City, Zone, Area, CoverageStatus } from '../services/coverage.service';
 import { RouterModule } from '@angular/router';
 import { CoverageModalComponent } from './coverage-modal/coverage-modal.component';
+
+// Sub-components available for future refactoring (see src/app/landing/components/):
+// NavbarComponent, HeroComponent, PlansComponent, ServicesComponent,
+// CoverageComponent, SupportComponent, FooterComponent
 
 @Component({
   selector: 'app-landing',
@@ -73,6 +76,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     phoneNumber: '',
     email: ''
   };
+
+  // Form submission state
+  private isSubmitting = false;
+  private lastSubmitTime = 0;
+  private readonly SUBMIT_COOLDOWN_MS = 3000;
 
   // Google Maps config
   mapCenter = { lat: 6.432, lng: 3.448 };
@@ -460,9 +468,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.stopAutoSlide();
+    this.mapObserver?.disconnect();
   }
 
-  private coverageMap!: L.Map;
+  private coverageMap: any;
+  private mapObserver: IntersectionObserver | null = null;
+  private mapInitialized = false;
 
   ngAfterViewInit() {
     this.initAutocomplete();
@@ -471,12 +482,38 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private initCoverageMap() {
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'undefined') return;
+
+    const mapElement = document.getElementById('coverage-map');
+    if (!mapElement) return;
+
+    // Use Intersection Observer to lazy load the map
+    this.mapObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.mapInitialized) {
+            this.mapInitialized = true;
+            this.loadLeafletMap();
+            this.mapObserver?.disconnect();
+          }
+        });
+      },
+      { rootMargin: '100px' }
+    );
+
+    this.mapObserver.observe(mapElement);
+  }
+
+  private async loadLeafletMap() {
+    try {
+      const L = await import('leaflet');
       this.coverageMap = L.map('coverage-map').setView([6.4426, 3.4116], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
       }).addTo(this.coverageMap);
+    } catch (error) {
+      console.error('Error loading Leaflet:', error);
     }
   }
 
@@ -751,7 +788,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       isValid = false;
     }
 
-    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$/;
+    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
     if (!this.interestData.phoneNumber || !phoneRegex.test(this.interestData.phoneNumber)) {
       this.errors.phoneNumber = 'Please enter a valid phone number.';
       isValid = false;
@@ -767,11 +804,19 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async submitInterest() {
+    // Debounce: prevent rapid submissions
+    const now = Date.now();
+    if (this.isSubmitting || (now - this.lastSubmitTime) < this.SUBMIT_COOLDOWN_MS) {
+      return;
+    }
+
     const addrInput = document.getElementById('address-input') as HTMLInputElement;
     if (addrInput) this.searchAddress = addrInput.value;
 
     if (!this.validateInterestForm()) return;
 
+    this.isSubmitting = true;
+    this.lastSubmitTime = now;
     this.commonService.setLoading(true);
 
     try {
@@ -793,11 +838,13 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       await new Promise(resolve => setTimeout(resolve, 600));
 
       this.commonService.setLoading(false);
+      this.isSubmitting = false;
       this.overlayStep = 'interest-success';
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error submitting interest:', error);
       this.commonService.setLoading(false);
+      this.isSubmitting = false;
       this.commonService.showToast('Something went wrong. Please try again.', 'error');
     }
   }

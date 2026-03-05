@@ -1,0 +1,37 @@
+<section id="plans" class="plans-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">{{ activeServiceType === 'home' ? 'Full Fibre Internet Plans' : 'Business Internet
+                Plans' }}</h2>
+            <p class="section-subtitle">{{ activeServiceType === 'home' ? 'True end-to-end fibre to your home —
+                unlimited data, symmetrical speeds.' : 'Dedicated fibre connectivity with guaranteed bandwidth and
+                enterprise-grade SLAs.' }}</p>
+
+            <div class="plan-toggle">
+                <button [class.active]="activeServiceType === 'home'" (click)="setServiceType('home')">Home
+                    Plans</button>
+                <button [class.active]="activeServiceType === 'business'" (click)="setServiceType('business')">Business
+                    Plans</button>
+            </div>
+        </div>
+
+        <div class="plans-grid">
+            <div *ngFor="let plan of activePlans" class="plan-card" [class.featured]="plan.featured">
+                @if (plan.badge) {
+                <span class="plan-badge">{{ plan.badge }}</span>
+                }
+                <h3 class="plan-name">{{ plan.name }}</h3>
+                <p class="plan-speed">{{ plan.speed }}</p>
+                <span class="plan-tag" [ngClass]="plan.tagClass">{{ plan.tag }}</span>
+                <div class="plan-price">
+                    <span class="currency">₦</span><span class="amount">{{ plan.price }}</span> <span
+                        class="period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li *ngFor="let feature of plan.features">{{ feature }}</li>
+                </ul>
+                <button class="btn-plan" (click)="onScrollToSection('register')">Get Started</button>
+            </div>
+        </div>
+    </div>
+</section>

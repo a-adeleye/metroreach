@@ -1,0 +1,54 @@
+<section id="home" class="hero">
+    <div class="carousel-container" id="hero-carousel">
+        <div class="carousel-track" [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
+            <div *ngFor="let slide of slides; let i = index" class="slide">
+                <div class="container slide-content-wrapper">
+                    <div class="hero-content">
+                        <p class="hero-subtitle">{{ slide.subtitle }}</p>
+                        <h1 class="hero-title">{{ slide.title1 }}<br>{{ slide.title2 }}</h1>
+                        <p class="hero-tagline">{{ slide.tagline }}</p>
+                        <p class="hero-desc">{{ slide.description }}</p>
+                        <div class="hero-buttons">
+                            <button class="btn-express" (click)="onScrollToSection('register')">Express Interest
+                                Now</button>
+                            <button class="btn-view-packages" (click)="onScrollToSection('plans')">View All
+                                Packages</button>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="speed-card">
+                            <div class="speed-content">
+                                <h2>{{ slide.cardTitle }}<span>{{ slide.cardSubtitle }}</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control prev" (click)="prevSlide()" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+        <button class="carousel-control next" (click)="nextSlide()" aria-label="Next slide">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+
+        <div class="hero-dots">
+            <span *ngFor="let dot of slides; let i = index" class="dot" [class.active]="i === currentSlide"
+                (click)="setSlide(i)" role="button" tabindex="0" [attr.aria-label]="'Go to slide ' + (i + 1)"></span>
+        </div>
+    </div>
+</section>
+
+<section class="info-banner">
+    <div class="container">
+        <p><span class="info-icon">i</span> All Full Fibre plans include Free WiFi Gateway & Installation. Prices
+            include VAT. 12 month minimum contract.</p>
+    </div>
+</section>

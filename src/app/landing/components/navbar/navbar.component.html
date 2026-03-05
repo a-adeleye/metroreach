@@ -1,0 +1,35 @@
+<nav class="navbar">
+    <div class="container nav-container">
+        <a (click)="onScrollToSection('home')" class="navbar-logo">
+            <img src="metroreach-logo.png" alt="MetroReach Logo" class="logo-img">
+        </a>
+
+        <div class="nav-links">
+            <a (click)="onScrollToSection('home')">Home</a>
+            <a (click)="onScrollToSection('plans')">Full Fibre</a>
+            <a (click)="onScrollToSection('coverage')">Coverage</a>
+            <a (click)="onScrollToSection('services')">Services</a>
+            <a (click)="onScrollToSection('support')">Support</a>
+        </div>
+
+        <button class="hamburger" [class.active]="mobileMenuOpen" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<div class="mobile-menu-overlay" [class.open]="mobileMenuOpen">
+    <div class="mobile-menu-content">
+        <a (click)="closeMobileMenu(); onScrollToSection('home')">Home</a>
+        <a (click)="closeMobileMenu(); onScrollToSection('plans')">Full Fibre</a>
+        <a (click)="closeMobileMenu(); onScrollToSection('coverage')">Coverage</a>
+        <a (click)="closeMobileMenu(); onScrollToSection('services')">Services</a>
+        <a (click)="closeMobileMenu(); onScrollToSection('support')">Support</a>
+        <div class="mobile-menu-actions">
+            <a routerLink="/dashboard" class="btn-mobile-account">My Account</a>
+            <a (click)="closeMobileMenu(); onScrollToSection('register')" class="btn-mobile-cta">Get Started</a>
+        </div>
+    </div>
+</div>

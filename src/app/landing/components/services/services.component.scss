@@ -1,0 +1,96 @@
+@import '../../styles/variables';
+
+.services-section {
+    padding: 140px 0;
+    background: $white;
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 80px;
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 600;
+            color: $text-dark;
+            letter-spacing: -1.5px;
+        }
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+    }
+
+    .service-card {
+        padding: 48px 40px;
+        border-radius: 28px;
+        background: $light-bg;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        text-align: center;
+        transition: $transition-smooth;
+
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        }
+
+        .service-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba($primary-green, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            color: $primary-green;
+        }
+
+        h4 {
+            font-size: 20px;
+            font-weight: 500;
+            color: $text-dark;
+            margin-bottom: 10px;
+        }
+
+        .service-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: $primary-green;
+            margin-bottom: 16px;
+
+            &.free {
+                color: $primary-green;
+            }
+
+            &.optional {
+                color: $accent-gold;
+            }
+        }
+
+        p {
+            font-size: 15px;
+            color: #888;
+            line-height: 1.6;
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .services-section .services-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .services-section .services-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

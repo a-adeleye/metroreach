@@ -1,0 +1,184 @@
+@import '../../styles/variables';
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba($white, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba($primary-green, 0.05);
+    transition: $transition-smooth;
+
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+
+    .navbar-logo {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 5px 0;
+
+        .logo-img {
+            height: 48px;
+            width: auto;
+        }
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 40px;
+
+        a {
+            color: $text-dark;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            padding: 10px 0;
+            opacity: 0.7;
+            transition: $transition-smooth;
+
+            &:hover {
+                opacity: 1;
+                color: $primary-green;
+            }
+        }
+    }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 1001;
+        padding: 0;
+
+        span {
+            width: 100%;
+            height: 2px;
+            background: $text-dark;
+            border-radius: 2px;
+            transition: $transition-smooth;
+        }
+
+        &.active {
+            span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 6px);
+            }
+
+            span:nth-child(2) {
+                opacity: 0;
+            }
+
+            span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -6px);
+            }
+        }
+    }
+}
+
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba($white, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 999;
+    padding: 120px 32px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: translateY(-20px);
+
+    &.open {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
+    }
+
+    .mobile-menu-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        width: 100%;
+        max-width: 400px;
+
+        a {
+            font-size: 24px;
+            font-weight: 500;
+            color: $text-dark;
+            text-decoration: none;
+            cursor: pointer;
+            transition: $transition-smooth;
+
+            &:hover {
+                color: $primary-green;
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    .mobile-menu-actions {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        align-items: center;
+
+        .btn-mobile-account {
+            font-size: 16px;
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-mobile-cta {
+            background: $primary-green;
+            color: $white;
+            padding: 16px 48px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba($primary-green, 0.2);
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar {
+        height: 80px;
+
+        .nav-links {
+            display: none !important;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+    }
+}
