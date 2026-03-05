@@ -16,31 +16,19 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
-    { path: 'login', component: LoginComponent },
-    {
-        path: 'dashboard',
-        component: UserDashboardComponent,
-        canActivate: [authGuard],
-        children: [
-            { path: '', redirectTo: 'overview', pathMatch: 'full' },
-            { path: 'overview', component: UserOverviewComponent },
-            { path: 'profile', component: UserProfileComponent },
-            { path: 'plan', component: UserPlanComponent },
-            { path: 'billing', component: UserBillingComponent },
-            { path: 'support', component: UserSupportComponent },
-            { path: '**', redirectTo: 'overview' }
-        ]
-    },
-    {
-        path: 'admin',
-        component: AdminComponent,
-        canActivate: [adminGuard],
-        children: [
-            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-            { path: 'dashboard', component: AdminDashboardComponent },
-            { path: 'leads', component: LeadsComponent },
-            { path: 'infrastructure', component: InfrastructureComponent },
-            { path: '**', redirectTo: 'dashboard' }
-        ]
-    }
+    // { path: 'login', component: LoginComponent },
+    // {
+    //     path: 'dashboard',
+    //     component: UserDashboardComponent,
+    //     canActivate: [authGuard],
+    //     children: [
+    //         { path: '', redirectTo: 'overview', pathMatch: 'full' },
+    //         { path: 'overview', component: UserOverviewComponent },
+    //         { path: 'profile', component: UserProfileComponent },
+    //         { path: 'plan', component: UserPlanComponent },
+    //         { path: 'billing', component: UserBillingComponent },
+    //         { path: 'support', component: UserSupportComponent },
+    //         { path: '**', redirectTo: 'overview' }
+    //     ]
+    // }
 ];

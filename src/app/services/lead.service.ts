@@ -15,7 +15,8 @@ export interface LeadData {
   phoneNumber: string;
   email: string;
   address: string;
-  type: 'home' | 'business';
+  type?: 'home' | 'business';
+  serviceType?: 'home' | 'business';
   stateId?: string;
   cityId?: string;
   zoneId?: string;
@@ -33,15 +34,23 @@ export class LeadService {
   private apiUrl = environment.apiUrl;
 
   createLead(data: LeadData, _metadata?: any) {
-    // Keeping backward compatibility for now if needed, but preferring publicLead
     return this.publicLead(data).toPromise();
   }
 
   publicLead(data: LeadData): Observable<any> {
     const payload = {
       ...data,
+      type: data.type || data.serviceType,
       source: 'web_app'
     };
     return this.http.post(`${this.apiUrl}/public/leads`, payload);
+  }
+
+  getAll(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/leads`);
+  }
+
+  getLeads(): Observable<any[]> {
+    return this.getAll();
   }
 }

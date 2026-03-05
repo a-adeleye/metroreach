@@ -19,12 +19,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.subscription = this.leadService.getAll().pipe(
-            map(leads => leads ? leads.length : 0)
+            map((leads: any[]) => leads ? leads.length : 0)
         ).subscribe({
-            next: (count) => {
+            next: (count: number) => {
                 this.leadsCount.set(count);
             },
-            error: (err) => {
+            error: (err: any) => {
                 console.error('AdminDashboard: Error fetching lead count:', err);
             }
         });

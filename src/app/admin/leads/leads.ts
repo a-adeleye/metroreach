@@ -31,12 +31,12 @@ export class LeadsComponent implements OnInit, OnDestroy {
         }
 
         this.leadService.getAll().subscribe({
-            next: (data) => {
+            next: (data: any[]) => {
                 console.log('AdminLeads: Received data:', data);
                 this.leads.set(data);
                 this.isLoading.set(false);
             },
-            error: (err) => {
+            error: (err: any) => {
                 console.error('AdminLeads: Error fetching leads:', err);
                 this.isLoading.set(false);
             }

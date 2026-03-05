@@ -7,7 +7,6 @@ import { GoogleMapsModule, GoogleMap, MapAdvancedMarker } from '@angular/google-
 import { CommonService } from '../services/common.service';
 import { LeadService } from '../services/lead.service';
 import { CoverageService, State, City, Zone, Area, CoverageStatus } from '../services/coverage.service';
-
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -21,6 +20,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private commonService = inject(CommonService);
   private leadService = inject(LeadService);
   private coverageService = inject(CoverageService);
+  private cdr = inject(ChangeDetectorRef);
+
   @ViewChild(GoogleMap) googleMap!: GoogleMap;
   @ViewChild(MapAdvancedMarker) mapMarker!: MapAdvancedMarker;
 
@@ -91,10 +92,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     gmpDraggable: true
   };
   private geocoder: any;
-
   private autocomplete: any;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   homePlans = [
     {
@@ -237,11 +237,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadStates() {
     this.coverageService.getStates().subscribe({
-      next: (states) => {
+      next: (states: State[]) => {
         this.states = states;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error loading states:', err)
+      error: (err: any) => console.error('Error loading states:', err)
     });
   }
 
@@ -263,12 +263,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (state.status?.toLowerCase() === 'live') {
       this.loadingHierarchy = true;
       this.coverageService.getCities(state.id).subscribe({
-        next: (cities) => {
+        next: (cities: City[]) => {
           this.cities = cities;
           this.loadingHierarchy = false;
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error loading cities:', err);
           this.loadingHierarchy = false;
         }
@@ -294,12 +294,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (city.status?.toLowerCase() === 'live') {
       this.loadingHierarchy = true;
       this.coverageService.getZones(city.id).subscribe({
-        next: (zones) => {
+        next: (zones: Zone[]) => {
           this.zones = zones;
           this.loadingHierarchy = false;
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error loading zones:', err);
           this.loadingHierarchy = false;
         }
@@ -323,12 +323,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (zone.status?.toLowerCase() === 'live') {
       this.loadingHierarchy = true;
       this.coverageService.getAreas(zone.id).subscribe({
-        next: (areas) => {
+        next: (areas: Area[]) => {
           this.areas = areas;
           this.loadingHierarchy = false;
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error loading areas:', err);
           this.loadingHierarchy = false;
         }
@@ -372,7 +372,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showOverlay = true;
     this.overlayStep = 'interest';
     this.cdr.detectChanges();
-    // Delay slightly to ensure elements are rendered
     setTimeout(() => {
       this.initAutocomplete();
     }, 100);
@@ -391,11 +390,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private initCoverageMap() {
-    // Check if we are in the browser
     if (typeof window !== 'undefined') {
-      // 6.4426, 3.4116 is Victoria Island center
       this.coverageMap = L.map('coverage-map').setView([6.4426, 3.4116], 13);
-
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
@@ -428,7 +424,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       const input = document.getElementById('address-input') as HTMLInputElement;
       if (!input) return;
 
-      // Create suggestions dropdown
       const wrapper = input.parentElement!;
       let dropdown = wrapper.querySelector('.autocomplete-dropdown') as HTMLElement;
 
@@ -445,7 +440,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       input.addEventListener('input', () => {
         clearTimeout(debounceTimer);
         const query = input.value;
-        this.searchAddress = query; // Sync the value immediately
+        this.searchAddress = query;
 
         if (query.length < 3) {
           dropdown.style.display = 'none';
@@ -485,7 +480,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 300);
       });
 
-      // Hide dropdown when clicking outside
       document.addEventListener('click', (e) => {
         if (!wrapper.contains(e.target as Node)) {
           dropdown.style.display = 'none';
@@ -502,7 +496,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       const placeId = suggestion.placePrediction?.placeId;
       if (!placeId) return;
 
-      // Show loading state immediately
       this.mapLoading = true;
       dropdown.style.display = 'none';
       input.value = suggestion.placePrediction?.text?.text || 'Loading...';
@@ -512,7 +505,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       const place = new Place({ id: placeId });
       await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location', 'addressComponents'] });
 
-      // Ensure minimum 500ms loading time for smooth UX
       const elapsed = Date.now() - startTime;
       if (elapsed < 500) {
         await new Promise(resolve => setTimeout(resolve, 500 - elapsed));
@@ -539,7 +531,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.addressMetadata.lng = lng;
       }
 
-      // Extract components
       if (place.addressComponents) {
         const components = place.addressComponents;
         const locality = components.find((c: any) => c.types.includes('locality'))?.longText || '';
@@ -570,7 +561,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
 
     try {
-      // Initialize geocoder if needed
       if (!this.geocoder) {
         const { Geocoder } = await (window as any).google.maps.importLibrary("geocoding");
         this.geocoder = new Geocoder();
@@ -588,7 +578,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.errors.address = '';
         if (input) input.value = addr;
 
-        // Update metadata
         this.addressMetadata.lat = pos.lat;
         this.addressMetadata.lng = pos.lng;
 
@@ -670,7 +659,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-
   validateInterestForm(): boolean {
     let isValid = true;
     this.errors.fullName = '';
@@ -698,7 +686,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async submitInterest() {
-    // Final check for address from the DOM
     const addrInput = document.getElementById('address-input') as HTMLInputElement;
     if (addrInput) this.searchAddress = addrInput.value;
 
@@ -721,11 +708,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         lng: this.addressMetadata.lng
       };
 
-      console.log('Sending lead to service:', data);
-
       await this.leadService.publicLead(data as any).toPromise();
-
-      // Small delay for better UX
       await new Promise(resolve => setTimeout(resolve, 600));
 
       this.commonService.setLoading(false);
@@ -758,7 +741,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   resetForm() {
-    // Reset Data
     this.interestData = {
       fullName: '',
       phoneNumber: '',
@@ -773,11 +755,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.searchAddress = '';
     this.addressSelected = false;
 
-    // Reset Input DOM
     const addrInput = document.getElementById('address-input') as HTMLInputElement;
     if (addrInput) addrInput.value = '';
 
-    // Reset Map
     const initialPos = { lat: 6.432, lng: 3.448 };
     this.mapCenter = initialPos;
     this.markerPosition = initialPos;
