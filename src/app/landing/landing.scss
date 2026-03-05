@@ -3300,7 +3300,6 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             color: #374151;
             margin-bottom: 12px;
             display: block;
-            text-transform: uppercase;
             letter-spacing: 0.05em;
         }
     }
@@ -3457,5 +3456,97 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
     100% {
         opacity: 1;
+    }
+}
+
+.grid-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    animation: fadeIn 0.3s ease;
+
+    .spinner-mini {
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(22, 101, 52, 0.1);
+        border-top-color: #166534;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        box-shadow: 0 0 15px rgba(22, 101, 52, 0.1);
+    }
+}
+
+.hierarchy-search-loader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: rgba(22, 101, 52, 0.04);
+    border: 1px solid rgba(22, 101, 52, 0.1);
+    border-radius: 12px;
+    margin-top: 20px;
+    animation: fadeIn 0.4s ease;
+
+    .loader-track {
+        flex: 1;
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .loader-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 40%;
+        background: #166534;
+        border-radius: 10px;
+        animation: loaderSlide 1.5s infinite ease-in-out;
+    }
+
+    .loader-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #166534;
+    }
+}
+
+@keyframes loaderSlide {
+    0% {
+        left: -40%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

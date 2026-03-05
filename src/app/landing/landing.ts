@@ -44,6 +44,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedCityId = '';
   selectedZoneId = '';
   selectedAreaId = '';
+  selectedZoneName = '';
 
   currentStatus: CoverageStatus = 'Live';
   lastLevelSelected: 'state' | 'city' | 'zone' | 'area' | null = null;
@@ -227,8 +228,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getStatusLabel(status: string): string {
     if (!status) return '';
-    if (status.toLowerCase() === 'live') return 'Coming Soon';
-    return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    if (status.toLowerCase() === 'live') return 'Live';
+    return status.replace(/_/g, ' ').replace(/\b\w/g, (value) => value.toUpperCase());
   }
 
   autoSlideInterval: any;
@@ -239,7 +240,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadZones() {
-    this.loadingHierarchy = true;
+    this.ngZone.run(() => {
+      this.loadingHierarchy = true;
+      this.cdr.detectChanges();
+    });
+
     this.coverageService.getZonesPublic().subscribe({
       next: (zones: Zone[]) => {
         this.ngZone.run(() => {
@@ -250,7 +255,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       error: (err: any) => {
         console.error('Error loading zones:', err);
-        this.loadingHierarchy = false;
+        this.ngZone.run(() => {
+          this.loadingHierarchy = false;
+          this.cdr.detectChanges();
+        });
       }
     });
   }
@@ -287,7 +295,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.lastSelectedId = state.id;
 
     if (state) {
-      this.loadingHierarchy = true;
+      this.ngZone.run(() => {
+        this.loadingHierarchy = true;
+        this.cdr.detectChanges();
+      });
+
       this.coverageService.getCities(state.id).subscribe({
         next: (cities: City[]) => {
           this.ngZone.run(() => {
@@ -298,7 +310,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         error: (err: any) => {
           console.error('Error loading cities:', err);
-          this.loadingHierarchy = false;
+          this.ngZone.run(() => {
+            this.loadingHierarchy = false;
+            this.cdr.detectChanges();
+          });
         }
       });
     }
@@ -335,7 +350,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         error: (err: any) => {
           console.error('Error loading zones:', err);
-          this.loadingHierarchy = false;
+          this.ngZone.run(() => {
+            this.loadingHierarchy = false;
+            this.cdr.detectChanges();
+          });
         }
       });
     } else {
@@ -353,15 +371,28 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentStatus = zone.status?.toLowerCase() === 'live' ? 'Live' : zone.status;
     this.lastLevelSelected = 'zone';
     this.lastSelectedId = zone.id;
+    this.searchAddress = zone.name;
+    this.selectedZoneName = zone.name;
 
-    this.loadingHierarchy = true;
+    this.ngZone.run(() => {
+      this.showOverlay = true;
+      this.overlayStep = 'loading';
+      this.loadingHierarchy = true;
+      this.cdr.detectChanges();
+    });
+
     this.coverageService.getAreas(zone.id).subscribe({
       next: (areas: Area[]) => {
         this.ngZone.run(() => {
           this.areas = areas;
           this.loadingHierarchy = false;
 
-          if (this.areas.length === 0) {
+          if (this.areas.length > 0) {
+            this.overlayStep = 'selection';
+            if (areas.length === 1) {
+              this.selectedAreaId = areas[0].id;
+            }
+          } else {
             this.openInterestDialog();
           }
 
@@ -380,7 +411,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onAreaChange() {
-    const area = this.areas.find(a => a.id === this.selectedAreaId);
+    const area = this.areas.find(a => a.id === this.selectedAreaId); // test matching area
     if (!area) return;
 
     this.currentStatus = area.status?.toLowerCase() === 'live' ? 'Live' : area.status;
@@ -760,7 +791,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.commonService.setLoading(false);
       this.overlayStep = 'interest-success';
-      this.resetForm();
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error submitting interest:', error);
       this.commonService.setLoading(false);
@@ -782,8 +813,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     // Keep zones to avoid re-requesting if closing modal
     // OR call loadZones again to refresh
     // For now, let's just clear selection and status.
-    this.currentStatus = 'Live';
-
+    this.resetForm();
     this.cdr.detectChanges();
   }
 
@@ -800,6 +830,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   resetForm() {
+    this.currentStatus = 'Live';
     this.interestData = {
       fullName: '',
       phoneNumber: '',

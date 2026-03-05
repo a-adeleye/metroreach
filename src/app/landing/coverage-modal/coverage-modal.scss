@@ -178,32 +178,69 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 
-  .loading-step {
+  .onboarding-loader {
+    .loading-badge {
+      display: inline-flex;
+      padding: 6px 16px;
+      background: rgba($primary-green, 0.05);
+      color: $primary-green;
+      border: 1px solid rgba($primary-green, 0.1);
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba($primary-green, 0.05);
+    }
+
+    h3 {
+      font-size: 32px;
+      font-weight: 700;
+      color: $midnight-blue;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    p {
+      font-size: 17px;
+      color: #64748b;
+      max-width: 500px;
+      margin: 0 auto;
+
+      strong {
+        color: $midnight-blue;
+        font-weight: 700;
+      }
+    }
+
     .scanner-wrap {
       position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 32px;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 40px;
 
       .scanner-circle {
         width: 100%;
         height: 100%;
-        border: 4px solid rgba($primary-green, 0.1);
+        border: 2px solid rgba($primary-green, 0.1);
         border-top-color: $primary-green;
         border-radius: 50%;
         animation: spin 1s linear infinite;
+        box-shadow: inset 0 0 20px rgba($primary-green, 0.05);
       }
 
       .scanner-line {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 80%;
-        height: 2px;
-        background: $primary-green;
+        width: 85%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent 0%, $primary-green 50%, transparent 100%);
         transform: translate(-50%, -50%);
-        box-shadow: 0 0 15px $primary-green;
+        box-shadow: 0 0 25px $primary-green;
         animation: scan 2s ease-in-out infinite;
+        border-radius: 50%;
       }
     }
   }
@@ -472,75 +509,213 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
-.selection-step {
+.onboarding-flow {
+  max-width: 600px;
+  margin: 0 auto;
   padding: 10px 0;
 
-  .modal-selection-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 40px;
-    text-align: left;
+  .onboarding-badge-solid {
+    display: inline-flex;
+    padding: 10px 24px;
+    background: #166534;
+    color: #ffffff;
+    font-size: 18px;
+    border-radius: 99px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(22, 101, 52, 0.2);
+  }
 
-    .form-group {
-      margin-bottom: 0;
-      position: relative;
+  .massive-header {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 15px;
+    letter-spacing: -2px;
+  }
 
-      &.full-width {
-        grid-column: span 2;
+  .onboarding-sub {
+    font-size: 17px;
+    color: #4b5563;
+    margin-bottom: 40px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.modal-onboarding-grid {
+  margin-top: 5px;
+
+  .onboarding-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .onboarding-card-full {
+    position: relative;
+    cursor: pointer;
+    background: #ffffff;
+    border: 2px solid #f1f5f9;
+    border-radius: 28px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-align: left;
+
+      .location-pin-wrap {
+        width: 60px;
+        height: 60px;
+        background: #e9f5ed;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #166534;
+        flex-shrink: 0;
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
       }
 
-      label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 10px;
-        display: block;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+      .card-text-main {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .name-badge-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .area-name-bold {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+          }
+
+          .status-micro-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+            letter-spacing: 0.05em;
+
+            &.live {
+              background: #e9f5ed;
+              color: #166534;
+            }
+          }
+        }
+
+        .area-description {
+          font-size: 14px;
+          color: #64748b;
+          font-weight: 500;
+        }
       }
+    }
 
-      .form-select {
-        width: 100%;
-        padding: 14px 16px;
-        background-color: #ffffff;
-        border: 1.5px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 15px;
-        color: #111827;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 16px center;
-        background-size: 18px;
-        cursor: pointer;
+    .active-check-wrap {
+      .check-circle-glow {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform: scale(0.9);
 
-        &:focus {
-          outline: none;
-          border-color: #166534;
-          box-shadow: 0 0 0 4px rgba(22, 101, 52, 0.1);
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+    &:hover {
+      border-color: #e2e8f0;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    &.active {
+      border-color: #166534;
+      background: #ffffff;
+      box-shadow: 0 15px 40px rgba(22, 101, 52, 0.1);
+
+      .check-circle-glow {
+        background: #166534;
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(22, 101, 52, 0.5);
+
+        svg {
+          opacity: 1;
         }
       }
     }
   }
 
+  .onboarding-actions {
+    margin-top: 20px;
+    animation: fadeInOverlay 0.5s ease;
+
+    .btn-primary-onboarding {
+      width: 100%;
+      max-width: 300px;
+      padding: 18px 30px;
+      background: #166534;
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(22, 101, 52, 0.2);
+
+      &:hover {
+        background: #114c27;
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(22, 101, 52, 0.3);
+      }
+    }
+  }
+
   .selection-loader-mini {
-    grid-column: span 2;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 20px;
-    background: rgba(22, 101, 52, 0.03);
-    border-radius: 12px;
-    font-size: 14px;
+    padding: 30px;
     color: #166534;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 15px;
 
     .spinner-mini {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(22, 101, 52, 0.1);
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(22, 101, 52, 0.1);
       border-top-color: #166534;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -610,6 +785,7 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   .reference-not {
     font-size: 13px;
     color: #999;
+    margin-top: 16px;
   }
 }
 

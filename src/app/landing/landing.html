@@ -194,7 +194,7 @@
                 <div class="coverage-hierarchy custom-grid-selection mb-wide">
                     <!-- Zone Selection Cards -->
                     <div class="selection-block">
-                        <label class="block-label">Select your zone <span class="required">*</span></label>
+                        <label class="block-label">Select your locality <span class="required">*</span></label>
                         <div class="selection-cards-grid state-grid">
                             <label *ngFor="let zone of zones; trackBy: trackByZone" class="selection-card"
                                 [class.active]="selectedZoneId === zone.id">
@@ -230,52 +230,6 @@
                         </div>
                     </div>
 
-                    <!-- Area Selection Cards -->
-                    @if (selectedZoneId && areas.length > 0) {
-                    <div class="selection-block">
-                        <label class="block-label">Select your area <span class="required">*</span></label>
-                        <div class="selection-cards-grid city-grid">
-                            <label *ngFor="let area of areas; trackBy: trackByArea" class="selection-card"
-                                [class.active]="selectedAreaId === area.id">
-                                <input type="radio" name="area-radio" [value]="area.id" [(ngModel)]="selectedAreaId"
-                                    (change)="onAreaChange()">
-                                <div class="card-content">
-                                    <div class="card-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <polyline points="12 6 12 12 16 14"></polyline>
-                                        </svg>
-                                    </div>
-                                    <span class="card-name">{{ area.name }}</span>
-                                </div>
-                                <div class="active-badge">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                </div>
-                            </label>
-
-                            <!-- Area Loading State -->
-                            @if (loadingHierarchy && areas.length === 0) {
-                            <div class="selection-card loading">
-                                <div class="skeleton-pulse"></div>
-                            </div>
-                            }
-                        </div>
-                    </div>
-                    }
-
-                    <!-- Area Searching Loader (Small overlay) -->
-                    @if (loadingHierarchy && areas.length > 0) {
-                    <div class="hierarchy-search-loader">
-                        <div class="loader-track">
-                            <div class="loader-fill"></div>
-                        </div>
-                        <span class="loader-text">Updating list...</span>
-                    </div>
-                    }
                 </div>
 
                 <div class="registration-prompt-section">
@@ -298,9 +252,9 @@
 
 <!-- ===== FULL SCREEN COVERAGE OVERLAY ===== -->
 <app-coverage-modal [showOverlay]="showOverlay" [overlayStep]="overlayStep" [searchAddress]="searchAddress"
-    [states]="states" [cities]="cities" [zones]="zones" [areas]="areas" [selectedStateId]="selectedStateId"
-    (selectedStateIdChange)="selectedStateId = $event" [selectedCityId]="selectedCityId"
-    (selectedCityIdChange)="selectedCityId = $event" [selectedZoneId]="selectedZoneId"
+    [selectedZoneName]="selectedZoneName" [states]="states" [cities]="cities" [zones]="zones" [areas]="areas"
+    [selectedStateId]="selectedStateId" (selectedStateIdChange)="selectedStateId = $event"
+    [selectedCityId]="selectedCityId" (selectedCityIdChange)="selectedCityId = $event" [selectedZoneId]="selectedZoneId"
     (selectedZoneIdChange)="selectedZoneId = $event" [selectedAreaId]="selectedAreaId"
     (selectedAreaIdChange)="selectedAreaId = $event" [loadingHierarchy]="loadingHierarchy" [activePlans]="activePlans"
     [currentStatus]="currentStatus" [interestData]="interestData" [errors]="errors" [mapCenter]="mapCenter"

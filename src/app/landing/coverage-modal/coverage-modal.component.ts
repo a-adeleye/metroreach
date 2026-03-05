@@ -17,6 +17,7 @@ export class CoverageModalComponent {
   @Input() showOverlay = false;
   @Input() overlayStep: CoverageOverlayStep = 'loading';
   @Input() searchAddress = '';
+  @Input() selectedZoneName = '';
 
   @Input() states: State[] = [];
   @Input() cities: City[] = [];
@@ -74,7 +75,7 @@ export class CoverageModalComponent {
 
   getStatusLabel(status: string): string {
     if (!status) return '';
-    if (status.toLowerCase() === 'live') return 'Coming Soon';
+    if (status.toLowerCase() === 'live') return 'Live';
     return status.replace(/_/g, ' ').replace(/\b\w/g, (value) => value.toUpperCase());
   }
 }

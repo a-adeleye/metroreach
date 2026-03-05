@@ -12,52 +12,75 @@
 
     <div class="overlay-content">
       @if (overlayStep === 'loading') {
-      <div class="overlay-step loading-step">
+      <div class="overlay-step loading-step onboarding-loader">
         <div class="scanner-wrap">
           <div class="scanner-circle"></div>
           <div class="scanner-line"></div>
         </div>
-        <h3>Checking Infrastructure...</h3>
-        <p>Verifying fibre availability for {{ searchAddress }}</p>
+        <div class="loading-badge">Infrastructure Check</div>
+        <h3>Verifying connectivity...</h3>
+        <p>Checking fibre availability in <strong>{{ searchAddress }}</strong> via our core infrastructure.</p>
       </div>
       }
 
       @if (overlayStep === 'selection') {
-      <div class="overlay-step selection-step">
-        <div class="step-header">
-          <div class="tag">Coverage Check</div>
-          <h2>Complete your location</h2>
-          <p>Tell us exactly where you are so we can check our infrastructure.</p>
+      <div class="overlay-step selection-step onboarding-flow">
+        <div class="step-header text-center">
+          <div class="onboarding-badge-solid">Good news! We're in {{ selectedZoneName }}</div>
+          <h2 class="massive-header">Check your area</h2>
+          <p class="onboarding-sub">We've brought fibre to your locality. Select your specific area below to see
+            available plans.</p>
         </div>
 
-        <div class="modal-selection-grid">
+        <div class="modal-onboarding-grid">
+          @if (areas.length > 0) {
+          <div class="onboarding-list">
+            <label *ngFor="let area of areas" class="onboarding-card-full" [class.active]="selectedAreaId === area.id">
+              <input type="radio" name="modal-area-radio" [value]="area.id" [ngModel]="selectedAreaId"
+                (ngModelChange)="selectedAreaIdChange.emit($event)" (change)="areaChange.emit()">
 
-          @if (zones.length > 0) {
-          <div class="form-group full-width">
-            <label>Zone <span class="required">*</span></label>
-            <select [ngModel]="selectedZoneId" (ngModelChange)="selectedZoneIdChange.emit($event)"
-              (change)="zoneChange.emit()" class="form-select">
-              <option value="" disabled selected>Select your Zone</option>
-              <option *ngFor="let zone of zones" [value]="zone.id">{{ zone.name }}</option>
-            </select>
+              <div class="card-left">
+                <div class="location-pin-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="card-text-main">
+                  <div class="name-badge-row">
+                    <span class="area-name-bold">{{ area.name }}</span>
+                    <span class="status-micro-badge" [class.live]="area.status.toLowerCase() === 'live'">{{
+                      getStatusLabel(area.status) }}</span>
+                  </div>
+                  <span class="area-description">Fibre Internet ready for {{ area.name }}</span>
+                </div>
+              </div>
+
+              <div class="active-check-wrap">
+                <div class="check-circle-glow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </label>
           </div>
           }
 
-          @if (areas.length > 0) {
-          <div class="form-group full-width">
-            <label>Area <span class="required">*</span></label>
-            <select [ngModel]="selectedAreaId" (ngModelChange)="selectedAreaIdChange.emit($event)"
-              (change)="areaChange.emit()" class="form-select">
-              <option value="" disabled selected>Select your Area</option>
-              <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
-            </select>
+          @if (selectedAreaId && areas.length > 0) {
+          <div class="onboarding-actions">
+            <button class="btn-primary-onboarding" (click)="areaChange.emit()">
+              Continue to Plans
+            </button>
           </div>
           }
 
           @if (loadingHierarchy) {
           <div class="selection-loader-mini">
             <div class="spinner-mini"></div>
-            <span>Loading locations...</span>
+            <span>Syncing infrastructure status...</span>
           </div>
           }
         </div>
@@ -67,17 +90,15 @@
       @if (overlayStep === 'success') {
       <div class="overlay-step success-step">
         <div class="step-header">
-          <div style="display: flex; flex-direction: column;">
-            <div class="back-link premium-back" (click)="setOverlayStep('selection')">
-              <div class="back-link-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <line x1="19" y1="12" x2="5" y2="12"></line>
-                  <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-              </div>
-              <span>Change Location</span>
+          <div class="back-link premium-back" (click)="setOverlayStep('selection')">
+            <div class="back-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
             </div>
+            <span>Change Location</span>
           </div>
           <h2>Great news! MetroReach is live.</h2>
           <p>Fibre infrastructure is ready at <strong>{{ searchAddress }}</strong>. Select a plan to continue.</p>
@@ -101,7 +122,6 @@
       @if (overlayStep === 'interest') {
       <div class="overlay-step interest-step">
         <div class="step-header">
-          <div style="display: flex; "></div>
           <div class="back-link premium-back" (click)="setOverlayStep('selection')">
             <div class="back-link-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
