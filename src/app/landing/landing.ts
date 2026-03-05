@@ -32,10 +32,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   touchEndX = 0;
   currentYear = new Date().getFullYear();
   searchAddress = '';
+  appVersion = '1.0.0';
   addressSelected = false;
   mapLoading = false;
   showOverlay = false;
-  overlayStep: 'loading' | 'success' | 'interest' | 'interest-success' | 'selection' = 'loading';
+  overlayStep: 'loading' | 'success' | 'interest' | 'interest-success' | 'selection' | 'zone-selection' = 'loading';
 
   // Coverage Hierarchy
   states: State[] = [];
@@ -432,6 +433,27 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.openInterestDialog();
       }
+      this.cdr.detectChanges();
+    });
+  }
+
+  onZoneSelectByName(name: string) {
+    this.ngZone.run(() => {
+      const zone = this.zones.find(z => z.name.toLowerCase().includes(name.toLowerCase()));
+      if (zone) {
+        this.selectedZoneId = zone.id;
+        this.onZoneChange();
+      } else {
+        this.openZoneSelection();
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  openZoneSelection() {
+    this.ngZone.run(() => {
+      this.showOverlay = true;
+      this.overlayStep = 'zone-selection';
       this.cdr.detectChanges();
     });
   }

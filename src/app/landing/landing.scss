@@ -2786,6 +2786,13 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         align-items: center;
         font-size: 14px;
 
+        .app-version {
+            opacity: 0.5;
+            margin-left: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
         .footer-bottom-links {
             display: flex;
             gap: 24px;

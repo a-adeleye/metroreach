@@ -409,7 +409,8 @@
                     </div>
                     <span class="coverage-status live">Live & Available</span>
                     <p>Covering all residences and businesses in Oniru.</p>
-                    <button class="btn-coverage green" aria-label="Get service in Oniru Estate">Get Service Now</button>
+                    <button class="btn-coverage green" aria-label="Get service in Oniru Estate"
+                        (click)="onZoneSelectByName('Oniru Estate')">Get Service Now</button>
                 </div>
 
                 <div class="coverage-card">
@@ -425,7 +426,8 @@
                     </div>
                     <span class="coverage-status coming">Coming Soon</span>
                     <p>Target completion: Q2 2026. Accepting pre-orders.</p>
-                    <button class="btn-coverage gold" aria-label="Notify me about Victoria Island">Notify Me</button>
+                    <button class="btn-coverage gold" aria-label="Notify me about Victoria Island"
+                        (click)="openInterestDialog()">Notify Me</button>
                 </div>
 
                 <div class="coverage-card">
@@ -442,7 +444,8 @@
                     </div>
                     <span class="coverage-status progress">Work In Progress</span>
                     <p>Infrastructure deployment underway. Register for updates.</p>
-                    <button class="btn-coverage gold" aria-label="Notify me about Ikoyi">Notify Me</button>
+                    <button class="btn-coverage gold" aria-label="Notify me about Ikoyi"
+                        (click)="openInterestDialog()">Notify Me</button>
                 </div>
             </div>
         </div>
@@ -531,7 +534,8 @@
         </div>
 
         <div class="footer-bottom">
-            <p>© {{ currentYear }} MetroReach Internet. All rights reserved.</p>
+            <p>© {{ currentYear }} MetroReach Internet. All rights reserved. <span class="app-version">v{{ appVersion
+                    }}</span></p>
             <div class="footer-bottom-links">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms & Conditions</a>

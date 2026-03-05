@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Area, City, CoverageStatus, State, Zone } from '../../services/coverage.service';
 
-export type CoverageOverlayStep = 'loading' | 'success' | 'interest' | 'interest-success' | 'selection';
+export type CoverageOverlayStep = 'loading' | 'success' | 'interest' | 'interest-success' | 'selection' | 'zone-selection';
 
 @Component({
   selector: 'app-coverage-modal',
@@ -76,6 +76,13 @@ export class CoverageModalComponent {
 
   triggerInterestDialog(): void {
     this.overlayStepChange.emit('interest');
+  }
+
+  onZoneSelectCard(zone: Zone): void {
+    this.selectedZoneIdChange.emit(zone.id);
+    setTimeout(() => {
+      this.zoneChange.emit();
+    }, 50);
   }
 
   onAreaSelectCard(area: Area): void {
