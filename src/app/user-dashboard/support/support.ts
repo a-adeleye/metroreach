@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SupportComponent {
     protected authService = inject(AuthService);
+    selectedCategory = signal<any>(null);
 
     supportCategories = [
         { title: 'Technical Help', icon: 'tool', desc: 'Troubleshoot your connection and hardware' },
@@ -23,4 +24,8 @@ export class SupportComponent {
         { q: 'How do I restart my MetroReach Router?', a: 'Locate the power button on the back of the G1 Gateway, press it once to turn off, wait 10 seconds, and press again.' },
         { q: 'What is the "Speed Boost" feature?', a: 'Speed Boost temporarily increases your connection priority during peak hours to ensure consistent performance for gaming and streaming.' }
     ];
+
+    showInfo(category: any) {
+        this.selectedCategory.set(category);
+    }
 }

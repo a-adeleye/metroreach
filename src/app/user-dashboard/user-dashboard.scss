@@ -102,6 +102,33 @@
             }
         }
     }
+
+    .btn-logout {
+        width: 100%;
+        margin-top: 16px;
+        background: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px;
+        color: #ef4444;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #fef2f2;
+        }
+
+        .logout-icon {
+            width: 18px;
+            height: 18px;
+        }
+    }
 }
 
 .dashboard-main {
@@ -167,7 +194,10 @@
                     color: #1e293b;
                 }
 
-                .user-id {
+                .user-meta {
+                    display: flex;
+                    gap: 4px;
+                    align-items: center;
                     font-size: 11px;
                     color: #94a3b8;
                 }

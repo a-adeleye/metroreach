@@ -57,6 +57,14 @@
                 <p class="help-number">0800-METRO-HELP</p>
                 <button class="btn-chat">Start Chat</button>
             </div>
+            <button class="btn-logout" (click)="logout()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Sign Out
+            </button>
         </div>
     </aside>
 
@@ -75,11 +83,10 @@
                 </button>
                 <div class="user-profile">
                     <div class="user-details">
-                        <span class="user-name">{{ authService.userProfile()?.fullName || 'Chidi Okafor' }}</span>
-                        <span class="user-id">ID: MR-84393</span>
+                        <span class="user-name">{{ userFullName() }}</span>
                     </div>
                     <div class="user-avatar">
-                        {{ (authService.userProfile()?.fullName || 'Chidi Okafor').substring(0, 2).toUpperCase() }}
+                        {{ userInitials() }}
                     </div>
                 </div>
             </div>

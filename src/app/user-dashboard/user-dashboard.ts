@@ -19,10 +19,35 @@ export class UserDashboardComponent implements OnInit {
     menuItems = [
         { label: 'Dashboard', icon: 'grid', route: '/dashboard/overview' },
         { label: 'Payment History', icon: 'credit-card', route: '/dashboard/billing' },
-        { label: 'My Devices', icon: 'package', route: '/dashboard/plan' },
         { label: 'Account Settings', icon: 'user', route: '/dashboard/profile' },
         { label: 'Support Tickets', icon: 'help-circle', route: '/dashboard/support' }
     ];
+
+    userFullName = computed(() => {
+        const p = this.authService.userProfile();
+        if (!p) return 'User';
+        if (p.firstName && p.lastName) return `${p.firstName} ${p.lastName}`;
+        return p.firstName || p.lastName || p.email || 'User';
+    });
+
+    userInitials = computed(() => {
+        const p = this.authService.userProfile();
+        if (!p) return 'U';
+        if (p.firstName && p.lastName) {
+            return (p.firstName[0] + p.lastName[0]).toUpperCase();
+        }
+        return (p.firstName?.[0] || p.lastName?.[0] || p.email?.[0] || 'U').toUpperCase();
+    });
+
+    userPhoneNumber = computed(() => this.authService.userProfile()?.phoneNumber || '');
+
+    userId = computed(() => {
+        const uid = this.authService.userProfile()?.uid;
+        if (!uid) return 'MR-XXXXX';
+        // If it looks like a long UUID, take first 5 chars, otherwise use as is
+        const shortId = uid.length > 8 ? uid.substring(0, 5).toUpperCase() : uid;
+        return `MR-${shortId}`;
+    });
 
     pageTitle = computed(() => {
         const url = this.router.url;
@@ -40,6 +65,5 @@ export class UserDashboardComponent implements OnInit {
 
     async logout() {
         await this.authService.logout();
-        this.router.navigate(['/login']);
     }
 }

@@ -41,8 +41,7 @@ export class LoginComponent implements OnInit {
             this.rememberMe = true;
         }
 
-        await this.authService.completePasswordlessSignIn();
-        if (this.authService.userProfile()) {
+        if (this.authService.isAuthenticated()) {
             this.redirect();
         }
     }
@@ -57,32 +56,27 @@ export class LoginComponent implements OnInit {
         this.error.set('');
 
         try {
-            if (this.isPasswordless) {
-                await this.authService.sendPasswordlessLink(this.email);
-                this.linkSent.set(true);
-            } else {
-                await this.authService.login(this.email, this.password);
+            const response = await this.authService.login(this.email, this.password);
 
-                // Handle Remember Me
-                if (this.rememberMe) {
-                    localStorage.setItem('remember_email', this.email);
-                } else {
-                    localStorage.removeItem('remember_email');
-                }
-
-                this.redirect();
+            if (response.mustChangePassword) {
+                this.router.navigate(['/change-password'], { state: { currentPassword: this.password } });
+                return;
             }
+
+            // Handle Remember Me
+            if (this.rememberMe) {
+                localStorage.setItem('remember_email', this.email);
+            } else {
+                localStorage.removeItem('remember_email');
+            }
+
+            this.redirect();
         } catch (e: any) {
             console.error('Login Error:', e);
-            this.error.set(this.getFriendlyError(e.code));
+            this.error.set(this.getFriendlyError(e.status));
         } finally {
             this.isLoading.set(false);
         }
-    }
-
-    toggleMode() {
-        this.isPasswordless = !this.isPasswordless;
-        this.error.set('');
     }
 
     navigateToForgot() {
@@ -90,19 +84,23 @@ export class LoginComponent implements OnInit {
     }
 
     private redirect() {
+        const profile = this.authService.userProfile();
+        if (profile?.mustChangePassword) {
+            this.router.navigate(['/change-password']);
+            return;
+        }
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
         this.router.navigateByUrl(returnUrl);
     }
 
-    private getFriendlyError(code?: string): string {
-        if (!code) return 'An unexpected error occurred. Please try again.';
-        switch (code) {
-            case 'auth/user-not-found': return 'Account not found.';
-            case 'auth/wrong-password': return 'Invalid credentials.';
-            case 'auth/invalid-email': return 'Please enter a valid email.';
-            case 'auth/invalid-login-credentials': return 'Invalid email or password.';
-            case 'auth/configuration-not-found': return 'Passwordless login is not enabled in Firebase Console.';
-            default: return `Error: ${code}. Please contact support.`;
+
+    private getFriendlyError(status?: number): string {
+        if (!status) return 'An unexpected error occurred. Please try again.';
+        switch (status) {
+            case 401: return 'Invalid email or password.';
+            case 403: return 'Account is disabled.';
+            case 404: return 'Login service not found.';
+            default: return `Error: ${status}. Please contact support.`;
         }
     }
 }

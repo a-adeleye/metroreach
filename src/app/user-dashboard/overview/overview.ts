@@ -14,8 +14,7 @@ export class OverviewComponent {
 
     userName = computed(() => {
         const profile = this.authService.userProfile();
-        if (!profile || !profile.fullName) return 'Chidi';
-        return profile.fullName.split(' ')[0];
+        return profile?.firstName || 'User';
     });
 
     viewMode = signal<'day' | 'week' | 'month'>('week');

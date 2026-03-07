@@ -20,8 +20,94 @@
     margin-top: 40px;
 }
 
+.mt-20 {
+    margin-top: 20px;
+}
+
 .w-100 {
     width: 100%;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.info-display {
+    border-left: 4px solid var(--primary-green);
+    background: white;
+
+    .info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--gray-light);
+
+        h3 {
+            margin: 0;
+            color: var(--midnight-blue);
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-body);
+            cursor: pointer;
+            line-height: 1;
+
+            &:hover {
+                color: var(--midnight-blue);
+            }
+        }
+    }
+
+    .info-body {
+        p {
+            margin-bottom: 16px;
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+    }
+
+    .dummy-data {
+        background: var(--gray-light);
+        padding: 20px;
+        border-radius: 12px;
+        display: flex;
+        gap: 32px;
+        margin-top: 24px;
+
+        .data-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            strong {
+                font-size: 12px;
+                color: var(--text-body);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            span {
+                font-family: monospace;
+                font-weight: 600;
+                color: var(--midnight-blue);
+            }
+
+            .badge {
+                display: inline-block;
+                background: #dcfce7;
+                color: #166534;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        }
+    }
 }
 
 .support-grid {
@@ -34,7 +120,8 @@
     transition: var(--transition-smooth);
     border: 1px solid var(--gray-light);
 
-    &:hover {
+    &:hover,
+    &.active {
         transform: translateY(-8px);
         box-shadow: var(--shadow-medium);
         border-color: var(--primary-green);

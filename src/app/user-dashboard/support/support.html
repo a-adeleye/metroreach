@@ -7,7 +7,7 @@
     <!-- Quick Support Grid -->
     <div class="support-grid">
         @for (cat of supportCategories; track cat.title) {
-        <div class="card support-card">
+        <div class="card support-card" (click)="showInfo(cat)" [class.active]="selectedCategory()?.title === cat.title">
             <div class="card-icon">
                 @switch (cat.icon) {
                 @case ('tool') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -29,10 +29,35 @@
             </div>
             <h3>{{ cat.title }}</h3>
             <p>{{ cat.desc }}</p>
-            <button class="btn-link">View Articles →</button>
+            <button class="btn-link">Get Help →</button>
         </div>
         }
     </div>
+
+    @if (selectedCategory()) {
+    <div class="card info-display animate-fade-in mt-20">
+        <div class="info-header">
+            <h3>{{ selectedCategory().title }} Details</h3>
+            <button class="btn-close" (click)="selectedCategory.set(null)">×</button>
+        </div>
+        <div class="info-body">
+            <p>Our engineers are currently refining the self-service knowledge base for <strong>{{
+                    selectedCategory().title }}</strong>.</p>
+            <p>In the meantime, you can reach out to our dedicated support team via the Live Chat or Phone options below
+                for immediate assistance with any {{ selectedCategory().title.toLowerCase() }} related issues.</p>
+
+            <div class="dummy-data">
+                <div class="data-item">
+                    <strong>Reference ID:</strong> <span>SR-{{ (selectedCategory().title.substring(0,2) +
+                        "-8493").toUpperCase() }}</span>
+                </div>
+                <div class="data-item">
+                    <strong>Status:</strong> <span class="badge">Operational</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
 
     <div class="support-content-row mt-40">
         <!-- Contact Section -->

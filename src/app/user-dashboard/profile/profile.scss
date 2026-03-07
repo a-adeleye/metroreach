@@ -68,3 +68,18 @@
     gap: 24px;
     grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
 }
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+.flex-1 {
+    flex: 1;
+}

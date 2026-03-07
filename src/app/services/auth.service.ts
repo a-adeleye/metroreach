@@ -1,142 +1,175 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Auth, authState, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut, User, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from '@angular/fire/auth';
-import { Firestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of, from } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface UserProfile {
     uid: string;
     email: string | null;
-    permissions: string[];
-    fullName?: string;
-    phone?: string;
-    createdAt?: any;
-    lastLogin?: any;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+    mustChangePassword?: boolean;
+}
+
+
+export interface LoginResponse {
+    accessToken?: string;
+    refreshTokenId?: string;
+    mustChangePassword?: boolean;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private auth = inject(Auth);
-    private firestore = inject(Firestore);
+    private http = inject(HttpClient);
     private router = inject(Router);
+    private apiUrl = environment.apiUrl; // 'https://api.metroreach.ng/api'
 
-    user = signal<User | null>(null);
     userProfile = signal<UserProfile | null>(null);
     isResolvingAuth = signal<boolean>(true);
 
     constructor() {
-        authState(this.auth).pipe(
-            switchMap(user => {
-                if (user) {
-                    this.user.set(user);
-                    return from(this.getOrCreateUserProfile(user));
-                } else {
-                    this.user.set(null);
-                    this.userProfile.set(null);
-                    return of(null);
-                }
-            }),
-            tap(() => this.isResolvingAuth.set(false))
-        ).subscribe(profile => {
-            if (profile) this.userProfile.set(profile);
+        this.loadStoredTokens();
+    }
+
+    private loadStoredTokens() {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            const decoded = this.decodeToken(token);
+            if (decoded) {
+                this.userProfile.set({
+                    uid: decoded.sub || decoded.uid,
+                    email: decoded.email,
+                    firstName: decoded.firstName,
+                    lastName: decoded.lastName,
+                    phoneNumber: decoded.phoneNumber || decoded.phone,
+                    mustChangePassword: decoded.mustChangePassword === true
+                });
+            }
+        }
+        this.isResolvingAuth.set(false);
+    }
+
+    async login(username: string, pass: string): Promise<LoginResponse> {
+        const response = await firstValueFrom(
+            this.http.post<LoginResponse>(`${this.apiUrl}/customer-auth/login`, { username, password: pass })
+        );
+
+        if (response.accessToken) {
+            this.handleAuthSuccess(response.accessToken, response.refreshTokenId || '');
+
+            // Check if mustChangePassword is in the token or response
+            const decodedToken = this.decodeToken(response.accessToken);
+            if (response.mustChangePassword || decodedToken?.mustChangePassword) {
+                return { ...response, mustChangePassword: true };
+            }
+        } else if (response.mustChangePassword) {
+            return response;
+        }
+
+        return response;
+    }
+
+    async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+        const token = localStorage.getItem('access_token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+        await firstValueFrom(
+            this.http.post<{ success: boolean }>(`${this.apiUrl}/customer-auth/change-password`,
+                { currentPassword, newPassword },
+                { headers })
+        );
+    }
+
+    async forgotPassword(email: string): Promise<void> {
+        await firstValueFrom(
+            this.http.post(`${this.apiUrl}/customer-auth/forgot-password`, { email })
+        );
+    }
+
+    async refreshToken(): Promise<void> {
+        const accessToken = localStorage.getItem('access_token');
+        const refreshTokenId = localStorage.getItem('refresh_token_id');
+
+        if (!accessToken || !refreshTokenId) {
+            this.logout();
+            return;
+        }
+
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
+        const response = await firstValueFrom(
+            this.http.post<LoginResponse>(`${this.apiUrl}/customer-auth/refresh`,
+                { refreshTokenId },
+                { headers })
+        );
+
+        if (response.accessToken) {
+            this.handleAuthSuccess(response.accessToken, response.refreshTokenId || refreshTokenId);
+        }
+    }
+
+    private handleAuthSuccess(accessToken: string, refreshTokenId: string) {
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('refresh_token_id', refreshTokenId);
+
+        const decoded = this.decodeToken(accessToken);
+        this.userProfile.set({
+            uid: decoded.sub || decoded.uid,
+            email: decoded.email,
+            firstName: decoded.firstName,
+            lastName: decoded.lastName,
+            phoneNumber: decoded.phoneNumber || decoded.phone,
+            mustChangePassword: decoded.mustChangePassword === true
         });
     }
 
-    private async getOrCreateUserProfile(user: User): Promise<UserProfile | null> {
+    private decodeToken(token: string): any {
         try {
-            const userDocRef = doc(this.firestore, 'users', user.uid);
-            const userDoc = await getDoc(userDocRef);
-
-            if (userDoc.exists()) {
-                const data = userDoc.data();
-                // Update last login
-                await setDoc(userDocRef, { lastLogin: serverTimestamp() }, { merge: true });
-                return {
-                    uid: user.uid,
-                    email: data['email'],
-                    permissions: data['permissions'] || [],
-                    fullName: data['fullName'],
-                    phone: data['phone']
-                };
-            } else {
-                // Create new profile
-                const newProfile: UserProfile = {
-                    uid: user.uid,
-                    email: user.email,
-                    permissions: ['USER'], // Default permission
-                    fullName: user.displayName || user.email?.split('@')[0] || 'New User',
-                    phone: '',
-                    createdAt: serverTimestamp(),
-                    lastLogin: serverTimestamp()
-                };
-                await setDoc(userDocRef, newProfile);
-                return newProfile;
-            }
+            const parts = token.split('.');
+            if (parts.length !== 3) return null;
+            const payload = parts[1];
+            const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+            return decoded;
         } catch (e) {
-            console.error('Error in getOrCreateUserProfile', e);
+            console.error('Error decoding token', e);
             return null;
         }
     }
 
-    async updateProfile(data: Partial<UserProfile>) {
-        const currentUser = this.user();
-        if (!currentUser) throw new Error('No user logged in');
-
-        const userDocRef = doc(this.firestore, 'users', currentUser.uid);
-        await updateDoc(userDocRef, data);
-
-        // Update local signal
-        this.userProfile.update(prev => prev ? { ...prev, ...data } : null);
-    }
-
-    async changePassword(currentPass: string, newPass: string) {
-        const currentUser = this.auth.currentUser;
-        if (!currentUser || !currentUser.email) throw new Error('No user logged in');
-
-        // Re-authenticate first
-        const credential = EmailAuthProvider.credential(currentUser.email, currentPass);
-        await reauthenticateWithCredential(currentUser, credential);
-
-        // Update password
-        await updatePassword(currentUser, newPass);
-    }
-
-    async login(email: string, pass: string) {
-        return signInWithEmailAndPassword(this.auth, email, pass);
-    }
-
-    async sendPasswordlessLink(email: string) {
-        const actionCodeSettings = {
-            url: window.location.origin + '/login',
-            handleCodeInApp: true
-        };
-        await sendSignInLinkToEmail(this.auth, email, actionCodeSettings);
-        window.localStorage.setItem('emailForSignIn', email);
-    }
-
-    async completePasswordlessSignIn() {
-        if (isSignInWithEmailLink(this.auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) {
-                email = window.prompt('Please provide your email for confirmation');
-            }
-            if (email) {
-                await signInWithEmailLink(this.auth, email, window.location.href);
-                window.localStorage.removeItem('emailForSignIn');
+    async logout() {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+            try {
+                await firstValueFrom(this.http.post(`${this.apiUrl}/customer-auth/logout`, {}, { headers }));
+            } catch (e) {
+                console.error('Logout API failed', e);
             }
         }
-    }
-
-    async logout() {
-        await signOut(this.auth);
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token_id');
+        this.userProfile.set(null);
         this.router.navigate(['/login']);
     }
 
-    hasPermission(permission: string): boolean {
-        const profile = this.userProfile();
-        return !!profile && profile.permissions.includes(permission.toUpperCase());
+    async updateProfile(data: Partial<UserProfile>) {
+        const token = localStorage.getItem('access_token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+        await firstValueFrom(
+            this.http.post<UserProfile>(`${this.apiUrl}/customer-auth/update-profile`, data, { headers })
+        );
+
+        // Update local signal for UI consistency
+        this.userProfile.update(prev => prev ? { ...prev, ...data } : null);
+    }
+
+    isAuthenticated(): boolean {
+        return !!this.userProfile();
     }
 }
+
+

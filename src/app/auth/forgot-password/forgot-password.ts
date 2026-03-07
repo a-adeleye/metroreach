@@ -30,21 +30,16 @@ export class ForgotPasswordComponent {
         this.error.set('');
 
         try {
-            // Placeholder for password reset API call
-            console.log('Password reset requested for:', this.email);
-            // await this.authService.sendPasswordResetEmail(this.email);
-
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
+            await this.authService.forgotPassword(this.email);
             this.isSubmitted.set(true);
         } catch (e: any) {
             console.error('Reset Error:', e);
-            this.error.set('Failed to send reset email. Please try again.');
+            this.error.set(e.error?.message || 'Failed to send reset email. Please try again.');
         } finally {
             this.isLoading.set(false);
         }
     }
+
 
     backToLogin() {
         this.router.navigate(['/login']);
