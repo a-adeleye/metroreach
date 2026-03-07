@@ -13,15 +13,19 @@ export class BillingComponent {
     protected authService = inject(AuthService);
 
     balance = signal('0.00');
+    totalPaidYTD = signal('382,500');
+    outstanding = signal('0.00');
     nextPayment = {
-        date: 'March 15, 2026',
+        date: 'Oct 24, 2024',
         amount: '38,250'
     };
 
     history = [
-        { id: '#INV-5842', date: 'Feb 15, 2026', amount: '38,250', status: 'Paid', method: 'MasterCard •••• 4412' },
-        { id: '#INV-4921', date: 'Jan 15, 2026', amount: '38,250', status: 'Paid', method: 'MasterCard •••• 4412' },
-        { id: '#INV-3820', date: 'Dec 15, 2025', amount: '38,250', status: 'Paid', method: 'Bank Transfer' },
-        { id: '#INV-2710', date: 'Nov 15, 2025', amount: '38,250', status: 'Paid', method: 'Bank Transfer' }
+        { id: 'INV-2024-009', date: 'Sep 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Paid' },
+        { id: 'INV-2024-008', date: 'Aug 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Paid' },
+        { id: 'INV-2024-007', date: 'Jul 24, 2024', description: 'Mesh WiFi Unit Purchase (x2)', amount: '72,000', status: 'Paid' },
+        { id: 'INV-2024-006', date: 'Jun 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Paid' },
+        { id: 'INV-2024-005', date: 'Jun 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Pending' },
+        { id: 'INV-2024-001', date: 'Jan 15, 2024', description: 'Installation Fee + First Month', amount: '85,000', status: 'Paid' }
     ];
 }

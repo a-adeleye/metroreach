@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Area, City, CoverageStatus, State, Zone } from '../../services/coverage.service';
+import { SubscriptionPlan } from '../../services/subscription.service';
 
 export type CoverageOverlayStep = 'loading' | 'success' | 'interest' | 'interest-success' | 'selection' | 'zone-selection';
 
@@ -30,7 +31,8 @@ export class CoverageModalComponent {
   @Input() selectedAreaId = '';
 
   @Input() loadingHierarchy = false;
-  @Input() activePlans: any[] = [];
+  @Input() activePlans: SubscriptionPlan[] = [];
+  @Input() selectedPlan: SubscriptionPlan | null = null;
   @Input() currentStatus: CoverageStatus = 'Live';
 
   @Input() interestData = {
@@ -65,7 +67,7 @@ export class CoverageModalComponent {
   @Output() zoneChange = new EventEmitter<void>();
   @Output() areaChange = new EventEmitter<void>();
 
-  @Output() selectPlan = new EventEmitter<any>();
+  @Output() selectPlan = new EventEmitter<SubscriptionPlan>();
   @Output() markerDragEnd = new EventEmitter<google.maps.MapMouseEvent>();
   @Output() submitInterest = new EventEmitter<void>();
 

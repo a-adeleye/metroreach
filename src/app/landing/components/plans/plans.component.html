@@ -21,16 +21,17 @@
                 <span class="plan-badge">{{ plan.badge }}</span>
                 }
                 <h3 class="plan-name">{{ plan.name }}</h3>
-                <p class="plan-speed">{{ plan.speed }}</p>
-                <span class="plan-tag" [ngClass]="plan.tagClass">{{ plan.tag }}</span>
+                <p class="plan-speed">{{ plan.speedMbps }} Mbps</p>
+                <span class="plan-tag" [ngClass]="plan.tagClass || 'full-fibre'">{{ plan.description || 'Full Fibre'
+                    }}</span>
                 <div class="plan-price">
-                    <span class="currency">₦</span><span class="amount">{{ plan.price }}</span> <span
+                    <span class="currency">₦</span><span class="amount">{{ plan.monthlyPrice | number }}</span> <span
                         class="period">/month</span>
                 </div>
                 <ul class="plan-features">
                     <li *ngFor="let feature of plan.features">{{ feature }}</li>
                 </ul>
-                <button class="btn-plan" (click)="onScrollToSection('register')">Get Started</button>
+                <button class="btn-plan" (click)="selectPlan.emit(plan)">Get Started</button>
             </div>
         </div>
     </div>

@@ -200,8 +200,8 @@
             <div *ngFor="let plan of activePlans" class="plan-card-mini" [class.featured]="plan.featured">
               <div class="plan-info">
                 <h3>{{ plan.name }}</h3>
-                <p class="speed">{{ plan.speed }}</p>
-                <div class="price">₦{{ plan.price }}<span>/mo</span></div>
+                <p class="speed">{{ plan.speedMbps }} Mbps</p>
+                <div class="price">₦{{ plan.monthlyPrice | number }}<span>/mo</span></div>
               </div>
               <button class="btn-select-plan" (click)="selectPlan.emit(plan)">Select Plan</button>
             </div>
@@ -213,7 +213,8 @@
       @if (overlayStep === 'interest') {
       <div class="overlay-step interest-step">
         <div class="step-header">
-          <div class="back-link premium-back" (click)="setOverlayStep('selection')">
+          <div class="back-link premium-back"
+            (click)="selectedPlan ? setOverlayStep('success') : setOverlayStep('selection')">
             <div class="back-link-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -221,8 +222,13 @@
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
             </div>
-            <span>Change Location</span>
+            <span>{{ selectedPlan ? 'Back to Plans' : 'Change Location' }}</span>
           </div>
+          @if (selectedPlan && currentStatus === 'Live') {
+          <h2>Complete Your Subscription</h2>
+          <p>You've selected the <strong>{{ selectedPlan.name }}</strong> plan. Please provide your installation details
+            to proceed to secure payment.</p>
+          } @else {
           @if (currentStatus === 'ongoing') {
           <h2>Deployment in Progress</h2>
           }
@@ -241,6 +247,7 @@
           @if (currentStatus !== 'Live' && currentStatus !== 'coming soon') {
           <p>We're not quite there yet, but you can help us prioritize your area! Register below for updates and early
             access.</p>
+          }
           }
         </div>
 
@@ -304,7 +311,7 @@
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </div>
-            <span class="btn-label">Register for Priority Access</span>
+            <span class="btn-label">{{ selectedPlan ? 'Proceed to Payment' : 'Register for Priority Access' }}</span>
           </button>
         </div>
       </div>

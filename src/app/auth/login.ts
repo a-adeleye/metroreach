@@ -2,12 +2,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './login.html',
     styleUrl: './login.scss'
 })
@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
 
     email = '';
     password = '';
+    rememberMe = false;
     isPasswordless = false;
 
     isLoading = signal(false);
@@ -33,6 +34,13 @@ export class LoginComponent implements OnInit {
     }
 
     async ngOnInit() {
+        // Load saved email if 'Remember Me' was used
+        const savedEmail = localStorage.getItem('remember_email');
+        if (savedEmail) {
+            this.email = savedEmail;
+            this.rememberMe = true;
+        }
+
         await this.authService.completePasswordlessSignIn();
         if (this.authService.userProfile()) {
             this.redirect();
@@ -54,6 +62,14 @@ export class LoginComponent implements OnInit {
                 this.linkSent.set(true);
             } else {
                 await this.authService.login(this.email, this.password);
+
+                // Handle Remember Me
+                if (this.rememberMe) {
+                    localStorage.setItem('remember_email', this.email);
+                } else {
+                    localStorage.removeItem('remember_email');
+                }
+
                 this.redirect();
             }
         } catch (e: any) {
@@ -67,6 +83,10 @@ export class LoginComponent implements OnInit {
     toggleMode() {
         this.isPasswordless = !this.isPasswordless;
         this.error.set('');
+    }
+
+    navigateToForgot() {
+        this.router.navigate(['/forgot-password']);
     }
 
     private redirect() {

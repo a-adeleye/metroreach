@@ -1,0 +1,39 @@
+<div class="checkout-status-page">
+    <div class="content-card success">
+        <div class="icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
+        <h1>Payment Successful!</h1>
+        <p class="summary">Your transaction was processed successfully. Thank you for choosing Metroreach.</p>
+
+        <div class="info-box">
+            <div class="info-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            <div class="info-content">
+                <p>We've sent your <strong>login credentials</strong> to your email address.</p>
+                <p>You can now log in to your account to view the status of your order.</p>
+            </div>
+        </div>
+
+        <div class="details" *ngIf="txRef">
+            <span class="label">Reference:</span>
+            <span class="value">{{ txRef }}</span>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" (click)="goToLogin()">
+                Go to Login
+            </button>
+            <a routerLink="/" class="btn btn-link">Back to Home</a>
+        </div>
+    </div>
+</div>

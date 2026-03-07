@@ -53,6 +53,25 @@
                 color: $primary-green;
             }
         }
+
+        .btn-account {
+            background: $primary-green;
+            color: $white !important;
+            padding: 10px 24px !important;
+            border-radius: 8px;
+            font-weight: 500 !important;
+            opacity: 1 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: $transition-smooth;
+
+            &:hover {
+                background: shade($primary-green, 15%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba($primary-green, 0.2);
+            }
+        }
     }
 
     .hamburger {

@@ -7,8 +7,10 @@
 
         <div class="coverage-layout">
             <div class="map-container">
+                <!-- Leaflet Coverage Map Container -->
                 <div id="coverage-map" style="width: 100%; height: 500px; border:0; z-index:1;"></div>
 
+                <!-- Visual Coverage Zones -->
                 <div class="coverage-zones">
                     <div class="zone oniru live" style="top: 45%; left: 55%;">
                         <div class="pulse"></div>
@@ -45,7 +47,8 @@
                     </div>
                     <span class="coverage-status live">Live & Available</span>
                     <p>Covering all residences and businesses in Oniru.</p>
-                    <button class="btn-coverage green" aria-label="Get service in Oniru Estate">Get Service Now</button>
+                    <button class="btn-coverage green" aria-label="Get service in Oniru Estate"
+                        (click)="onZoneSelect.emit('Oniru Estate')">Get Service Now</button>
                 </div>
 
                 <div class="coverage-card">
@@ -61,7 +64,8 @@
                     </div>
                     <span class="coverage-status coming">Coming Soon</span>
                     <p>Target completion: Q2 2026. Accepting pre-orders.</p>
-                    <button class="btn-coverage gold" aria-label="Notify me about Victoria Island">Notify Me</button>
+                    <button class="btn-coverage gold" aria-label="Notify me about Victoria Island"
+                        (click)="notifyMe.emit()">Notify Me</button>
                 </div>
 
                 <div class="coverage-card">
@@ -78,7 +82,8 @@
                     </div>
                     <span class="coverage-status progress">Work In Progress</span>
                     <p>Infrastructure deployment underway. Register for updates.</p>
-                    <button class="btn-coverage gold" aria-label="Notify me about Ikoyi">Notify Me</button>
+                    <button class="btn-coverage gold" aria-label="Notify me about Ikoyi"
+                        (click)="notifyMe.emit()">Notify Me</button>
                 </div>
             </div>
         </div>

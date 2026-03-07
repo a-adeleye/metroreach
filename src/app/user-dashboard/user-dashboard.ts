@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -17,12 +17,18 @@ export class UserDashboardComponent implements OnInit {
     isSidebarOpen = signal(false);
 
     menuItems = [
-        { label: 'Overview', icon: 'grid', route: '/dashboard/overview' },
-        { label: 'Profile', icon: 'user', route: '/dashboard/profile' },
-        { label: 'My Plan', icon: 'package', route: '/dashboard/plan' },
-        { label: 'Billing', icon: 'credit-card', route: '/dashboard/billing' },
-        { label: 'Support', icon: 'help-circle', route: '/dashboard/support' }
+        { label: 'Dashboard', icon: 'grid', route: '/dashboard/overview' },
+        { label: 'Payment History', icon: 'credit-card', route: '/dashboard/billing' },
+        { label: 'My Devices', icon: 'package', route: '/dashboard/plan' },
+        { label: 'Account Settings', icon: 'user', route: '/dashboard/profile' },
+        { label: 'Support Tickets', icon: 'help-circle', route: '/dashboard/support' }
     ];
+
+    pageTitle = computed(() => {
+        const url = this.router.url;
+        const item = this.menuItems.find(i => url.includes(i.route));
+        return item ? item.label : 'Dashboard';
+    });
 
     toggleSidebar() {
         this.isSidebarOpen.update(v => !v);

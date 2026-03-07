@@ -6,6 +6,16 @@ import { LeadService } from '../services/lead.service';
 import { CoverageService, State, City, Zone, Area, CoverageStatus } from '../services/coverage.service';
 import { RouterModule } from '@angular/router';
 import { CoverageModalComponent } from './coverage-modal/coverage-modal.component';
+import { SubscriptionPlan, SubscriptionService } from '../services/subscription.service';
+
+// Sub-components
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HeroComponent } from './components/hero/hero.component';
+import { PlansComponent } from './components/plans/plans.component';
+import { ServicesComponent } from './components/services/services.component';
+import { CoverageComponent } from './components/coverage/coverage.component';
+import { SupportComponent } from './components/support/support.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 // Sub-components available for future refactoring (see src/app/landing/components/):
 // NavbarComponent, HeroComponent, PlansComponent, ServicesComponent,
@@ -14,7 +24,19 @@ import { CoverageModalComponent } from './coverage-modal/coverage-modal.componen
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, CoverageModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    CoverageModalComponent,
+    NavbarComponent,
+    HeroComponent,
+    PlansComponent,
+    ServicesComponent,
+    CoverageComponent,
+    SupportComponent,
+    FooterComponent
+  ],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
@@ -24,12 +46,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private coverageService = inject(CoverageService);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
+  private subscriptionService = inject(SubscriptionService);
 
-  currentSlide = 0;
   activeServiceType: 'home' | 'business' = 'home';
-  mobileMenuOpen = false;
-  touchStartX = 0;
-  touchEndX = 0;
   currentYear = new Date().getFullYear();
   searchAddress = '';
   appVersion = '1.0.0';
@@ -62,6 +81,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   loadingHierarchy = false;
+  selectedPlan: SubscriptionPlan | null = null;
 
   addressMetadata = {
     locality: '',
@@ -103,103 +123,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor() { }
 
-  homePlans = [
-    {
-      name: 'Essential',
-      speed: '50 Mbps',
-      tag: 'Best Value',
-      tagClass: 'best-value',
-      price: '20,000',
-      featured: false,
-      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Basic technical support']
-    },
-    {
-      name: 'Premium',
-      speed: '100 Mbps',
-      tag: 'Full Fibre',
-      tagClass: 'full-fibre',
-      price: '38,250',
-      featured: true,
-      badge: 'Most Popular',
-      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Standard technical support', 'Smart home ready']
-    },
-    {
-      name: 'Ultra',
-      speed: '300 Mbps',
-      tag: 'Fast',
-      tagClass: 'fast',
-      price: '85,000',
-      featured: false,
-      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Priority technical support', 'Smart home ready']
-    },
-    {
-      name: 'Gigabit',
-      speed: '500 Mbps',
-      tag: 'Fast',
-      tagClass: 'fast',
-      price: '139,500',
-      featured: false,
-      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', 'Premium technical support', 'Gaming & 4K streaming']
-    },
-    {
-      name: 'Ultrafast',
-      speed: '1000 Mbps',
-      tag: 'Full Fibre',
-      tagClass: 'full-fibre',
-      price: '252,000',
-      featured: false,
-      features: ['Unlimited data', 'Free WiFi Gateway', 'Free installation', '24/7 premium support', '4K streaming & smart home ready']
-    }
-  ];
-
-  businessPlans = [
-    {
-      name: 'Small Business',
-      speed: '50 Mbps CIR',
-      tag: 'Guaranteed Bandwidth',
-      tagClass: 'full-fibre',
-      price: '90,000',
-      featured: false,
-      features: ['Unlimited data', 'Business-grade router', 'Static IP included', '24/7 business support', '99.9% uptime SLA', 'CIR guaranteed bandwidth']
-    },
-    {
-      name: 'Growing Business',
-      speed: '100 Mbps CIR',
-      tag: 'Guaranteed Bandwidth',
-      tagClass: 'full-fibre',
-      price: '170,000',
-      featured: true,
-      badge: 'Most Popular',
-      features: ['Unlimited data', 'Enterprise router', '2 Static IPs included', '24/7 priority support', '99.95% uptime SLA', 'Dedicated account manager']
-    },
-    {
-      name: 'Established Business',
-      speed: '300 Mbps CIR',
-      tag: 'Guaranteed Bandwidth',
-      tagClass: 'full-fibre',
-      price: '380,000',
-      featured: false,
-      features: ['Unlimited data', 'Advanced enterprise router', '5 Static IPs included', '24/7 premium support', '99.99% uptime SLA', 'Network security suite']
-    },
-    {
-      name: 'Large Enterprise',
-      speed: '500 Mbps CIR',
-      tag: 'Guaranteed Bandwidth',
-      tagClass: 'full-fibre',
-      price: '625,000',
-      featured: false,
-      features: ['Unlimited data', 'Carrier-grade equipment', '10 Static IPs included', '24/7 dedicated support', '99.99% uptime SLA', 'Advanced security suite']
-    },
-    {
-      name: 'Corporate Solution',
-      speed: '1000 Mbps CIR',
-      tag: 'Guaranteed Bandwidth',
-      tagClass: 'full-fibre',
-      price: '1,130,000',
-      featured: false,
-      features: ['Unlimited data', 'Redundant carrier-grade equipment', 'Unlimited Static IPs', '24/7 engineer support', '99.999% uptime SLA', 'On-site technician included']
-    }
-  ];
+  homePlans: SubscriptionPlan[] = [];
+  businessPlans: SubscriptionPlan[] = [];
 
   get activePlans() {
     return this.activeServiceType === 'home' ? this.homePlans : this.businessPlans;
@@ -244,8 +169,39 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   autoSlideInterval: any;
 
   ngOnInit() {
-    this.startAutoSlide();
     this.loadZones();
+    this.loadPlans();
+  }
+
+  loadPlans() {
+    this.subscriptionService.getPublicPlans().subscribe({
+      next: (plans) => {
+        // Business plans usually have 'CIR' in name or a specific property, 
+        // but the API snippet doesn't show a 'type' field.
+        // We'll assume plans with 'Mbps' are home and 'CIR' are business, 
+        // or just filter by speed/price if needed.
+        // Based on the user request, the response is an array.
+        // Let's split them based on price or keywords for now, or just use them as they come.
+        // I will assume for now they are all 'home' unless I see otherwise.
+
+        this.homePlans = plans.filter(p => !p.name.toLowerCase().includes('business') && !p.name.toLowerCase().includes('enterprise') && !p.name.toLowerCase().includes('corporate'));
+        this.businessPlans = plans.filter(p => p.name.toLowerCase().includes('business') || p.name.toLowerCase().includes('enterprise') || p.name.toLowerCase().includes('corporate'));
+
+        // If all plans go to one bucket, fix it
+        if (this.homePlans.length === 0 && plans.length > 0) {
+          this.homePlans = plans;
+        }
+
+        // Add default tags/classes if missing for the UI
+        plans.forEach(p => {
+          if (!p.tag) p.tag = 'Full Fibre';
+          if (!p.tagClass) p.tagClass = 'full-fibre';
+        });
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading plans:', err)
+    });
   }
 
   loadZones() {
@@ -458,8 +414,19 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onSelectPlan(plan: any) {
-    this.overlayStep = 'interest-success';
+  onSelectPlanFromLanding(plan: SubscriptionPlan) {
+    this.selectedPlan = plan;
+    this.showOverlay = true;
+    this.overlayStep = 'zone-selection';
+    this.cdr.detectChanges();
+    this.scrollToSection('register');
+  }
+
+  onSelectPlan(plan: SubscriptionPlan) {
+    this.selectedPlan = plan;
+    // For "Live" areas, we still need to collect user info before proceeding to checkout
+    // So we move to the 'interest' step (form)
+    this.overlayStep = 'interest';
     this.cdr.detectChanges();
   }
 
@@ -489,7 +456,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.stopAutoSlide();
     this.mapObserver?.disconnect();
   }
 
@@ -499,53 +465,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.initAutocomplete();
-    this.initTouchListeners();
-    this.initCoverageMap();
   }
 
-  private initCoverageMap() {
-    if (typeof window === 'undefined') return;
-
-    const mapElement = document.getElementById('coverage-map');
-    if (!mapElement) return;
-
-    // Use Intersection Observer to lazy load the map
-    this.mapObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !this.mapInitialized) {
-            this.mapInitialized = true;
-            this.loadLeafletMap();
-            this.mapObserver?.disconnect();
-          }
-        });
-      },
-      { rootMargin: '100px' }
-    );
-
-    this.mapObserver.observe(mapElement);
-  }
-
-  private async loadLeafletMap() {
-    try {
-      const L = await import('leaflet');
-      this.coverageMap = L.map('coverage-map').setView([6.4426, 3.4116], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(this.coverageMap);
-    } catch (error) {
-      console.error('Error loading Leaflet:', error);
-    }
-  }
-
-  private initTouchListeners() {
-    const carousel = document.getElementById('hero-carousel');
-    if (carousel) {
-      carousel.addEventListener('touchstart', (e: any) => this.onTouchStart(e), { passive: true });
-      carousel.addEventListener('touchend', (e: any) => this.onTouchEnd(e), { passive: true });
-    }
-  }
 
   private async initAutocomplete(retryCount = 0) {
     if (!(window as any).google || !(window as any).google.maps || !(window as any).google.maps.importLibrary) {
@@ -736,61 +657,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  startAutoSlide() {
-    this.stopAutoSlide();
-    this.autoSlideInterval = setInterval(() => {
-      this.autoNextSlide();
-    }, 3000);
-  }
-
-  stopAutoSlide() {
-    if (this.autoSlideInterval) {
-      clearInterval(this.autoSlideInterval);
-    }
-  }
-
-  resetAutoSlide() {
-    this.stopAutoSlide();
-    this.startAutoSlide();
-  }
-
-  setSlide(index: number) {
-    this.currentSlide = index;
-    this.resetAutoSlide();
-  }
-
-  autoNextSlide() {
-    this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-    this.cdr.detectChanges();
-  }
-
-  nextSlide() {
-    this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-    this.resetAutoSlide();
-  }
-
-  prevSlide() {
-    this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
-    this.resetAutoSlide();
-  }
-
-  onTouchStart(event: TouchEvent) {
-    this.touchStartX = event.changedTouches[0].screenX;
-  }
-
-  onTouchEnd(event: TouchEvent) {
-    this.touchEndX = event.changedTouches[0].screenX;
-    this.handleSwipe();
-  }
-
-  handleSwipe() {
-    if (this.touchEndX < this.touchStartX - 50) {
-      this.nextSlide();
-    }
-    if (this.touchEndX > this.touchStartX + 50) {
-      this.prevSlide();
-    }
-  }
 
   scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
@@ -853,16 +719,41 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         zoneId: this.selectedZoneId || null,
         areaId: this.selectedAreaId || null,
         lat: this.addressMetadata.lat,
-        lng: this.addressMetadata.lng
+        lng: this.addressMetadata.lng,
+        planId: this.selectedPlan?.id || null
       };
 
-      await this.leadService.publicLead(data as any).toPromise();
-      await new Promise(resolve => setTimeout(resolve, 600));
+      if (this.selectedPlan && this.currentStatus === 'Live') {
+        // If it's a live area and a plan is selected, create checkout session
+        this.subscriptionService.createCheckoutSession(data as any).subscribe({
+          next: (res) => {
+            if (res.checkoutUrl) {
+              window.location.href = res.checkoutUrl;
+              // Keep loading states active while the page redirects
+            } else {
+              this.commonService.setLoading(false);
+              this.isSubmitting = false;
+              this.overlayStep = 'interest-success';
+              this.cdr.detectChanges();
+            }
+          },
+          error: (err) => {
+            console.error('Checkout error:', err);
+            this.commonService.setLoading(false);
+            this.isSubmitting = false;
+            this.commonService.showToast('Could not initiate payment. Please try again.', 'error');
+          }
+        });
+      } else {
+        // Otherwise just register as a lead
+        await this.leadService.publicLead(data as any).toPromise();
+        await new Promise(resolve => setTimeout(resolve, 600));
 
-      this.commonService.setLoading(false);
-      this.isSubmitting = false;
-      this.overlayStep = 'interest-success';
-      this.cdr.detectChanges();
+        this.commonService.setLoading(false);
+        this.isSubmitting = false;
+        this.overlayStep = 'interest-success';
+        this.cdr.detectChanges();
+      }
     } catch (error) {
       console.error('Error submitting interest:', error);
       this.commonService.setLoading(false);
@@ -893,16 +784,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.activeServiceType = type;
   }
 
-  toggleMobileMenu() {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
-  }
-
-  closeMobileMenu() {
-    this.mobileMenuOpen = false;
-  }
 
   resetForm() {
     this.currentStatus = 'Live';
+    this.selectedPlan = null;
     this.interestData = {
       fullName: '',
       phoneNumber: '',

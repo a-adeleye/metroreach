@@ -16,6 +16,7 @@
                     <li><a href="javascript:void(0)" (click)="onScrollToSection('plans')">Full Fibre Plans</a></li>
                     <li><a href="javascript:void(0)" (click)="onScrollToSection('coverage')">Coverage Areas</a></li>
                     <li><a href="javascript:void(0)" (click)="onScrollToSection('register')">Register Interest</a></li>
+                    <li><a routerLink="/dashboard">My Account</a></li>
                 </ul>
             </div>
 
@@ -27,7 +28,8 @@
         </div>
 
         <div class="footer-bottom">
-            <p>© {{ currentYear }} MetroReach Internet. All rights reserved.</p>
+            <p>© {{ currentYear }} MetroReach Internet. All rights reserved. <span class="app-version">v{{ appVersion
+                    }}</span></p>
             <div class="footer-bottom-links">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms & Conditions</a>

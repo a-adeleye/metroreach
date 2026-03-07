@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,6 +9,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './coverage.component.scss',
 })
 export class CoverageComponent implements AfterViewInit, OnDestroy {
+  @Output() onZoneSelect = new EventEmitter<string>();
+  @Output() notifyMe = new EventEmitter<void>();
+
   private coverageMap: any;
   private mapObserver: IntersectionObserver | null = null;
   private mapInitialized = false;

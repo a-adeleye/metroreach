@@ -12,6 +12,12 @@ import { AuthService } from '../../services/auth.service';
 export class OverviewComponent {
     protected authService = inject(AuthService);
 
+    userName = computed(() => {
+        const profile = this.authService.userProfile();
+        if (!profile || !profile.fullName) return 'Chidi';
+        return profile.fullName.split(' ')[0];
+    });
+
     viewMode = signal<'day' | 'week' | 'month'>('week');
 
     userPlan = signal({

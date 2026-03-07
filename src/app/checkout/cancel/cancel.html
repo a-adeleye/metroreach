@@ -1,0 +1,37 @@
+<div class="checkout-status-page">
+    <div class="content-card error">
+        <div class="icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+
+        <h1>{{ isFailed ? 'Payment Failed' : 'Payment Cancelled' }}</h1>
+        <p class="summary">
+            {{ isFailed ? 'Your transaction could not be completed. Please check your payment details or
+            try another method.' : 'Your payment process was cancelled at your request.' }}
+        </p>
+
+        <div class="info-box error-box" *ngIf="error">
+            <div class="info-content">
+                <p><strong>System Error:</strong> {{ error }}</p>
+            </div>
+        </div>
+
+        <div class="details" *ngIf="txRef">
+            <span class="label">Reference:</span>
+            <span class="value">{{ txRef }}</span>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" (click)="retryPayment()" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Try Again</span>
+                <span *ngIf="isLoading" class="spinner"></span>
+            </button>
+            <a routerLink="/" class="btn btn-link">Back to Home</a>
+        </div>
+    </div>
+</div>
