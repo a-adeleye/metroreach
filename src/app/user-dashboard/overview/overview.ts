@@ -1,39 +1,85 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { DashboardService, DashboardResponse, ProvisioningDashboard, NormalDashboard } from '../../services/dashboard.service';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
     selector: 'app-overview',
-    standalone: true,
-    imports: [CommonModule],
+    imports: [RouterLink, CommonModule],
     templateUrl: './overview.html',
     styleUrl: './overview.scss'
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
     protected authService = inject(AuthService);
+    private dashboardService = inject(DashboardService);
 
     userName = computed(() => {
         const profile = this.authService.userProfile();
         return profile?.firstName || 'User';
     });
 
+    dashboardData = signal<DashboardResponse | null>(null);
+    isLoading = signal(true);
+
+    async ngOnInit() {
+        try {
+            const data = await this.dashboardService.getDashboard();
+            this.dashboardData.set(data);
+        } catch (error) {
+            console.error('Failed to fetch dashboard data', error);
+        } finally {
+            this.isLoading.set(false);
+        }
+    }
+
     viewMode = signal<'day' | 'week' | 'month'>('week');
 
-    userPlan = signal({
-        name: 'Premium Full Fibre',
-        speed: '100 Mbps',
-        price: '38,250',
-        nextBilling: 'March 15, 2026',
-        status: 'Active'
+    // Mapped signals for Template
+    showStatusComponent = computed(() => {
+        const data = this.dashboardData();
+        if (!data) return false;
+        return ['REQUESTED', 'Ordered', 'Preparing', 'Provisioning'].includes(data.status);
     });
 
-    stats = signal([
-        { label: 'Data Used', value: '450 GB', sub: 'Unlimited Plan', icon: 'zap' },
-        { label: 'Uptime', value: '99.9%', sub: 'Last 30 Days', icon: 'activity' },
-        { label: 'Connected', value: '12 Devices', sub: 'Via WiFi Gateway', icon: 'wifi' }
-    ]);
+    orderStatus = computed(() => {
+        const data = this.dashboardData();
+        return data?.status || null;
+    });
 
-    // Usage Mock Data
+    provisioningData = computed(() => {
+        const data = this.dashboardData();
+        if (data && 'planPaidFor' in data) {
+            return data as ProvisioningDashboard;
+        }
+        return null;
+    });
+
+    normalData = computed(() => {
+        const data = this.dashboardData();
+        if (data && 'currentSubscription' in data) {
+            return data as NormalDashboard;
+        }
+        return null;
+    });
+
+    milestones = [
+        { id: 'REQUESTED', label: 'Ordered', description: 'Order confirmed' },
+        { id: 'Preparing', label: 'Preparing', description: 'Setting up account' },
+        { id: 'Provisioning', label: 'Provisioning', description: 'Configuring network' },
+        { id: 'Completed', label: 'Completed', description: 'Service is live' }
+    ];
+
+    currentStepIndex = computed(() => {
+        const s = this.orderStatus();
+        if (!s) return -1;
+        // If Completed or Active, mark all steps as done (but showStatusComponent will be false)
+        if (s === 'Completed' || s === 'Active') return 3;
+        return this.milestones.findIndex(m => m.id === s);
+    });
+
+    // Usage Mock Data - Kept as requested
     usageData = signal([
         { label: 'Mon', value: 65, secondary: 40 },
         { label: 'Tue', value: 85, secondary: 50 },
@@ -108,3 +154,4 @@ export class OverviewComponent {
         this.usageData.set(newData);
     }
 }
+

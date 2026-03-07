@@ -1,6 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { DashboardService, PaymentHistoryItem, PaymentHistoryResponse } from '../../services/dashboard.service';
 
 @Component({
     selector: 'app-billing',
@@ -9,23 +10,87 @@ import { AuthService } from '../../services/auth.service';
     templateUrl: './billing.html',
     styleUrl: './billing.scss'
 })
-export class BillingComponent {
+export class BillingComponent implements OnInit {
     protected authService = inject(AuthService);
+    private dashboardService = inject(DashboardService);
 
-    balance = signal('0.00');
-    totalPaidYTD = signal('382,500');
-    outstanding = signal('0.00');
-    nextPayment = {
-        date: 'Oct 24, 2024',
-        amount: '38,250'
-    };
+    // Summary signals
+    totalPaidYTD = signal('0.00');
+    nextPaymentDate = signal('N/A');
 
-    history = [
-        { id: 'INV-2024-009', date: 'Sep 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Paid' },
-        { id: 'INV-2024-008', date: 'Aug 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Paid' },
-        { id: 'INV-2024-007', date: 'Jul 24, 2024', description: 'Mesh WiFi Unit Purchase (x2)', amount: '72,000', status: 'Paid' },
-        { id: 'INV-2024-006', date: 'Jun 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Paid' },
-        { id: 'INV-2024-005', date: 'Jun 24, 2024', description: 'Monthly Subscription - Premium 100 Mbps', amount: '38,250', status: 'Pending' },
-        { id: 'INV-2024-001', date: 'Jan 15, 2024', description: 'Installation Fee + First Month', amount: '85,000', status: 'Paid' }
-    ];
+    // History signals
+    history = signal<PaymentHistoryItem[]>([]);
+    isLoading = signal(true);
+
+    // Pagination signals
+    currentPage = signal(1);
+    totalPages = signal(1);
+
+    // Filter signals
+    statusFilter = signal<'paid' | 'pending' | undefined>(undefined);
+    lastSixMonths = signal(false);
+
+    async ngOnInit() {
+        await this.fetchHistory();
+    }
+
+    async fetchHistory(page: number = 1) {
+        this.isLoading.set(true);
+        try {
+            const response = await this.dashboardService.getPaymentHistory({
+                page,
+                status: this.statusFilter(),
+                lastSixMonths: this.lastSixMonths()
+            });
+
+            this.history.set(response.data);
+            this.totalPaidYTD.set(response.summary.totalPaidYtd);
+            this.nextPaymentDate.set(response.summary.nextPaymentDate);
+
+            this.currentPage.set(response.meta.currentPage);
+            this.totalPages.set(response.meta.lastPage);
+        } catch (error) {
+            console.error('Failed to fetch payment history', error);
+        } finally {
+            this.isLoading.set(false);
+        }
+    }
+
+    async changePage(page: number) {
+        if (page >= 1 && page <= this.totalPages()) {
+            await this.fetchHistory(page);
+        }
+    }
+
+    async toggleStatusFilter(status?: 'paid' | 'pending') {
+        this.statusFilter.set(status);
+        await this.fetchHistory(1);
+    }
+
+    async toggleLastSixMonths(val: boolean) {
+        this.lastSixMonths.set(val);
+        await this.fetchHistory(1);
+    }
+
+    // Error handling
+    downloadError = signal<string | null>(null);
+
+    async downloadInvoice(id: string) {
+        this.downloadError.set(null);
+        try {
+            const blob = await this.dashboardService.downloadInvoice(id);
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Invoice-${id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Failed to download invoice', error);
+            this.downloadError.set('Could not download invoice. Please try again later.');
+            setTimeout(() => this.downloadError.set(null), 5000);
+        }
+    }
 }

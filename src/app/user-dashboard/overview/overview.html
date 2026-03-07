@@ -4,193 +4,248 @@
         <p>Here's what's happening with your internet connection today.</p>
     </section>
 
-    <!-- Top Row: Plan & Usage -->
-    <div class="dashboard-grid-top">
-        <div class="card current-plan-card">
-            <div class="card-top">
-                <span class="label">Current Plan</span>
-                <span class="status-badge">Active</span>
+    @if (showStatusComponent()) {
+    <!-- Order Progress Component -->
+    <div class="status-container card">
+        <div class="status-header">
+            <div class="header-main">
+                <span class="badge pulse">{{ orderStatus() }}</span>
+                <h2 class="status-title">Order Progress</h2>
             </div>
-            <div class="plan-main">
-                <h2 class="plan-name">Premium 100Mbps</h2>
-                <div class="plan-price">
-                    <span class="currency">₦</span>38,250<span class="period">/mo</span>
-                </div>
-            </div>
-            <div class="plan-bottom">
-                <div class="bottom-item">
-                    <span>Contract Ends</span>
-                    <strong>Oct 24, 2024</strong>
-                </div>
-                <div class="bottom-item">
-                    <span>Data Cap</span>
-                    <strong>Unlimited</strong>
+            <div class="plan-details-card">
+                <span class="label">Selected Plan</span>
+                <div class="plan-info">
+                    <span class="value">{{ provisioningData()?.planPaidFor }}</span>
                 </div>
             </div>
         </div>
 
-        <div class="card usage-chart-card">
-            <div class="chart-header">
-                <h3>Data Usage (30 Days)</h3>
-                <div class="legend">
-                    <div class="legend-item"><span class="dot download"></span> Download</div>
-                    <div class="legend-item"><span class="dot upload"></span> Upload</div>
+        <div class="timeline">
+            @for (milestone of milestones; track milestone.id; let i = $index) {
+            <div class="timeline-step" [class.active]="i <= currentStepIndex()"
+                [class.current]="i === currentStepIndex()">
+                <div class="step-indicator">
+                    <div class="indicator-icon">
+                        @if (i < currentStepIndex()) { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            } @else {
+                            <span>{{ i + 1 }}</span>
+                            }
+                    </div>
+                    @if (i < milestones.length - 1) { <div class="indicator-line">
                 </div>
+                }
             </div>
-            <div class="chart-body">
-                <svg viewBox="0 0 1000 200" preserveAspectRatio="none" class="chart-svg">
-                    <!-- Area Fills -->
-                    <path [attr.d]="downloadPath() + ' L 1000 200 L 0 200 Z'" class="area-download" />
-                    <path [attr.d]="uploadPath() + ' L 1000 200 L 0 200 Z'" class="area-upload" />
+            <div class="step-content">
+                <h4 class="step-label">{{ milestone.label }}</h4>
+                <p class="step-desc">{{ milestone.description }}</p>
+            </div>
+        </div>
+        }
+    </div>
 
-                    <!-- Lines -->
-                    <path [attr.d]="downloadPath()" class="line-download" />
-                    <path [attr.d]="uploadPath()" class="line-upload" />
-
-                    <!-- Interaction Points -->
-                    @for (point of chartPoints(); track $index) {
-                    <circle [attr.cx]="point.x" [attr.cy]="point.y1" r="3" class="point-download" />
-                    }
-                </svg>
-                <div class="chart-labels">
-                    <span>Week 1</span>
-                    <span>Week 2</span>
-                    <span>Week 3</span>
-                    <span>Week 4</span>
-                </div>
+    <div class="status-footer">
+        <div class="footer-info">
+            <div class="info-block">
+                <span class="label">Ordered Date</span>
+                <strong>{{ provisioningData()?.paymentDate | date:'MMMM dd, yyyy' }}</strong>
+            </div>
+            <div class="info-block">
+                <span class="label">Amount Paid</span>
+                <strong>{{ provisioningData()?.amountPaid | currency:'NGN':'symbol-narrow':'1.0-0' }}</strong>
+            </div>
+            <div class="info-block">
+                <span class="label">Payment</span>
+                <span class="status-success">Paid</span>
+            </div>
+        </div>
+        <button class="btn-support" routerLink="/dashboard/support">Contact Support</button>
+    </div>
+</div>
+} @else {
+<!-- Top Row: Plan & Usage -->
+<div class="dashboard-grid-top">
+    <div class="card current-plan-card">
+        <div class="card-top">
+            <span class="label">Current Plan</span>
+            <span class="status-badge">Active</span>
+        </div>
+        <div class="plan-main">
+            <h2 class="plan-name">{{ normalData()?.currentSubscription }}</h2>
+            <div class="plan-price">
+                <span class="currency"></span>{{ normalData()?.amount | currency:'NGN':'symbol-narrow':'1.0-0' }}<span
+                    class="period">/mo</span>
+            </div>
+        </div>
+        <div class="plan-bottom">
+            <div class="bottom-item">
+                <span>Contract Ends</span>
+                <strong>{{ normalData()?.endDate | date:'MMMM dd, yyyy' }}</strong>
+            </div>
+            <div class="bottom-item">
+                <span>Data Cap</span>
+                <strong>Unlimited</strong>
             </div>
         </div>
     </div>
 
-    <!-- Middle Row: Action Cards -->
-    <div class="action-cards-grid">
-        <div class="action-card renew">
-            <div class="action-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 4v6h-6"></path>
-                    <path d="M1 20v-6h6"></path>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-            </div>
-            <div class="action-info">
-                <h3>Renew Service</h3>
-                <p>Pay for next month</p>
-            </div>
-            <div class="action-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+    <div class="card usage-chart-card">
+        <div class="chart-header">
+            <h3>Data Usage (30 Days)</h3>
+            <div class="legend">
+                <div class="legend-item"><span class="dot download"></span> Download</div>
+                <div class="legend-item"><span class="dot upload"></span> Upload</div>
             </div>
         </div>
+        <div class="chart-body">
+            <svg viewBox="0 0 1000 200" preserveAspectRatio="none" class="chart-svg">
+                <!-- Area Fills -->
+                <path [attr.d]="downloadPath() + ' L 1000 200 L 0 200 Z'" class="area-download" />
+                <path [attr.d]="uploadPath() + ' L 1000 200 L 0 200 Z'" class="area-upload" />
 
-        <div class="action-card upgrade">
-            <div class="action-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="18 15 12 9 6 15"></polyline>
-                </svg>
-            </div>
-            <div class="action-info">
-                <h3>Upgrade Plan</h3>
-                <p>Get faster speeds</p>
-            </div>
-            <div class="action-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <!-- Lines -->
+                <path [attr.d]="downloadPath()" class="line-download" />
+                <path [attr.d]="uploadPath()" class="line-upload" />
+
+                <!-- Interaction Points -->
+                @for (point of chartPoints(); track $index) {
+                <circle [attr.cx]="point.x" [attr.cy]="point.y1" r="3" class="point-download" />
+                }
+            </svg>
+            <div class="chart-labels">
+                <span>Week 1</span>
+                <span>Week 2</span>
+                <span>Week 3</span>
+                <span>Week 4</span>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="action-card device">
-            <div class="action-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                </svg>
+<!-- Middle Row: Action Cards -->
+<div class="action-cards-grid">
+    <div class="action-card renew">
+        <div class="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6"></path>
+                <path d="M1 20v-6h6"></path>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+        </div>
+        <div class="action-info">
+            <h3>Renew Service</h3>
+            <p>Pay for next month</p>
+        </div>
+        <div class="action-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <div class="action-card upgrade">
+        <div class="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+        </div>
+        <div class="action-info">
+            <h3>Upgrade Plan</h3>
+            <p>Get faster speeds</p>
+        </div>
+        <div class="action-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <div class="action-card device">
+        <div class="action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+        </div>
+        <div class="action-info">
+            <h3>Add Mesh CPE</h3>
+            <p>Extend WiFi coverage</p>
+        </div>
+        <div class="action-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Row: Service Details & Upgrades -->
+<div class="dashboard-grid-bottom">
+    <div class="card service-details-card">
+        <h3>Service Details</h3>
+        <div class="details-list">
+            <div class="detail-item">
+                <span>Status</span>
+                <span class="status-live">Active</span>
             </div>
-            <div class="action-info">
-                <h3>Add Mesh CPE</h3>
-                <p>Extend WiFi coverage</p>
-            </div>
-            <div class="action-arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+            <div class="detail-item">
+                <span>Installation Addr.</span>
+                <strong>{{ normalData()?.installationAddress }}</strong>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Row: Service Details & Upgrades -->
-    <div class="dashboard-grid-bottom">
-        <div class="card service-details-card">
-            <h3>Service Details</h3>
-            <div class="details-list">
-                <div class="detail-item">
-                    <span>Status</span>
-                    <span class="status-live">Active</span>
-                </div>
-                <div class="detail-item">
-                    <span>Service ID</span>
-                    <strong>MR-LAG-VI-0042</strong>
-                </div>
-                <div class="detail-item">
-                    <span>WiFi Gateway SN</span>
-                    <strong>ZX99-234-AA01</strong>
-                </div>
-                <div class="detail-item">
-                    <span>Installation Addr.</span>
-                    <strong>Block 4, Flat 2B, Victoria Garden City, Lagos</strong>
-                </div>
+    <div class="recommended-section">
+        <div class="section-header">
+            <h3>Recommended Upgrades</h3>
+            <div class="nav-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
             </div>
         </div>
-
-        <div class="recommended-section">
-            <div class="section-header">
-                <h3>Recommended Upgrades</h3>
-                <div class="nav-dots">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
+        <div class="upgrades-grid">
+            <div class="upgrade-card">
+                <div class="upgrade-header">
+                    <h4>Ultra 200Mbps</h4>
+                    <div class="price">₦55,000</div>
                 </div>
+                <ul class="features">
+                    <li>200Mbps Download</li>
+                    <li>200Mbps Upload</li>
+                    <li>Priority Support</li>
+                </ul>
+                <button class="btn-view">View Details</button>
             </div>
-            <div class="upgrades-grid">
-                <div class="upgrade-card">
-                    <div class="upgrade-header">
-                        <h4>Ultra 200Mbps</h4>
-                        <div class="price">₦55,000</div>
-                    </div>
-                    <ul class="features">
-                        <li>200Mbps Download</li>
-                        <li>200Mbps Upload</li>
-                        <li>Priority Support</li>
-                    </ul>
-                    <button class="btn-view">View Details</button>
-                </div>
 
-                <div class="upgrade-card">
-                    <div class="upgrade-header">
-                        <h4>Gigabit Home</h4>
-                        <div class="price">₦120,000</div>
-                    </div>
-                    <ul class="features">
-                        <li>1Gbps Speed</li>
-                        <li>Free Static IP</li>
-                        <li>Gaming Optimized</li>
-                    </ul>
-                    <button class="btn-view">View Details</button>
+            <div class="upgrade-card">
+                <div class="upgrade-header">
+                    <h4>Gigabit Home</h4>
+                    <div class="price">₦120,000</div>
                 </div>
+                <ul class="features">
+                    <li>1Gbps Speed</li>
+                    <li>Free Static IP</li>
+                    <li>Gaming Optimized</li>
+                </ul>
+                <button class="btn-view">View Details</button>
+            </div>
 
-                <div class="upgrade-card">
-                    <div class="upgrade-header">
-                        <h4>Business Pro</h4>
-                        <div class="price">₦85,000</div>
-                    </div>
-                    <ul class="features">
-                        <li>250Mbps Speed</li>
-                        <li>5 Mesh Units</li>
-                    </ul>
-                    <button class="btn-view">View Details</button>
+            <div class="upgrade-card">
+                <div class="upgrade-header">
+                    <h4>Business Pro</h4>
+                    <div class="price">₦85,000</div>
                 </div>
+                <ul class="features">
+                    <li>250Mbps Speed</li>
+                    <li>5 Mesh Units</li>
+                </ul>
+                <button class="btn-view">View Details</button>
             </div>
         </div>
     </div>
+</div>
+}
 </div>

@@ -1,29 +1,35 @@
 <div class="billing-layout">
+    @if (downloadError()) {
+    <div class="alert error"
+        style="margin-bottom: 20px; padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px; display: flex; align-items: center; gap: 10px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ downloadError() }}
+    </div>
+    }
+
     <div class="billing-header">
         <h1>Payment History & Invoices</h1>
         <div class="header-actions">
             <div class="filters">
-                <div class="filter-select">
-                    <span>Last 6 Months</span>
+                <div class="filter-select" (click)="toggleLastSixMonths(!lastSixMonths())"
+                    [class.active]="lastSixMonths()">
+                    <span>{{ lastSixMonths() ? 'Last 6 Months' : 'All Time' }}</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
-                <div class="filter-select">
-                    <span>All Status</span>
+                <div class="filter-select"
+                    (click)="toggleStatusFilter(statusFilter() === 'paid' ? 'pending' : (statusFilter() === 'pending' ? undefined : 'paid'))">
+                    <span>{{ statusFilter() ? (statusFilter() | titlecase) : 'All Status' }}</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
             </div>
-            <button class="btn-export">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Export CSV
-            </button>
         </div>
     </div>
 
@@ -37,21 +43,7 @@
             </div>
             <div class="card-info">
                 <span class="label">Total Paid (YTD)</span>
-                <span class="value">₦{{ totalPaidYTD() }}</span>
-            </div>
-        </div>
-
-        <div class="summary-card">
-            <div class="card-icon yellow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-            </div>
-            <div class="card-info">
-                <span class="label">Outstanding</span>
-                <span class="value">₦{{ outstanding() }}</span>
+                <span class="value">{{ totalPaidYTD() | currency:'NGN':'symbol-narrow':'1.0-0' }}</span>
             </div>
         </div>
 
@@ -66,7 +58,7 @@
             </div>
             <div class="card-info">
                 <span class="label">Next Payment Due</span>
-                <span class="value">{{ nextPayment.date }}</span>
+                <span class="value">{{ nextPaymentDate() ? (nextPaymentDate() | date:'MMMM dd, yyyy') : '---' }}</span>
             </div>
         </div>
     </div>
@@ -78,26 +70,33 @@
                 <tr>
                     <th>INVOICE #</th>
                     <th>DATE</th>
-                    <th>DESCRIPTION</th>
                     <th>AMOUNT</th>
                     <th>STATUS</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
             <tbody>
-                @for (item of history; track item.id) {
+                @if (isLoading()) {
                 <tr>
-                    <td><strong>{{ item.id }}</strong></td>
-                    <td class="text-secondary">{{ item.date }}</td>
-                    <td class="text-secondary">{{ item.description }}</td>
-                    <td><strong>₦{{ item.amount }}</strong></td>
+                    <td colspan="6" style="text-align: center; padding: 2rem;">Loading payment history...</td>
+                </tr>
+                } @else if (history().length === 0) {
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem;">No payment history found.</td>
+                </tr>
+                } @else {
+                @for (item of history(); track item.id) {
+                <tr>
+                    <td><strong>{{ item.invoiceNumber }}</strong></td>
+                    <td class="text-secondary">{{ item.paymentDate | date:'MMM dd, yyyy' }}</td>
+                    <td><strong>{{ item.amount | currency:'NGN':'symbol-narrow':'1.0-0' }}</strong></td>
                     <td>
                         <span class="status-pill" [class]="item.status.toLowerCase()">
                             {{ item.status }}
                         </span>
                     </td>
                     <td>
-                        <button class="btn-action">
+                        <button class="btn-action" (click)="downloadInvoice(item.id)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -108,15 +107,21 @@
                     </td>
                 </tr>
                 }
+                }
             </tbody>
         </table>
         <div class="pagination">
-            <span class="showing">Showing 1 to 6 of 18 entries</span>
+            <span class="showing">Page {{ currentPage() }} of {{ totalPages() }}</span>
             <div class="pages">
-                <button class="page-num active">1</button>
-                <button class="page-num">2</button>
-                <button class="page-num">3</button>
-                <button class="page-num">
+                <button class="page-num" (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="transform: rotate(180deg)">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+                <button class="page-num active">{{ currentPage() }}</button>
+                <button class="page-num" (click)="changePage(currentPage() + 1)"
+                    [disabled]="currentPage() === totalPages()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>

@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'app-user-dashboard',
-    standalone: true,
     imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive],
     templateUrl: './user-dashboard.html',
     styleUrl: './user-dashboard.scss'
@@ -57,6 +56,13 @@ export class UserDashboardComponent implements OnInit {
 
     toggleSidebar() {
         this.isSidebarOpen.update(v => !v);
+    }
+
+    closeSidebar() {
+        // Only auto-close if we are on a mobile/tablet view (typically where it overlaps)
+        if (window.innerWidth <= 1024) {
+            this.isSidebarOpen.set(false);
+        }
     }
 
     ngOnInit() {
