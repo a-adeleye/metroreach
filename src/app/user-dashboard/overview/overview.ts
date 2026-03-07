@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { DashboardService, DashboardResponse, ProvisioningDashboard, NormalDashboard } from '../../services/dashboard.service';
@@ -31,6 +31,7 @@ export class OverviewComponent implements OnInit {
             console.error('Failed to fetch dashboard data', error);
         } finally {
             this.isLoading.set(false);
+            this.dashboardService.loaded.set(true);
         }
     }
 

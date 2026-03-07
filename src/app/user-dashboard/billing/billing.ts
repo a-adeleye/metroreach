@@ -75,14 +75,14 @@ export class BillingComponent implements OnInit {
     // Error handling
     downloadError = signal<string | null>(null);
 
-    async downloadInvoice(id: string) {
+    async downloadInvoice(item: PaymentHistoryItem) {
         this.downloadError.set(null);
         try {
-            const blob = await this.dashboardService.downloadInvoice(id);
+            const blob = await this.dashboardService.downloadInvoice(item.id);
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Invoice-${id}.pdf`;
+            a.download = `Invoice-${item.invoiceNumber}.pdf`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);

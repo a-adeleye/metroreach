@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -50,17 +50,11 @@ export interface PaymentHistoryResponse {
 export class DashboardService {
     private http = inject(HttpClient);
     private apiUrl = environment.apiUrl;
-
-    private getHeaders() {
-        const token = localStorage.getItem('access_token');
-        return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    }
+    loaded = signal(false);
 
     async getDashboard(): Promise<DashboardResponse> {
         return firstValueFrom(
-            this.http.get<DashboardResponse>(`${this.apiUrl}/customer-auth/dashboard`, {
-                headers: this.getHeaders()
-            })
+            this.http.get<DashboardResponse>(`${this.apiUrl}/customer-auth/dashboard`)
         );
     }
 
@@ -76,7 +70,6 @@ export class DashboardService {
 
         return firstValueFrom(
             this.http.get<PaymentHistoryResponse>(`${this.apiUrl}/customer-auth/payments/history`, {
-                headers: this.getHeaders(),
                 params: httpParams
             })
         );
@@ -85,9 +78,9 @@ export class DashboardService {
     async downloadInvoice(paymentId: string): Promise<Blob> {
         return firstValueFrom(
             this.http.get(`${this.apiUrl}/customer-auth/payments/${paymentId}/invoice-pdf`, {
-                headers: this.getHeaders(),
                 responseType: 'blob'
             })
         );
     }
 }
+

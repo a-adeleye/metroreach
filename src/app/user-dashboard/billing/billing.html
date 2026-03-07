@@ -18,16 +18,10 @@
                 <div class="filter-select" (click)="toggleLastSixMonths(!lastSixMonths())"
                     [class.active]="lastSixMonths()">
                     <span>{{ lastSixMonths() ? 'Last 6 Months' : 'All Time' }}</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
                 </div>
                 <div class="filter-select"
                     (click)="toggleStatusFilter(statusFilter() === 'paid' ? 'pending' : (statusFilter() === 'pending' ? undefined : 'paid'))">
                     <span>{{ statusFilter() ? (statusFilter() | titlecase) : 'All Status' }}</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
                 </div>
             </div>
         </div>
@@ -87,16 +81,17 @@
                 } @else {
                 @for (item of history(); track item.id) {
                 <tr>
-                    <td><strong>{{ item.invoiceNumber }}</strong></td>
-                    <td class="text-secondary">{{ item.paymentDate | date:'MMM dd, yyyy' }}</td>
-                    <td><strong>{{ item.amount | currency:'NGN':'symbol-narrow':'1.0-0' }}</strong></td>
-                    <td>
+                    <td data-label="Invoice #"><strong>{{ item.invoiceNumber }}</strong></td>
+                    <td data-label="Date" class="text-secondary">{{ item.paymentDate | date:'MMM dd, yyyy' }}</td>
+                    <td data-label="Amount"><strong>{{ item.amount | currency:'NGN':'symbol-narrow':'1.0-0' }}</strong>
+                    </td>
+                    <td data-label="Status">
                         <span class="status-pill" [class]="item.status.toLowerCase()">
                             {{ item.status }}
                         </span>
                     </td>
-                    <td>
-                        <button class="btn-action" (click)="downloadInvoice(item.id)">
+                    <td data-label="Action">
+                        <button class="btn-action" (click)="downloadInvoice(item)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>

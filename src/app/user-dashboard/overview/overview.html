@@ -4,6 +4,15 @@
         <p>Here's what's happening with your internet connection today.</p>
     </section>
 
+    @if(isLoading()) {
+    <div class="overlay-step loading-step onboarding-loader">
+        <div class="scanner-wrap">
+            <div class="scanner-circle"></div>
+            <div class="scanner-line"></div>
+        </div>
+    </div>
+    } @else {
+
     @if (showStatusComponent()) {
     <!-- Order Progress Component -->
     <div class="status-container card">
@@ -247,5 +256,6 @@
         </div>
     </div>
 </div>
+}
 }
 </div>

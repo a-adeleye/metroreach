@@ -213,36 +213,6 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         font-weight: 700;
       }
     }
-
-    .scanner-wrap {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      margin: 0 auto 40px;
-
-      .scanner-circle {
-        width: 100%;
-        height: 100%;
-        border: 2px solid rgba($primary-green, 0.1);
-        border-top-color: $primary-green;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        box-shadow: inset 0 0 20px rgba($primary-green, 0.05);
-      }
-
-      .scanner-line {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 85%;
-        height: 3px;
-        background: linear-gradient(90deg, transparent 0%, $primary-green 50%, transparent 100%);
-        transform: translate(-50%, -50%);
-        box-shadow: 0 0 25px $primary-green;
-        animation: scan 2s ease-in-out infinite;
-        border-radius: 50%;
-      }
-    }
   }
 
   .plans-grid-mini {
@@ -931,24 +901,6 @@ $transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
 .required {
   color: #dc2626;
-}
-
-@keyframes scan {
-
-  0%,
-  100% {
-    transform: translate(-50%, -200%);
-  }
-
-  50% {
-    transform: translate(-50%, 200%);
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 @keyframes fadeIn {
